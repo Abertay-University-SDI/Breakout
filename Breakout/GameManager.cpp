@@ -115,3 +115,13 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+
+std::vector<std::pair<std::string, int>> GameManager::queryLeaderboard()
+{
+    sf::Packet packet;
+    packet << SCORE_REQUEST;
+    _udpSocket.send(packet, sf::IpAddress(), 6969);
+
+    // after a request, check the socket for a reply every frame
+    // Then draw the leaderboard
+}
