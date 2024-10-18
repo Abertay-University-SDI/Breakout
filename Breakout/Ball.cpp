@@ -41,6 +41,11 @@ void Ball::update(float dt)
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
     }
 
+    // Gravity
+    _direction.y += BALL_GRAVITY * dt;
+    // Terminal Speed
+    if (_direction.y > BALL_TERMINAL_SPEED_MULTIPLIER) { _direction.y = BALL_TERMINAL_SPEED_MULTIPLIER; }
+
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
 
@@ -86,8 +91,6 @@ void Ball::update(float dt)
         // Cap direction mutiplier
         if (_direction.x > BALL_DIRECTION_CAP) { _direction.x = BALL_DIRECTION_CAP; }
         else if (_direction.x < -BALL_DIRECTION_CAP) { _direction.x = -BALL_DIRECTION_CAP; }
-   
-        std::cout << _direction.x << std::endl;
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);

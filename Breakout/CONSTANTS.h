@@ -20,12 +20,14 @@ constexpr const char* WINDOW_TITLE = "Game";
 constexpr float PADDLE_WIDTH = 150.0f;
 constexpr float PADDLE_HEIGHT = 20.0f;
 constexpr float PADDLE_SPEED = 300.0f;
-constexpr float PADDLE_VELOCITY_MULTIPLIER = 1.f / 300.f;
+constexpr float PADDLE_VELOCITY_MULTIPLIER = 1.f / PADDLE_SPEED;
 
 // Ball settings
 constexpr float BALL_RADIUS = 10.0f;
 constexpr float BALL_SPEED = 400.0f;
-constexpr float BALL_DIRECTION_CAP = 2;
+constexpr float BALL_DIRECTION_CAP = 1.5f;
+constexpr float BALL_GRAVITY = 0.6f;
+constexpr float BALL_TERMINAL_SPEED_MULTIPLIER = 1.5f;
 
 // Brick settings
 constexpr float BRICK_WIDTH = 75.0f;
