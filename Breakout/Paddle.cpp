@@ -2,7 +2,7 @@
 #include <iostream>
 
 Paddle::Paddle(sf::RenderWindow* window)
-    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
+    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true), _prevXPosition(_sprite.getPosition().x)
 {
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
@@ -43,6 +43,11 @@ void Paddle::update(float dt)
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
     }
+
+
+    // Calculate paddle velocity
+    _velocity = (_sprite.getPosition().x - _prevXPosition) / dt;
+    _prevXPosition = _sprite.getPosition().x; // Store current position
 }
 
 void Paddle::render()
@@ -64,4 +69,9 @@ void Paddle::setWidth(float coeff, float duration)
     _timeInNewSize = duration;
     float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
     _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
+float Paddle::getVelocity()
+{
+    return _velocity;
 }
