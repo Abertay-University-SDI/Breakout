@@ -73,13 +73,21 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
 
-        // Old Physics
-        //float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        //_direction.x = paddlePositionProportion * 2.0f - 1.0f;
+        // Paddle Proportion
+        float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+        paddlePositionProportion *= 2 - 1;
 
-        // Realistic Physics
-        _direction.x = (_gameManager->getPaddle()->getVelocity() * PADDLE_VELOCITY_MULTIPLIER) + _direction.x;
+        // Keep proportion > 0
+        if (paddlePositionProportion < 0) { paddlePositionProportion = 0; }
 
+        // Paddle based ball physics
+        _direction.x = ((_gameManager->getPaddle()->getVelocity() * PADDLE_VELOCITY_MULTIPLIER) + _direction.x) + paddlePositionProportion;
+
+        // Cap direction mutiplier
+        if (_direction.x > BALL_DIRECTION_CAP) { _direction.x = BALL_DIRECTION_CAP; }
+        else if (_direction.x < -BALL_DIRECTION_CAP) { _direction.x = -BALL_DIRECTION_CAP; }
+   
+        std::cout << _direction.x << std::endl;
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
