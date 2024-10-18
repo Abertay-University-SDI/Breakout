@@ -26,25 +26,25 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    // Create buttons
+    sf::Vector2 screenSize = _window->getSize();
+    Button* replay_button = _ui->addButton(screenSize.x / 2, screenSize.y / 2, 48, sf::Color::White, sf::Color::Black, "Replay", "ReplayButton"); // Replay button
+    replay_button->setOnClick([&] {restart(); }); // Sets restart as the callback function to be called by the replay button
+
+    Button* quit_button = _ui->addButton(screenSize.x / 2, screenSize.y / 2 + 70, 48, sf::Color::White, sf::Color::Black, "Quit", "QuitButton"); // Quit button
+    quit_button->setOnClick([] {exit(0); });
 }
 
 void GameManager::update(float dt)
 {
+    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) exit(0);
+
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
+    _ui->updateButtons();
     _powerupInEffect.second -= dt;
-    
 
-    if (_lives <= 0)
-    {
-        _masterText.setString("Game over.");
-        return;
-    }
-    if (_levelComplete)
-    {
-        _masterText.setString("Level completed.");
-        return;
-    }
     // pause and pause handling
     if (_pauseHold > 0.f) _pauseHold -= dt;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
@@ -62,10 +62,36 @@ void GameManager::update(float dt)
             _pauseHold = PAUSE_TIME_BUFFER;
         }
     }
+
     if (_pause)
     {
+        // Show the buttons
+        _ui->getButton("ReplayButton")->setVisible(true);
+        _ui->getButton("QuitButton")->setVisible(true);
         return;
     }
+    else if (_lives <= 0)
+    {
+        _masterText.setString("Game over.");
+        // Show the buttons
+        _ui->getButton("ReplayButton")->setVisible(true);
+        _ui->getButton("QuitButton")->setVisible(true);
+        return;
+    }
+    else if (_levelComplete)
+    {
+        _masterText.setString("Level completed.");
+        // Show the buttons
+        _ui->getButton("ReplayButton")->setVisible(true);
+        _ui->getButton("QuitButton")->setVisible(true);
+        return;
+    }
+    else {
+        // Hide the buttons
+        _ui->getButton("ReplayButton")->setVisible(false);
+        _ui->getButton("QuitButton")->setVisible(false);
+    }
+
 
     // timer.
     _time += dt;
@@ -108,6 +134,19 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+// restart the game. called by replay button
+void GameManager::restart()
+{
+    _levelComplete = false;
+    _pause = false;
+    _lives = 3;
+    _masterText.setString("");
+    _ball->setPosition(0, 300);
+    _ball->resetVelocity(400, 1, 1);
+    _ui->resetLife();
+    _brickManager->resetBricks();
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
