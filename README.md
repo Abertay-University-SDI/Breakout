@@ -33,4 +33,5 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
-#bug - circular dependancy, fixed. - 5 minutes.
+#bug fix: circular dependancy, fixed. - 5 minutes.
+#added feature: paddle mouse control - 45 minutes.

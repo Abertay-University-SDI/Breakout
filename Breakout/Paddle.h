@@ -16,6 +16,8 @@ public:
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
 
+    void moveViaMouse();
+
 private:
 
 
@@ -24,4 +26,5 @@ private:
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    sf::Vector2i mousePos;
 };
