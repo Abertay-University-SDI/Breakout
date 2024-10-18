@@ -13,6 +13,8 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _udpSocket.setBlocking(false);
 }
 
 void GameManager::initialize()
@@ -26,6 +28,8 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    _udpSocket.bind(PORT, SERVER_IP);
 }
 
 void GameManager::update(float dt)
@@ -37,6 +41,16 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
+        // @TODO (Denis): Draw leaderboard
+        sf::Packet packet;
+        packet << SCORE_UPDATE;
+        packet << std::string("PlayerName");
+        packet << getBrickManager()->getScore();
+        _udpSocket.send(packet, SERVER_IP, PORT);
+        
+        // @TODO (Denis): Implement
+        // queryLeaderboard();
+
         _masterText.setString("Game over.");
         return;
     }
@@ -85,6 +99,37 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+
+    if (_waitingForLeaderboard)
+    {
+        sf::Packet receivedPacket;
+        sf::IpAddress address;
+        unsigned short port;
+        if (_udpSocket.receive(receivedPacket, address, port) == sf::Socket::Status::Done)
+        {
+            short messageId;
+            receivedPacket >> messageId;
+
+            if (messageId == SCORE_RESULT)
+            {
+                int size;
+                receivedPacket >> size;
+                
+                std::vector<LeaderboardEntry> scoreVec;
+                for (int i = 0; i < size; ++i)
+                {
+                    LeaderboardEntry entry;
+                    receivedPacket >> entry.first;
+                    receivedPacket >> entry.second;
+                    scoreVec.push_back(entry);
+                }
+
+                _leaderboardReceivedCallback(scoreVec);
+                _waitingForLeaderboard = false;
+            }
+        }
+    }
+    
 }
 
 void GameManager::loseLife()
@@ -116,12 +161,11 @@ Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
 
-std::vector<std::pair<std::string, int>> GameManager::queryLeaderboard()
+void GameManager::queryLeaderboard(std::function<void(std::vector<LeaderboardEntry>&)> callback)
 {
     sf::Packet packet;
     packet << SCORE_REQUEST;
-    _udpSocket.send(packet, sf::IpAddress(), 6969);
-
-    // after a request, check the socket for a reply every frame
-    // Then draw the leaderboard
+    _udpSocket.send(packet, sf::IpAddress(), PORT);
+    _waitingForLeaderboard = true;
+    _leaderboardReceivedCallback = callback;
 }

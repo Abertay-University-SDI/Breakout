@@ -32,4 +32,12 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+> v1.2 [60 minutes]
+> - Server Application Prototype
+> - Started Client-side network implementation
+ 
+> v1.1 [55 minutes]
+> - Leaderboard research
+
+> v1.0 [5 mins]
+> - Fixed compilation issue

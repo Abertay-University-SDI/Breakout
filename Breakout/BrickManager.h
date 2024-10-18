@@ -12,10 +12,14 @@ public:
     void render();
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
+    int getScore();
+
 private:
     std::vector<Brick> _bricks;
     sf::RenderWindow* _window;
 
     GameManager* _gameManager;
     static constexpr float TOP_PADDING = 100.0f;
+
+    int _score = 0;
 };

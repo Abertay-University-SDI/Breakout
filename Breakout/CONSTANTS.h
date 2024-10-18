@@ -51,6 +51,13 @@ const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
 
 // Network settings
+constexpr short SCORE_UPDATE = 121;
 constexpr short SCORE_REQUEST = 122;
+constexpr short SCORE_RESULT = 123;
+
+constexpr unsigned short PORT = 8692;
+constexpr const char SERVER_IP[] = "";
+
+typedef std::pair<std::string, int> LeaderboardEntry;
 
 
