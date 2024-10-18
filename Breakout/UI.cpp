@@ -60,6 +60,16 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setString("fire " + oss.str());
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
+	case smallBall:
+		oss << std::fixed << std::setprecision(2) << powerup.second;
+		_powerupText.setString("Small  " + oss.str());
+		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
+	case bigBall:
+		oss << std::fixed << std::setprecision(2) << powerup.second;
+		_powerupText.setString("Big  " + oss.str());
+		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
 		
@@ -78,5 +88,19 @@ void UI::render()
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);
+	}
+}
+
+void UI::GenerateLives(int lives)
+{
+	for (int i = lives; i > 0; --i)
+	{
+		sf::CircleShape newLife;
+		newLife.setFillColor(sf::Color::Red);
+		newLife.setOutlineColor(sf::Color::Cyan);
+		newLife.setOutlineThickness(4.0f);
+		newLife.setRadius(LIFE_RADIUS);
+		newLife.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * i, LIFE_PADDING);
+		_lives.push_back(newLife);
 	}
 }

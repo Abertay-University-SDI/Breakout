@@ -58,3 +58,10 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
     }
     return collisionResponse;
 }
+
+void BrickManager::ResetBricks()
+{
+    _bricks.clear();
+
+    createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+}

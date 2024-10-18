@@ -25,11 +25,15 @@ void Ball::update(float dt)
     {
         if (_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
-        else
+        else if (_isFireBall)
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
         }        
+        else
+        {
+            setSize(RADIUS, 0);
+        }
     }
 
     // Fireball effect
@@ -48,7 +52,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= windowDimensions.x - 2 * _sprite.getRadius() && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -76,7 +80,7 @@ void Ball::update(float dt)
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
         // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * _sprite.getRadius());
     }
 
     // collision with bricks
@@ -100,6 +104,12 @@ void Ball::render()
 void Ball::setVelocity(float coeff, float duration)
 {
     _velocity = coeff * VELOCITY;
+    _timeWithPowerupEffect = duration;
+}
+
+void Ball::setSize(float radius, float duration)
+{
+    _sprite.setRadius(radius);
     _timeWithPowerupEffect = duration;
 }
 

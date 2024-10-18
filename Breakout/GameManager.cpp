@@ -37,7 +37,18 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over.\n Press R To Start A New Game!");
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+        {
+            _lives = 3;
+            _masterText.setString("");
+            _ui->GenerateLives(_lives);
+            _ball->_timeWithPowerupEffect = 0;
+            _ui->updatePowerupText({ none, 0.0f });
+            _brickManager->ResetBricks();
+        }
+
         return;
     }
     if (_levelComplete)
