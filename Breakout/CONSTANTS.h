@@ -43,7 +43,7 @@ constexpr float POWERUP_SPEED = 150.0f;
 // Particle Effect Settings
 constexpr float PARTICLE_DURATION = 1.f;
 constexpr float PARTICLE_SIZE = 5.f;
-constexpr int PARTICLE_NUMBER = 5;
+constexpr int PARTICLE_NUMBER = 10;
 
 // UI settings
 constexpr float UI_LIFE_RADIUS = 15.0f;

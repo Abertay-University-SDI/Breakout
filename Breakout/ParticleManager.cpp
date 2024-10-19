@@ -16,6 +16,7 @@ void ParticleManager::update(float dt)
 	{
 		particle.update(dt);
 
+		// Remove particles no longer rendering
 		if (!particle.toRender)
 		{
 			particle = _particles.back();

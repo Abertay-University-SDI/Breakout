@@ -13,6 +13,8 @@ public:
 
 private:
 	std::vector<sf::RectangleShape> particles;
+	std::vector<sf::Vector2f> directions;
 	float timer;
+	float particleSpeed = 50.f;
 };
 
