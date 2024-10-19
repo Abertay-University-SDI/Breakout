@@ -5,10 +5,12 @@
 class ParticleEffects
 {
 public: 
-	ParticleEffects(sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles);
-	void render(sf::RenderWindow& window);
+	ParticleEffects(sf::RenderWindow* window, sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles, int duration);
+	void update(float dt);
+	void render();
 
 private:
 	std::vector<sf::RectangleShape> particles;
+	float timer;
 };
 
