@@ -40,9 +40,9 @@ void Paddle::moveRight(float dt)
 
 void Paddle::moveViaMouse()
 {
-    mousePos = sf::Mouse::getPosition();
-    const int paddleYPos = (_window->getSize().y - PADDLE_HEIGHT) - 10;
-    _sprite.setPosition(mousePos.x, paddleYPos);
+    _mousePos = sf::Mouse::getPosition();
+    const int _paddleYPos = (_window->getSize().y - PADDLE_HEIGHT) - 10;
+    _sprite.setPosition(_mousePos.x, _paddleYPos);
 }
 
 void Paddle::update(float dt)
