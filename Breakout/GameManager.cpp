@@ -41,17 +41,17 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
-        // @TODO (Denis): Draw leaderboard
-        sf::Packet packet;
-        packet << SCORE_UPDATE;
-        packet << std::string("PlayerName");
-        packet << getBrickManager()->getScore();
-        _udpSocket.send(packet, SERVER_IP, PORT);
-        
-        // @TODO (Denis): Implement
-        // queryLeaderboard();
+        if (!_leaderboardReceived && !_waitingForLeaderboard)
+        {
+            sf::Packet packet;
+            packet << SCORE_UPDATE;
+            packet << std::string("Name");
+            packet << getBrickManager()->getScore();
+            _udpSocket.send(packet, SERVER_IP, PORT);
+            queryLeaderboard();
+        }
 
-        _masterText.setString("Game over.");
+        _masterText.setString(std::string("Game over.\nYour score is: ") + std::to_string(getBrickManager()->getScore()));
         return;
     }
     if (_levelComplete)
@@ -115,17 +115,18 @@ void GameManager::update(float dt)
                 int size;
                 receivedPacket >> size;
                 
-                std::vector<LeaderboardEntry> scoreVec;
+                _leaderboard.clear();
                 for (int i = 0; i < size; ++i)
                 {
                     LeaderboardEntry entry;
                     receivedPacket >> entry.first;
                     receivedPacket >> entry.second;
-                    scoreVec.push_back(entry);
+                    _leaderboard.push_back(entry);
                 }
 
-                _leaderboardReceivedCallback(scoreVec);
                 _waitingForLeaderboard = false;
+                _leaderboardReceived = true;
+                drawLeaderboard();
             }
         }
     }
@@ -161,11 +162,23 @@ Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
 
-void GameManager::queryLeaderboard(std::function<void(std::vector<LeaderboardEntry>&)> callback)
+void GameManager::queryLeaderboard()
 {
     sf::Packet packet;
     packet << SCORE_REQUEST;
     _udpSocket.send(packet, sf::IpAddress(), PORT);
     _waitingForLeaderboard = true;
-    _leaderboardReceivedCallback = callback;
+    _leaderboardReceived = false;
+}
+
+void GameManager::drawLeaderboard()
+{
+    if (_waitingForLeaderboard || !_leaderboardReceived)
+        return;
+
+    // for now only show the highest score achieved
+    if (_leaderboard.size() > 0)
+    {
+        _masterText.setString(_leaderboard[0].first + std::to_string(_leaderboard[0].second));
+    }
 }

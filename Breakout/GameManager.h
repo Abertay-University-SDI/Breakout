@@ -28,8 +28,8 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
-    void queryLeaderboard(std::function<void(std::vector<LeaderboardEntry>&)> callback);
-
+    void queryLeaderboard();
+    void drawLeaderboard();
 
 private:
     bool _pause;
@@ -53,7 +53,9 @@ private:
     
     sf::UdpSocket _udpSocket;
     bool _waitingForLeaderboard = false;
-    std::function<void(std::vector<LeaderboardEntry>&)> _leaderboardReceivedCallback;
+    bool _leaderboardReceived = false;
+
+    std::vector<LeaderboardEntry> _leaderboard;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

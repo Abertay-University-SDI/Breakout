@@ -48,8 +48,13 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+
+        if (brick.reduceHealth() == 0)
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+        }
+
         _score += 100;
         break;
     }

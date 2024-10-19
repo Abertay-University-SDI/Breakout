@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SFML/Graphics/Color.hpp"
+
 // implemented powerups
 enum POWERUPS
 {
@@ -55,8 +57,8 @@ constexpr short SCORE_UPDATE = 121;
 constexpr short SCORE_REQUEST = 122;
 constexpr short SCORE_RESULT = 123;
 
-constexpr unsigned short PORT = 8692;
-constexpr const char SERVER_IP[] = "";
+constexpr unsigned short PORT = 28000;
+constexpr const char SERVER_IP[] = "127.0.0.1";
 
 typedef std::pair<std::string, int> LeaderboardEntry;
 
