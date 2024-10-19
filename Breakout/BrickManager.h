@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Brick.h"
+#include "ParticleEffects.h"
 #include <SFML/Graphics.hpp>
 
 class GameManager;
@@ -14,6 +15,7 @@ public:
 
 private:
     std::vector<Brick> _bricks;
+    std::vector<ParticleEffects> _particles;
     sf::RenderWindow* _window;
 
     GameManager* _gameManager;

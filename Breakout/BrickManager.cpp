@@ -19,6 +19,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
             _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            _particles.emplace_back(sf::Vector2<float>{ x,y }, brickWidth, brickHeight, sf::Vector2<float>{ 10,10 }, 5);
         }
     }
 }
@@ -27,6 +28,11 @@ void BrickManager::render()
 {
     for (auto& brick : _bricks) {
         brick.render(*_window);
+    }
+
+    for (auto& particle : _particles)
+    {
+        particle.render(*_window);
     }
 }
 

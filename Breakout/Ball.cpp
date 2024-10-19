@@ -17,8 +17,6 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
-    std::cout << _gravity << std::endl;
-
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
