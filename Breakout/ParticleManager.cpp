@@ -12,8 +12,22 @@ void ParticleManager::createParticles(sf::Vector2<float> position, float width, 
 
 void ParticleManager::update(float dt)
 {
+	for (auto& particle : _particles)
+	{
+		particle.update(dt);
+
+		if (!particle.toRender)
+		{
+			particle = _particles.back();
+			_particles.pop_back();
+		}
+	}
 }
 
 void ParticleManager::render()
 {
+	for (auto& particle : _particles)
+	{
+		particle.render(*_window);
+	}
 }

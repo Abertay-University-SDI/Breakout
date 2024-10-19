@@ -104,6 +104,7 @@ void GameManager::render()
     _paddle->render();
     _ball->render();
     _brickManager->render();
+    _particleManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();

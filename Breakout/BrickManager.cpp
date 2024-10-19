@@ -47,7 +47,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
             collisionResponse = 1;
 
         // Spawn Particles
-        _gameManager->getParticleManager()->createParticles(sf::Vector2<float>{ brickBounds.left, brickBounds.top }, brickBounds.width, brickBounds.height, sf::Vector2<float>{ 10, 10 }, 5, 10);
+        _gameManager->getParticleManager()->createParticles(sf::Vector2<float>{ brickBounds.left, brickBounds.top }, brickBounds.width, brickBounds.height, sf::Vector2<float>{ PARTICLE_SIZE, PARTICLE_SIZE }, PARTICLE_NUMBER, PARTICLE_DURATION);
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector

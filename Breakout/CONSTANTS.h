@@ -40,6 +40,11 @@ constexpr int BRICK_COLUMNS = 10;
 constexpr float POWERUP_RADIUS = 15.0f;
 constexpr float POWERUP_SPEED = 150.0f;
 
+// Particle Effect Settings
+constexpr float PARTICLE_DURATION = 1.f;
+constexpr float PARTICLE_SIZE = 5.f;
+constexpr int PARTICLE_NUMBER = 5;
+
 // UI settings
 constexpr float UI_LIFE_RADIUS = 15.0f;
 constexpr float UI_LIFE_PADDING = 20.0f;

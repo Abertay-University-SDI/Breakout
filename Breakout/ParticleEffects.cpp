@@ -1,6 +1,7 @@
 #include "ParticleEffects.h"
+#include <iostream>
 
-ParticleEffects::ParticleEffects(sf::RenderWindow* window, sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles, int duration)
+ParticleEffects::ParticleEffects(sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles, int duration)
 {
 	// Add particles to vector
 	for (int i = 0; i < numParticles; i++)
@@ -21,10 +22,23 @@ ParticleEffects::ParticleEffects(sf::RenderWindow* window, sf::Vector2<float> po
 
 void ParticleEffects::update(float dt)
 {
-	
+	timer -= dt;
+
+	std::cout << timer << std::endl;
+
+	if (timer <= 0)
+	{
+		toRender = false;
+	}
 }
 
-void ParticleEffects::render()
+void ParticleEffects::render(sf::RenderWindow& window)
 {
-
+	if (toRender)
+	{
+		for (auto& particle : particles)
+		{
+			window.draw(particle);
+		}
+	}
 }
