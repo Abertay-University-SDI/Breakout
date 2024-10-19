@@ -1,6 +1,6 @@
 #include "ParticleEffects.h"
 
-ParticleEffects::ParticleEffects(sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles, int duration)
+ParticleEffects::ParticleEffects(sf::Vector2<float> position, float width, float height, sf::Vector2<float> particleSize, int numParticles, float duration)
 {
 	// Add particles to vector
 	for (int i = 0; i < numParticles; i++)
@@ -24,6 +24,7 @@ ParticleEffects::ParticleEffects(sf::Vector2<float> position, float width, float
 	}
 
 	timer = duration;
+	totalTime = duration;
 }
 
 void ParticleEffects::update(float dt)
@@ -37,6 +38,7 @@ void ParticleEffects::update(float dt)
 		for (auto& particle : particles)
 		{
 			particle.move(sf::Vector2f(particleSpeed * directions[count].x, particleSpeed * directions[count].y) * dt);
+			particle.setFillColor(sf::Color(255, 255, 255, (lerp(sf::Color::White, sf::Color::Transparent, totalTime - timer))));
 			count++;
 		}
 	}
@@ -57,4 +59,12 @@ void ParticleEffects::render(sf::RenderWindow& window)
 			window.draw(particle);
 		}
 	}
+}
+
+float ParticleEffects::lerp(sf::Color startColour, sf::Color endColour, float time)
+{
+
+	float lerpedColour = (1.f - (time / totalTime)) * (float)startColour.a + time * (float)endColour.a;
+
+	return lerpedColour;
 }
