@@ -17,6 +17,8 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+    std::cout << _gravity << std::endl;
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -25,12 +27,18 @@ void Ball::update(float dt)
     else
     {
         if (_velocity != VELOCITY)
+        {
             _velocity = VELOCITY;   // reset speed.
+        }
         else
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+        }   
+        if (_gravity != BALL_GRAVITY)
+        {
+            _gravity = BALL_GRAVITY; // reset gravity
+        }
     }
 
     // Fireball effect
@@ -42,7 +50,7 @@ void Ball::update(float dt)
     }
 
     // Gravity
-    _direction.y += BALL_GRAVITY * dt;
+    _direction.y += _gravity * dt;
     // Terminal Speed
     if (_direction.y > BALL_TERMINAL_SPEED_MULTIPLIER) { _direction.y = BALL_TERMINAL_SPEED_MULTIPLIER; }
 
@@ -118,6 +126,9 @@ void Ball::setVelocity(float coeff, float duration)
 {
     _velocity = coeff * VELOCITY;
     _timeWithPowerupEffect = duration;
+
+    // Adjust gravity to compensate
+    _gravity = coeff * BALL_GRAVITY;
 }
 
 void Ball::setFireBall(float duration)
