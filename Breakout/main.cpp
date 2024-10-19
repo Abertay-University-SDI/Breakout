@@ -2,8 +2,13 @@
 #include "GameManager.h"
 #include <iostream>
 
+#ifdef SERVER
+#include "ServerApplication.h"
+#endif
+
 int main()
 {
+#ifndef SERVER
 
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
     GameManager gameManager(&window);
@@ -29,6 +34,12 @@ int main()
         gameManager.render();
         window.display();
     }
+#else
+    
+    ServerApplication serverApp;
+    serverApp.run();
+
+#endif
 
     return 0;
 }

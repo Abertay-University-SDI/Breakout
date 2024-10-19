@@ -1,5 +1,6 @@
 #include "BrickManager.h"
 #include "GameManager.h"
+#include "MathUtils.h"
 
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
@@ -48,8 +49,18 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+
+        sf::Vector2f dir = brick.getPosition() - ballPosition;
+        MathUtils::normalize(dir);
+        brick.nudge(MathUtils::multiplyVF(dir, 2));
+
+        if (brick.reduceHealth() == 0)
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+        }
+
+        _score += 100;
         break;
     }
     if (_bricks.size() == 0)
@@ -57,4 +68,9 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         _gameManager->levelComplete();
     }
     return collisionResponse;
+}
+
+int BrickManager::getScore()
+{
+    return _score;
 }

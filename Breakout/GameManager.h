@@ -7,6 +7,8 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "SFML/Network.hpp"
+#include <functional>
 
 
 
@@ -26,6 +28,8 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void queryLeaderboard();
+    void drawLeaderboard();
 
 private:
     bool _pause;
@@ -46,6 +50,12 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    
+    sf::UdpSocket _udpSocket;
+    bool _waitingForLeaderboard = false;
+    bool _leaderboardReceived = false;
+
+    std::vector<LeaderboardEntry> _leaderboard;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

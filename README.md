@@ -32,4 +32,25 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+> v1.5 [15 minutes]
+> - Added some Math functions for Vector2f manipulation
+> - Bricks now get nudged when hit by the ball
+
+> v1.4 [10 minutes]
+> - Brick Health and changing color based on health
+> - Drawing score on win/lose, until leadeboard is received
+
+> v1.3 [50 minutes]
+> - Drawing leaderboard on client
+> - Moving the server code from main to ServerApplication class
+> - Debugging UdpSocket not receiving data
+
+> v1.2 [60 minutes]
+> - Server Application Prototype
+> - Started Client-side network implementation
+ 
+> v1.1 [55 minutes]
+> - Leaderboard research
+
+> v1.0 [5 mins]
+> - Fixed compilation issue

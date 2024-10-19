@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SFML/Graphics/Color.hpp"
+
 // implemented powerups
 enum POWERUPS
 {
@@ -49,5 +51,15 @@ constexpr int INITIAL_LIVES = 3;
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
+
+// Network settings
+constexpr short SCORE_UPDATE = 121;
+constexpr short SCORE_REQUEST = 122;
+constexpr short SCORE_RESULT = 123;
+
+constexpr unsigned short PORT = 28000;
+constexpr const char SERVER_IP[] = "127.0.0.1";
+
+typedef std::pair<std::string, int> LeaderboardEntry;
 
 

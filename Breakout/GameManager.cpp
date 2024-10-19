@@ -13,6 +13,8 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _udpSocket.setBlocking(false);
 }
 
 void GameManager::initialize()
@@ -26,6 +28,8 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    _udpSocket.bind(PORT, SERVER_IP);
 }
 
 void GameManager::update(float dt)
@@ -37,7 +41,17 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        if (!_leaderboardReceived && !_waitingForLeaderboard)
+        {
+            sf::Packet packet;
+            packet << SCORE_UPDATE;
+            packet << std::string("Name");
+            packet << getBrickManager()->getScore();
+            _udpSocket.send(packet, SERVER_IP, PORT);
+            queryLeaderboard();
+        }
+
+        _masterText.setString(std::string("Game over.\nYour score is: ") + std::to_string(getBrickManager()->getScore()));
         return;
     }
     if (_levelComplete)
@@ -85,6 +99,38 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+
+    if (_waitingForLeaderboard)
+    {
+        sf::Packet receivedPacket;
+        sf::IpAddress address;
+        unsigned short port;
+        if (_udpSocket.receive(receivedPacket, address, port) == sf::Socket::Status::Done)
+        {
+            short messageId;
+            receivedPacket >> messageId;
+
+            if (messageId == SCORE_RESULT)
+            {
+                int size;
+                receivedPacket >> size;
+                
+                _leaderboard.clear();
+                for (int i = 0; i < size; ++i)
+                {
+                    LeaderboardEntry entry;
+                    receivedPacket >> entry.first;
+                    receivedPacket >> entry.second;
+                    _leaderboard.push_back(entry);
+                }
+
+                _waitingForLeaderboard = false;
+                _leaderboardReceived = true;
+                drawLeaderboard();
+            }
+        }
+    }
+    
 }
 
 void GameManager::loseLife()
@@ -115,3 +161,24 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+
+void GameManager::queryLeaderboard()
+{
+    sf::Packet packet;
+    packet << SCORE_REQUEST;
+    _udpSocket.send(packet, sf::IpAddress(), PORT);
+    _waitingForLeaderboard = true;
+    _leaderboardReceived = false;
+}
+
+void GameManager::drawLeaderboard()
+{
+    if (_waitingForLeaderboard || !_leaderboardReceived)
+        return;
+
+    // for now only show the highest score achieved
+    if (_leaderboard.size() > 0)
+    {
+        _masterText.setString(_leaderboard[0].first + std::to_string(_leaderboard[0].second));
+    }
+}
