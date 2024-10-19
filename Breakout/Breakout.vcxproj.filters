@@ -116,6 +116,9 @@
     <ClInclude Include="ServerApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="suggestedIssues.txt" />

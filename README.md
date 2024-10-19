@@ -32,6 +32,10 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
+> v1.5 [15 minutes]
+> - Added some Math functions for Vector2f manipulation
+> - Bricks now get nudged when hit by the ball
+
 > v1.4 [10 minutes]
 > - Brick Health and changing color based on health
 > - Drawing score on win/lose, until leadeboard is received

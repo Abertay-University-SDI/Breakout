@@ -34,6 +34,16 @@ int Brick::reduceHealth()
     return _health;
 }
 
+void Brick::nudge(sf::Vector2f amount)
+{
+    _shape.setPosition(_shape.getPosition() + amount);
+}
+
+sf::Vector2f Brick::getPosition()
+{
+    return _shape.getPosition();
+}
+
 sf::Color Brick::getColorFromHealth(int health)
 {
     switch (health)

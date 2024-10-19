@@ -8,6 +8,8 @@ public:
     sf::FloatRect getBounds() const;
     int getHealth() const;
     int reduceHealth();
+    void nudge(sf::Vector2f amount);
+    sf::Vector2f getPosition();
 
     static sf::Color getColorFromHealth(int health);
 
