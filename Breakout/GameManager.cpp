@@ -38,6 +38,9 @@ GameManager::~GameManager()
 
     delete _inputManager;
     _inputManager = nullptr;
+
+    delete _pauseButtonManager;
+    _pauseButtonManager = nullptr;
 }
 
 void GameManager::initialize()
@@ -49,6 +52,10 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
     _inputManager = new InputManager(_window, _paddle);
+    _pauseButtonManager = new ButtonManager();
+
+    Button* TestButton = new Button(_window, sf::Vector2f(50, 400), sf::Vector2f(100, 50), _font);
+    _pauseButtonManager->AddButton(TestButton);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -90,6 +97,9 @@ void GameManager::update(float dt)
     }
     if (_pause)
     {
+        _pauseButtonManager->update(dt);
+        _pauseButtonManager->render();
+
         return;
     }
 
@@ -108,6 +118,10 @@ void GameManager::update(float dt)
     _ball->update(dt);
     _powerupManager->update(dt);
     _inputManager->update(dt);
+
+    //Debug lines
+    //sf::Vector2i MousePosition = sf::Mouse::getPosition(*_window);
+    //std::cout << MousePosition.x << " " << MousePosition.y << " " << _paddle->getPosition().y << std::endl;
 }
 
 void GameManager::loseLife()

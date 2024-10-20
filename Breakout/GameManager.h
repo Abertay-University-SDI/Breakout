@@ -8,6 +8,7 @@
 #include "MessagingSystem.h"
 #include "UI.h"
 #include "InputManager.h"
+#include "ButtonManager.h"
 
 class GameManager {
 public:
@@ -49,6 +50,7 @@ private:
 
     // New
     InputManager* _inputManager;
+    ButtonManager* _pauseButtonManager;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
