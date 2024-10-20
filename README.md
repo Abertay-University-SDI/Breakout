@@ -33,3 +33,11 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+#bug fix: circular dependancy, fixed. - 10 minutes.
+#added feature: paddle mouse control - 50 minutes.
+#Added feature: Timer added + timer UI - 1 hour
+#Added feature: Brick health - 1 hour
+
+#total time spend: 3 Hours
+
+#Note: Would have done more however, my son is being born tomorrow. 

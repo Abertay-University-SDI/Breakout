@@ -6,7 +6,10 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+
+//circular dependant found - forward decleration used to fix
+//#include "PowerupFireBall.h"
+class PowerupFireBall;
 
 
 class PowerupBase

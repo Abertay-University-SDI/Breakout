@@ -17,16 +17,25 @@ public:
 	void lifeLost(int lives);
 	void render();
 
+	//timer method
+	void timer(float dt);
+	float CurrentTimerValue;
+
+
 private:
 	GameManager* _gameManager;
 	
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+	sf::Text _timerText; //timer text
 
 	std::vector<sf::CircleShape> _lives;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
+
+	//timer variables
+	float MaxTimerValue = 60;
 };
 

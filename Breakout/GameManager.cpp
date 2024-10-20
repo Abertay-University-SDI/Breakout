@@ -33,13 +33,24 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
+
+    //timer logic
+    _ui->timer(dt); //call timer text function
     
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over, lives expired.");
         return;
     }
+
+    //timer game logic
+    if (_ui->CurrentTimerValue <= 0)
+    {
+        _masterText.setString("Game over, time expired.");
+        return;
+    }
+
     if (_levelComplete)
     {
         _masterText.setString("Level completed.");

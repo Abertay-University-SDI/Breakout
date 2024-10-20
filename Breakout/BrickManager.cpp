@@ -42,14 +42,44 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // default vertical bounce (collision is top/bottom)
         collisionResponse = 2;
+
+        //brick health logic
+        if (brick._brickHP > 0)
+        {
+            brick._brickHP -= 50;
+
+            if (brick._brickHP <= 0)
+            {
+                brick._isDestroyed = true;
+            }
+        }
         if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
-            // unless it's horizontal (collision from side)
+        {
             collisionResponse = 1;
+
+            //brick health logic
+            if (brick._brickHP > 0)
+            {
+                brick._brickHP -= 50;
+
+                if (brick._brickHP <= 0)
+                {
+                    brick._isDestroyed = true;
+                }
+            }
+        }
+            // unless it's horizontal (collision from side)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+
+        //break brick logic
+        if (brick._isDestroyed)
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+
+        }
         break;
     }
     if (_bricks.size() == 0)

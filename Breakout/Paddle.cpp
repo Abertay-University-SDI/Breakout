@@ -7,6 +7,9 @@ Paddle::Paddle(sf::RenderWindow* window)
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
     _sprite.setSize(sf::Vector2f(_width, PADDLE_HEIGHT));
+
+    //set cursor invisible
+    window->setMouseCursorVisible(false);
 }
 
 Paddle::~Paddle()
@@ -21,6 +24,7 @@ void Paddle::moveLeft(float dt)
     {
         _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
     }
+
 }
 
 void Paddle::moveRight(float dt)
@@ -31,6 +35,14 @@ void Paddle::moveRight(float dt)
     {
         _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
     }
+
+}
+
+void Paddle::moveViaMouse()
+{
+    _mousePos = sf::Mouse::getPosition();
+    const int _paddleYPos = (_window->getSize().y - PADDLE_HEIGHT) - 10;
+    _sprite.setPosition(_mousePos.x, _paddleYPos);
 }
 
 void Paddle::update(float dt)
@@ -43,6 +55,8 @@ void Paddle::update(float dt)
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
     }
+
+    moveViaMouse();
 }
 
 void Paddle::render()
