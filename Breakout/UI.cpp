@@ -28,7 +28,6 @@ UI::~UI()
 {
 }
 
-
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {
 	std::ostringstream oss;
