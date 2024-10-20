@@ -57,12 +57,12 @@ void InputManager::UpdateMouse(float dt)
 	}
 }
 
-void InputManager::SetMouseInputActive()
+void InputManager::SwapControlScheme()
 {
-	bIsKeyboardInputActive = false;
+	bIsKeyboardInputActive = !bIsKeyboardInputActive;
 }
 
-void InputManager::SetKeyboardInputActive()
+bool InputManager::IsKeyboardInputActive()
 {
-	bIsKeyboardInputActive = true;
+	return bIsKeyboardInputActive;
 }

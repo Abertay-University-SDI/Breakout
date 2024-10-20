@@ -54,7 +54,7 @@ void GameManager::initialize()
     _inputManager = new InputManager(_window, _paddle);
     _pauseButtonManager = new ButtonManager();
 
-    Button* TestButton = new Button(_window, sf::Vector2f(50, 400), sf::Vector2f(100, 50), _font);
+    ControlsButton* TestButton = new ControlsButton(_window, sf::Vector2f(500, 400), sf::Vector2f(250, 75), _font, _inputManager, 20, 12, "Swap Controls");
     _pauseButtonManager->AddButton(TestButton);
 
     // Create bricks
@@ -98,7 +98,6 @@ void GameManager::update(float dt)
     if (_pause)
     {
         _pauseButtonManager->update(dt);
-        _pauseButtonManager->render();
 
         return;
     }
@@ -134,6 +133,10 @@ void GameManager::loseLife()
 
 void GameManager::render()
 {
+    if (_pause)
+    {
+        _pauseButtonManager->render();
+    }
     _paddle->render();
     _ball->render();
     _brickManager->render();

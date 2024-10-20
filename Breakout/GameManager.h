@@ -9,6 +9,7 @@
 #include "UI.h"
 #include "InputManager.h"
 #include "ButtonManager.h"
+#include "ControlsButton.h"
 
 class GameManager {
 public:

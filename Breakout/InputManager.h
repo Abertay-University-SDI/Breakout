@@ -9,9 +9,9 @@ public:
 
 	void update(float dt);
 
-	// Setters
-	void SetMouseInputActive();
-	void SetKeyboardInputActive();
+	void SwapControlScheme();
+
+	bool IsKeyboardInputActive();
 
 private:
 	void UpdateKeyboard(float dt);

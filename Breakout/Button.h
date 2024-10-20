@@ -4,10 +4,10 @@
 class Button
 {
 public:
-	Button(sf::RenderWindow* window, sf::Vector2f buttonPosition, sf::Vector2f buttonSize, sf::Font font, sf::String buttonText = "Button", sf::Color buttonTextColour = sf::Color::Black, sf::Color buttonColour = sf::Color::Cyan);
+	Button(sf::RenderWindow* window, sf::Vector2f buttonPosition, sf::Vector2f buttonSize, sf::Font font, int buttonTextSize = 20, sf::String buttonText = "Button", sf::Color buttonTextColour = sf::Color::Black, sf::Color buttonColour = sf::Color::Cyan);
 
-	void update(float dt);
-	void render();
+	virtual void update(float dt);
+	virtual void render();
 
 	virtual void PressedLogic();
 

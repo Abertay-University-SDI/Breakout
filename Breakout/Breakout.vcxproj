@@ -142,6 +142,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ControlsButton.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp">
@@ -165,6 +166,7 @@
     <ClInclude Include="BrickManager.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CONSTANTS.h" />
+    <ClInclude Include="ControlsButton.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MessagingSystem.h" />
