@@ -7,12 +7,12 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
-
+#include "InputManager.h"
 
 class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
+    ~GameManager();
     void initialize();
     void update(float dt);
     void loseLife();
@@ -46,6 +46,9 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    // New
+    InputManager* _inputManager;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

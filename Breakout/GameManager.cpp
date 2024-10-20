@@ -15,6 +15,31 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setFillColor(sf::Color::Yellow);
 }
 
+GameManager::~GameManager()
+{
+    // Since this class instantiated these classes through the "New" keyword, it also should delete them.
+    delete _paddle;
+    _paddle = nullptr;
+
+    delete _brickManager;
+    _brickManager = nullptr;
+
+    delete _messagingSystem;
+    _messagingSystem = nullptr;
+
+    delete _ball;
+    _ball = nullptr;
+
+    delete _powerupManager;
+    _powerupManager = nullptr;
+
+    delete _ui;
+    _ui = nullptr;
+
+    delete _inputManager;
+    _inputManager = nullptr;
+}
+
 void GameManager::initialize()
 {
     _paddle = new Paddle(_window);
@@ -23,6 +48,7 @@ void GameManager::initialize()
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
+    _inputManager = new InputManager(_window, _paddle);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -77,14 +103,11 @@ void GameManager::update(float dt)
         _timeLastPowerupSpawned = _time;
     }
 
-    // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
-
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _inputManager->update(dt);
 }
 
 void GameManager::loseLife()

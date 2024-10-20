@@ -6,7 +6,9 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+// Bugfix: PowerupFireball class attempting to inherit from a class which doesn't exist yet (PowerupBase), do not need to include this header as no dependancies exist within this class
+// that rely on anything within the PowerupFireball header file.
+//#include "PowerupFireBall.h"
 
 
 class PowerupBase
