@@ -6,7 +6,7 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), bshouldChangeGamestate(false), requiredGamestate(1)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -38,9 +38,6 @@ GameManager::~GameManager()
 
     delete _inputManager;
     _inputManager = nullptr;
-
-    delete _pauseButtonManager;
-    _pauseButtonManager = nullptr;
 }
 
 void GameManager::initialize()
@@ -52,10 +49,6 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
     _inputManager = new InputManager(_window, _paddle);
-    _pauseButtonManager = new ButtonManager();
-
-    ControlsButton* ControlButton = new ControlsButton(_window, sf::Vector2f(500, 400), sf::Vector2f(250, 75), _font, _inputManager, 20, 12, "Swap Controls");
-    _pauseButtonManager->AddButton(ControlButton);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -82,24 +75,11 @@ void GameManager::update(float dt)
     if (_pauseHold > 0.f) _pauseHold -= dt;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
-        if (!_pause && _pauseHold <= 0.f)
+        if (_pauseHold <= 0.f)
         {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
+            bshouldChangeGamestate = true;
+            requiredGamestate = 2;
         }
-        if (_pause && _pauseHold <= 0.f)
-        {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-    }
-    if (_pause)
-    {
-        _pauseButtonManager->update(dt);
-
-        return;
     }
 
     // timer.
@@ -133,10 +113,6 @@ void GameManager::loseLife()
 
 void GameManager::render()
 {
-    if (_pause)
-    {
-        _pauseButtonManager->render();
-    }
     _paddle->render();
     _ball->render();
     _brickManager->render();
@@ -150,8 +126,17 @@ void GameManager::levelComplete()
     _levelComplete = true;
 }
 
+void GameManager::resetPauseBuffer()
+{
+    _pauseHold = PAUSE_TIME_BUFFER;
+    bshouldChangeGamestate = false;
+}
+
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
+InputManager* GameManager::getInputManager() { return _inputManager; }
+bool GameManager::ShouldUpdateGamestate() { return bshouldChangeGamestate; }
+int GameManager::GetRequiredGamestate() { return requiredGamestate; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }

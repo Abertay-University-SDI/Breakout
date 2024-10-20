@@ -21,13 +21,17 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void resetPauseBuffer();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+    InputManager* getInputManager();
 
+    bool ShouldUpdateGamestate();
+    int GetRequiredGamestate();
 
 private:
     bool _pause;
@@ -51,8 +55,10 @@ private:
 
     // New
     InputManager* _inputManager;
-    ButtonManager* _pauseButtonManager;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    bool bshouldChangeGamestate;
+    int requiredGamestate;
 };

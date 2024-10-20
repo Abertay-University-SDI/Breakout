@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
 #include "StartMenu.h"
+#include "PauseMenu.h"
 #include <iostream>
 
 enum Gamestate
@@ -18,6 +19,8 @@ int main()
     gameManager.initialize();
 
     StartMenu startMenu(&window);
+
+    PauseMenu pauseMenu(&window, gameManager.getInputManager());
 
     Gamestate gamestate;
     gamestate = Gamestate::start;
@@ -55,9 +58,22 @@ int main()
         case Gamestate::gameloop:
 
             gameManager.update(deltaTime);
+            if (gameManager.ShouldUpdateGamestate())
+            {
+                bShouldUpdateGamestate = true;
+                RequiredGamestate = gameManager.GetRequiredGamestate();
+            }
 
             break;
         case Gamestate::pause:
+
+            pauseMenu.update(deltaTime);
+            if (pauseMenu.ShouldUpdateGamestate())
+            {
+                bShouldUpdateGamestate = true;
+                RequiredGamestate = pauseMenu.GetRequiredGamestate();
+            }
+
             break;
         }
 
@@ -74,7 +90,7 @@ int main()
             break;
 
         case Gamestate::pause:
-
+            pauseMenu.render();
             break;
         }
         window.display();
@@ -88,15 +104,25 @@ int main()
                 gamestate = Gamestate::start;
                 break;
             case 1:
+                if (gamestate == Gamestate::pause)
+                {
+                    gameManager.resetPauseBuffer();
+                }
                 gamestate = Gamestate::gameloop;
                 break;
             case 2:
+                if (gamestate == Gamestate::gameloop)
+                {
+                    pauseMenu.ResetPauseBuffer();
+                }
                 gamestate = Gamestate::pause;
                 break;
             case 3:
                 gamestate = Gamestate::exitgame;
                 break;
             }
+
+            bShouldUpdateGamestate = false;
         }
     }
 
