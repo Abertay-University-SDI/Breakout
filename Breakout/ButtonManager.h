@@ -8,6 +8,7 @@ class ButtonManager
 {
 public:
 	ButtonManager();
+	~ButtonManager();
 
 	void update(float dt);
 	void render();

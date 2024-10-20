@@ -54,8 +54,8 @@ void GameManager::initialize()
     _inputManager = new InputManager(_window, _paddle);
     _pauseButtonManager = new ButtonManager();
 
-    ControlsButton* TestButton = new ControlsButton(_window, sf::Vector2f(500, 400), sf::Vector2f(250, 75), _font, _inputManager, 20, 12, "Swap Controls");
-    _pauseButtonManager->AddButton(TestButton);
+    ControlsButton* ControlButton = new ControlsButton(_window, sf::Vector2f(500, 400), sf::Vector2f(250, 75), _font, _inputManager, 20, 12, "Swap Controls");
+    _pauseButtonManager->AddButton(ControlButton);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);

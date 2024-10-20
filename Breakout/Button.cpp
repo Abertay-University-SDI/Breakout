@@ -33,8 +33,6 @@ void Button::update(float dt)
 					pressedHoldTimer = pressedHoldStartTime;
 				}
 			}
-
-			std::cout << MousePosition.x << " " << MousePosition.y << " Button Position: " << _buttonPosition.x << " " << _buttonPosition.y << std::endl;
 		}
 	}
 	else

@@ -142,6 +142,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ChangeGamestateButton.cpp" />
     <ClCompile Include="ControlsButton.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="PowerupManager.cpp" />
     <ClCompile Include="PowerupSlowBall.cpp" />
     <ClCompile Include="PowerupSmallPaddle.cpp" />
+    <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +167,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickManager.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="ChangeGamestateButton.h" />
     <ClInclude Include="CONSTANTS.h" />
     <ClInclude Include="ControlsButton.h" />
     <ClInclude Include="GameManager.h" />
@@ -179,6 +182,7 @@
     <ClInclude Include="PowerupManager.h" />
     <ClInclude Include="PowerupSlowBall.h" />
     <ClInclude Include="PowerupSmallPaddle.h" />
+    <ClInclude Include="StartMenu.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
