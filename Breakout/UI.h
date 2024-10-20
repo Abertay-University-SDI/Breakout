@@ -19,6 +19,7 @@ public:
 
 	//timer method
 	void timer(float dt);
+	float CurrentTimerValue;
 
 
 private:
@@ -36,6 +37,5 @@ private:
 
 	//timer variables
 	float MaxTimerValue = 60;
-	float CurrentTimerValue;
 };
 

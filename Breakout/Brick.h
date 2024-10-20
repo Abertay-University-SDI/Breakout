@@ -7,7 +7,10 @@ public:
     void render(sf::RenderWindow& window);
     sf::FloatRect getBounds() const;
 
+    //brick health data
+    float _brickHP;
+    bool _isDestroyed;
+
 private:
     sf::RectangleShape _shape;
-    bool _isDestroyed;
 };
