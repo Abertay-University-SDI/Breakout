@@ -20,7 +20,7 @@ void GameManager::initialize()
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this, _paddle); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
@@ -33,7 +33,7 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
-    
+    _ui->update();
 
     if (_lives <= 0)
     {
@@ -71,15 +71,35 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+      // TODO parameterise
+    if((_ball->getCollisionResponce() == 1 || _ball->getCollisionResponce() == 2))// && _time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand() % 700 == 0)
     {
-        _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        if (rand() % 100 < 30)
+        {
+            _powerupManager->spawnPowerup();
+            _timeLastPowerupSpawned = _time;
+        }
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+    if (sf::Mouse::getPosition().x > 0);
+    {
+        _currentMousePos = sf::Mouse::getPosition().x - _window->getPosition().x;
+        _paddle->movePosition(_currentMousePos, dt);
+    }
+   
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    }
+    
+    if (_ball->getIsStickyBall() == true && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        _ball->setIsStuck(false);
+        _ball->setVelocity(1.f, 5.f);
+    }
+ 
 
     // update everything 
     _paddle->update(dt);
