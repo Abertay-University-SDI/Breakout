@@ -80,7 +80,7 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
@@ -113,4 +113,9 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+int Ball::getCollisionResponce()
+{
+    return collisionResponse;
 }

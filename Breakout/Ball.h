@@ -14,6 +14,7 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    int getCollisionResponce();
 
 private:
     sf::CircleShape _sprite;
@@ -23,6 +24,7 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+    int collisionResponse;
 
     GameManager* _gameManager;  // Reference to the GameManager
 
