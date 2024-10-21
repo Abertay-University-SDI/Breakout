@@ -1,13 +1,14 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, Paddle* paddle)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isStickyBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+    _paddle = paddle;
 }
 
 Ball::~Ball()
@@ -28,6 +29,7 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
+            setStickyBall(0);
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
         }        
     }
@@ -38,6 +40,10 @@ void Ball::update(float dt)
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+    }
+    if (_isStickyBall == true && _isStuck == true)
+    {
+        _sprite.setPosition(sf::Vector2f(_paddle->getPosition().x + (_paddle->getBounds().width / 2), _sprite.getPosition().y));
     }
 
     // Update position with a subtle floating-point error
@@ -70,13 +76,27 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
-        _direction.y *= -1; // Bounce vertically
+        if (_isStickyBall)
+        {
+            _velocity = 0;
+            _direction.y *= -1; // Bounce vertically
+            _isStuck = true;
+            float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+            _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
-        float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+            // Adjust position to avoid getting stuck inside the paddle
+            _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        }
+        if(!_isStickyBall)
+        {
+            _direction.y *= -1; // Bounce vertically
 
-        // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+            float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+            _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+
+            // Adjust position to avoid getting stuck inside the paddle
+            _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        }
     }
 
     // collision with bricks
@@ -115,7 +135,30 @@ void Ball::setFireBall(float duration)
     _timeWithPowerupEffect = 0.f;    
 }
 
+void Ball::setStickyBall(float duration)
+{
+    if (duration)
+    {
+        _isStickyBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+    _isStickyBall = false;
+    _isStuck = false;
+    _timeWithPowerupEffect = 0.f;
+}
+
+bool Ball::getIsStickyBall()
+{
+    return _isStickyBall;
+}
+
 int Ball::getCollisionResponce()
 {
     return collisionResponse;
+}
+
+void Ball::setIsStuck(bool stuck)
+{
+    _isStuck = stuck;
 }

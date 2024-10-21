@@ -34,8 +34,18 @@ fire ball (green)
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
 
+(~15 mins)
 Compiler issue fixed. Issue was a circular dependancy in the powerup baseclass where it had a reference to the
 Fireball class which uses powerup baseclass as its parent. issue was fixed by removing the unnecessary include.
 
+(~1 hour)
 Added mouse controls to the paddle so can now be controlled with either the mouse or the keyboard, if the mouse is over the
 window mouse controls are prioritised, to use keyboard take the mouse away from the window and use keyboard
+
+(~30 minutes)
+Changed powerup drops to be based on bricks broken, everytime the player breaks a brick there is a 30% chance for a powerup
+to spawn.
+
+(~1 and 1/2 hours)
+Implemented a sticky ball powerup allowing the ball to stick to the paddel whilst active and the player to be able
+to shoot the ball with left mouse click or be automatically let go once the timer reaches 0.
