@@ -22,6 +22,15 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	//initialize progress bar
+	_barBackground.setSize(sf::Vector2f(200, 30));
+	_barBackground.setFillColor(sf::Color::White);
+	_barBackground.setPosition(800, 50);
+
+	_barForeground.setSize(sf::Vector2f(200, 30));
+	_barForeground.setFillColor(sf::Color::Cyan);
+	_barForeground.setPosition(800, 50);
 }
 
 UI::~UI()
@@ -32,6 +41,9 @@ UI::~UI()
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {
 	std::ostringstream oss;
+
+	float startingDuration = 5.f;	//assumes all powerups are 5 secs long
+	_barForeground.setSize(sf::Vector2f(200 * (powerup.second / startingDuration), 30));	//makes the foreground of the bar dissappear over time
 
 	switch (powerup.first)
 	{
@@ -62,7 +74,7 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		break;
 	case none:
 		_powerupText.setString("");
-		
+		_barForeground.setSize(sf::Vector2f(0, 30));  //remove bar if there is no powerup
 		break;
 	}
 }
@@ -74,7 +86,14 @@ void UI::lifeLost(int lives)
 
 void UI::render()
 {
-	_window->draw(_powerupText);
+	//draws text and progress bar if there is a powerup currently active (returns false if there is nothing to display so skips)
+	if (!_powerupText.getString().isEmpty())
+	{
+		_window->draw(_powerupText);
+		_window->draw(_barBackground);
+		_window->draw(_barForeground);
+	}
+
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

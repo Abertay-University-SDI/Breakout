@@ -64,18 +64,21 @@ void PowerupManager::spawnPowerup()
         _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
         break;
     case 4:
         _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
         break;
     case 5:
+        //_powerups.push_back(new PowerupBigBall(_window, _paddle, _ball));
+        break;
+    case 6:
        break;
     }
 

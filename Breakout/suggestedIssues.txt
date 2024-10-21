@@ -9,7 +9,6 @@ FIXES:
 * Not resetting a value that should be reset on game start is a classic.
 
 
-
 IMPROVEMENTS:
 
 * Particle system on the bricks being destroyed.
@@ -17,5 +16,3 @@ IMPROVEMENTS:
 * Implement box2D and improve the physics handling.
 
 * Powerup that makes bricks explode, destroying neighbours.
-
-
