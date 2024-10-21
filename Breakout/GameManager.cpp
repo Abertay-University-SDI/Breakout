@@ -19,6 +19,7 @@ void GameManager::initialize()
 {
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
+    _particleManager = new ParticleManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
@@ -85,6 +86,9 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+
+    // Update Particle Effects
+    _particleManager->update(dt);
 }
 
 void GameManager::loseLife()
@@ -100,6 +104,7 @@ void GameManager::render()
     _paddle->render();
     _ball->render();
     _brickManager->render();
+    _particleManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
@@ -115,3 +120,4 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+ParticleManager* GameManager::getParticleManager() const { return _particleManager; }

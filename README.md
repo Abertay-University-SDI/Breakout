@@ -32,4 +32,19 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+Patch Notes:
+- Adjusted ball physics to account for the paddles movement direction
+- Added gravity to the ball
+- Added particle effects to blocks on destroy
+- Fixed bug
+
+Timings:
+- Fixed Bug (15 mins)
+- Adjusted Ball Physics (30 mins)
+- Refined Ball Physics (45 mins)
+- Fix Gravity (30 mins)
+- Added Particles (30 mins)
+- Refactored Particle Code (1 hour)
+- Added Particle Effect Logic (1 hour)
+- Added Lerp to Particles (30 mins)

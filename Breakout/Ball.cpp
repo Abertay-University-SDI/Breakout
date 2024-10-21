@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -24,12 +25,18 @@ void Ball::update(float dt)
     else
     {
         if (_velocity != VELOCITY)
+        {
             _velocity = VELOCITY;   // reset speed.
+        }
         else
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+        }   
+        if (_gravity != BALL_GRAVITY)
+        {
+            _gravity = BALL_GRAVITY; // reset gravity
+        }
     }
 
     // Fireball effect
@@ -39,6 +46,11 @@ void Ball::update(float dt)
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
     }
+
+    // Gravity
+    _direction.y += _gravity * dt;
+    // Terminal Speed
+    if (_direction.y > BALL_TERMINAL_SPEED_MULTIPLIER) { _direction.y = BALL_TERMINAL_SPEED_MULTIPLIER; }
 
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
@@ -72,8 +84,19 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
 
+        // Paddle Proportion
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+        paddlePositionProportion *= 2 - 1;
+
+        // Keep proportion > 0
+        if (paddlePositionProportion < 0) { paddlePositionProportion = 0; }
+
+        // Paddle based ball physics
+        _direction.x = ((_gameManager->getPaddle()->getVelocity() * PADDLE_VELOCITY_MULTIPLIER) + _direction.x) + paddlePositionProportion;
+
+        // Cap direction mutiplier
+        if (_direction.x > BALL_DIRECTION_CAP) { _direction.x = BALL_DIRECTION_CAP; }
+        else if (_direction.x < -BALL_DIRECTION_CAP) { _direction.x = -BALL_DIRECTION_CAP; }
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
@@ -101,6 +124,9 @@ void Ball::setVelocity(float coeff, float duration)
 {
     _velocity = coeff * VELOCITY;
     _timeWithPowerupEffect = duration;
+
+    // Adjust gravity to compensate
+    _gravity = coeff * BALL_GRAVITY;
 }
 
 void Ball::setFireBall(float duration)

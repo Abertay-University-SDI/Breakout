@@ -6,6 +6,7 @@
 #include "BrickManager.h"
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
+#include "ParticleManager.h"
 #include "UI.h"
 
 
@@ -24,6 +25,7 @@ public:
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
+    ParticleManager* getParticleManager() const;
     UI* getUI() const;
 
 
@@ -43,6 +45,7 @@ private:
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;
+    ParticleManager* _particleManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
