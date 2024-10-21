@@ -8,7 +8,12 @@
 #include "MessagingSystem.h"
 #include "UI.h"
 
-
+enum class GameState {
+    Running,
+    Paused,
+    GameOver,
+    LevelComplete
+};
 
 class GameManager {
 public:
@@ -28,6 +33,8 @@ public:
 
     void handlePauseInput();
     void initiateShake(float, float);
+    void resetGame();
+    GameState getGameState() const;
 
 private:
     bool _pause;
@@ -48,6 +55,8 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    GameState _gameState;
 
     // Screen shake variables
     float _shakeDuration;

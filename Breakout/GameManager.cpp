@@ -6,11 +6,6 @@
 #pragma region DEFINE PAUSE
 
 //Improvements to pausing.
-enum class GameState {
-    Running,
-    Paused,
-    Transitioning
-};
 
 GameState _gameState = GameState::Running;
 
@@ -42,21 +37,49 @@ void GameManager::initialize()
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
+void GameManager::resetGame() {
+    _lives = 3;
+    _levelComplete = false;
+    _time = 0.0f;
+    _powerupInEffect = { none, 0.f };
+    _timeLastPowerupSpawned = 0.f;
+
+    _brickManager = new BrickManager(_window, this);
+    _paddle = new Paddle(_window);
+    _ball = new Ball(_window, 400.0f, this);
+    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _ui = new UI(_window, _lives, this);
+    _messagingSystem = new MessagingSystem(_window);
+    _masterText.setString("");
+
+    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _gameState = GameState::Running;
+}
+
+GameState GameManager::getGameState() const {
+    return _gameState;
+}
+
+
 void GameManager::update(float dt)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    /////////////// RESET LOGIC \\\\\\\\\\\\\\\\\
+    //
+    if (_gameState == GameState::GameOver) {
+        _masterText.setString("Game over! Press R to Restart.");
 
-    if (_lives <= 0)
-    {
-        _masterText.setString("Game over.");
-        return;
-    }
-    if (_levelComplete)
-    {
-        _masterText.setString("Level completed.");
+        static float restartTimer = 0.0f;
+        restartTimer += dt;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || restartTimer > 3.0f) {
+            restartTimer = 0.0f;
+            resetGame();
+            _gameState = GameState::Running;
+        }
         return;
     }
 
@@ -67,7 +90,7 @@ void GameManager::update(float dt)
     handlePauseInput();
 
     if (_gameState == GameState::Paused) {
-        return;
+       return;
     }
 
     /////////////// Screen Shake Logic \\\\\\\\\\\\\\\\
@@ -115,6 +138,10 @@ void GameManager::loseLife()
 
     // TODO screen shake.
     initiateShake(0.15f, 0.4f);
+
+    if (_lives <= 0) {
+        _gameState = GameState::GameOver;
+    }
 }
 
 void GameManager::initiateShake(float duration, float intensity) {
