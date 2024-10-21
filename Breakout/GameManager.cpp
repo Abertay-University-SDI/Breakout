@@ -37,6 +37,7 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
+
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
@@ -58,6 +59,8 @@ void GameManager::update(float dt)
         _masterText.setString("Level completed.");
         return;
     }
+
+    /////////////// PAUSE LOGIC \\\\\\\\\\\\\\\\\\
     // pause and pause handling
     if (_pauseHold > 0.f) _pauseHold -= dt;
         
@@ -67,6 +70,24 @@ void GameManager::update(float dt)
         return;
     }
 
+    /////////////// Screen Shake Logic \\\\\\\\\\\\\\\\
+    //Screen shake
+
+    if (_shakeDuration > 0) {
+        _shakeOffset.x = (rand() % 200 - 100) / 100.0f * _shakeIntensity;
+        _shakeOffset.y = (rand() % 200 - 100) / 100.0f * _shakeIntensity;
+
+        _shakeDuration -= dt;
+    }
+    else 
+    {
+        _shakeOffset = { 0.0f, 0.0f };
+    }
+
+    sf::View view = _window->getView();
+    view.setCenter(view.getCenter() + _shakeOffset);
+    _window->setView(view);
+    
     // timer.
     _time += dt;
 
@@ -93,6 +114,12 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+    initiateShake(0.15f, 0.4f);
+}
+
+void GameManager::initiateShake(float duration, float intensity) {
+    _shakeDuration = duration;
+    _shakeIntensity = intensity;
 }
 
 void GameManager::render()

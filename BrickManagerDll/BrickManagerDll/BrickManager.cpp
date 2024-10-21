@@ -6,22 +6,10 @@ BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
 {
 }
 
-/*
-extern "C" {
-    BRICKMANAGER_API BrickManager* CreateBrickManager(sf::RenderWindow* window, GameManager* gameManager) {
-        return new BrickManager(window, gameManager);
-    }
-
-    BRICKMANAGER_API void DestroyBrickManager(BrickManager* brickManager) {
-        delete brickManager;
-    }
-}
-*/
-
 void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
 {
     float leftEdge;
-    if (cols % 2 == 0) 
+    if (cols % 2 == 0)
         leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
     else
         leftEdge = _window->getSize().x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);

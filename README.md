@@ -2,6 +2,9 @@
 
 W Kavanagh. June Summer 2024
 
+# Further fixes and improvements
+S Thomas. 2101106
+
 ## controls
 
 A/D to move the paddle right and left.
@@ -34,4 +37,6 @@ fire ball (green)
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
 
-* Fixed the compiler issues with the PowerupBase.h, by not calling PowerupFireball.h in PowerupBase.h. This took about half an hour of googling and digging around in the output.
+* Fixed the compiler issues with the PowerupBase.h, by not calling PowerupFireball.h in PowerupBase.h. This took about twenty minutes of googling and digging around in the output.
+* Made the pausing more robust by adding a state machine to keep track of the game. Separated the input handling and pausing logic for easier modification in the future. Also added debounce logic to prevent rapid state changes. This took about an hour with research.
+*

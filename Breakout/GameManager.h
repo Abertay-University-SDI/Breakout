@@ -27,6 +27,7 @@ public:
     UI* getUI() const;
 
     void handlePauseInput();
+    void initiateShake(float, float);
 
 private:
     bool _pause;
@@ -47,6 +48,11 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    // Screen shake variables
+    float _shakeDuration;
+    float _shakeIntensity;
+    sf::Vector2f _shakeOffset = { 0.0f, 0.0f };
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
