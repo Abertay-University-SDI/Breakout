@@ -33,3 +33,30 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+21/10/2024
+14:19 repo created
+15:21 Code compiles
+16:08 Mouse implementation
+17:07 Small Ball PowerUp
+17:58 Big Ball PowerUp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

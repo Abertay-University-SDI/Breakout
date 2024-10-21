@@ -3,7 +3,7 @@
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isSmallBall(false), _isBigBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
@@ -23,13 +23,26 @@ void Ball::update(float dt)
     }
     else
     {
+        if (_isBigBall)
+        {
+            setSmallball(0);
+            _sprite.setFillColor(sf::Color::Cyan);
+            _sprite.setRadius(RADIUS);
+        }
+        if (_isSmallBall)
+        {
+            setBigball(0);
+            _sprite.setFillColor(sf::Color::Cyan);
+            _sprite.setRadius(RADIUS);
+        }
         if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+            _velocity = VELOCITY;
         else
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+        }
+
     }
 
     // Fireball effect
@@ -38,6 +51,18 @@ void Ball::update(float dt)
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+    }
+
+    if (_isSmallBall)
+    {
+        _sprite.setFillColor(sf::Color::Magenta);
+        _sprite.setRadius(2.0f);
+    } 
+
+    if (_isBigBall)
+    {
+        _sprite.setFillColor(sf::Color::Magenta);
+        _sprite.setRadius(15.0f);
     }
 
     // Update position with a subtle floating-point error
@@ -113,4 +138,31 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setSmallball(float duration)
+{
+
+    if (duration)
+    {
+        _isSmallBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+
+    _isSmallBall = false;
+    _timeWithPowerupEffect = 0.f;
+}
+
+void Ball::setBigball(float duration)
+{
+    if (duration)
+    {
+        _isBigBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+
+    _isBigBall = false;
+    _timeWithPowerupEffect = 0.f;
 }
