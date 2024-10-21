@@ -33,6 +33,14 @@ void Paddle::moveRight(float dt)
     }
 }
 
+void Paddle::mouseMovement(float dt)
+{
+    sf::Vector2i pos = sf::Mouse::getPosition(*_window);
+    float x = pos.x - _width / 2;
+
+    _sprite.setPosition(x, _sprite.getPosition().y);
+}
+
 void Paddle::update(float dt)
 {
     if (_timeInNewSize > 0)
@@ -43,6 +51,8 @@ void Paddle::update(float dt)
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
     }
+
+    mouseMovement(dt);
 }
 
 void Paddle::render()
