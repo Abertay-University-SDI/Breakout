@@ -1,10 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-
-class GameManager;  // forward declaration
-
-
+class GameManager; 
 
 class Ball {
 public:
@@ -14,6 +11,7 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setSmallball(float duration);
 
 private:
     sf::CircleShape _sprite;
@@ -22,6 +20,7 @@ private:
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
+    bool _isSmallBall;
     float _timeWithPowerupEffect;
 
     GameManager* _gameManager;  // Reference to the GameManager
