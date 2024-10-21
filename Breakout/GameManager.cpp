@@ -33,7 +33,7 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
-    
+    _ui->update();
 
     if (_lives <= 0)
     {
@@ -78,9 +78,19 @@ void GameManager::update(float dt)
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
 
+    if (sf::Mouse::getPosition().x > 0);
+    {
+        _currentMousePos = sf::Mouse::getPosition().x - _window->getPosition().x;
+        _paddle->movePosition(_currentMousePos, dt);
+    }
+   
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    }
+       
+ 
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);

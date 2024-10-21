@@ -36,3 +36,6 @@ fire ball (green)
 
 Compiler issue fixed. Issue was a circular dependancy in the powerup baseclass where it had a reference to the
 Fireball class which uses powerup baseclass as its parent. issue was fixed by removing the unnecessary include.
+
+Added mouse controls to the paddle so can now be controlled with either the mouse or the keyboard, if the mouse is over the
+window mouse controls are prioritised, to use keyboard take the mouse away from the window and use keyboard

@@ -22,6 +22,13 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_testText.setCharacterSize(30);
+	_testText.setPosition(800, 50);
+	_testText.setFillColor(sf::Color::Cyan);
+	_font.loadFromFile("font/montS.ttf");
+	_testText.setFont(_font);
+	
 }
 
 UI::~UI()
@@ -67,6 +74,11 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
+void UI::update()
+{
+	_testText.setString(std::to_string(sf::Mouse::getPosition().x));
+}
+
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
@@ -79,4 +91,5 @@ void UI::render()
 	{
 		_window->draw(life);
 	}
+	_window->draw(_testText);
 }

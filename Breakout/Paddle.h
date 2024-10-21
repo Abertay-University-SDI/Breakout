@@ -9,6 +9,7 @@ public:
     Paddle(sf::RenderWindow* window);
     ~Paddle();
 
+    void movePosition(float mouseXPos, float dt);
     void moveLeft(float dt);
     void moveRight(float dt);
     void update(float dt);
