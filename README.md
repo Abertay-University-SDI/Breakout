@@ -39,4 +39,5 @@ fire ball (green)
 
 * Fixed the compiler issues with the PowerupBase.h, by not calling PowerupFireball.h in PowerupBase.h. This took about twenty minutes of googling and digging around in the output.
 * Made the pausing more robust by adding a state machine to keep track of the game. Separated the input handling and pausing logic for easier modification in the future. Also added debounce logic to prevent rapid state changes. This took about an hour with research.
-*
+* Added screen shaking after the player loses a life. ~thirty minutes
+* Added a game loop and reset to the game manager. ~ hour
