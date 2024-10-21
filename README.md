@@ -33,3 +33,6 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+Compiler issue fixed. Issue was a circular dependancy in the powerup baseclass where it had a reference to the
+Fireball class which uses powerup baseclass as its parent. issue was fixed by removing the unnecessary include.
