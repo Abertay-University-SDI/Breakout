@@ -3,6 +3,14 @@
 #include "PowerupManager.h"
 #include <iostream>
 
+#pragma region DEFINE PAUSE
+
+//Improvements to pausing.
+
+GameState _gameState = GameState::Running;
+
+#pragma endregion
+
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
@@ -24,9 +32,34 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
+
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
+
+void GameManager::resetGame() {
+    _lives = 3;
+    _levelComplete = false;
+    _time = 0.0f;
+    _powerupInEffect = { none, 0.f };
+    _timeLastPowerupSpawned = 0.f;
+
+    _brickManager = new BrickManager(_window, this);
+    _paddle = new Paddle(_window);
+    _ball = new Ball(_window, 400.0f, this);
+    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _ui = new UI(_window, _lives, this);
+    _messagingSystem = new MessagingSystem(_window);
+    _masterText.setString("");
+
+    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _gameState = GameState::Running;
+}
+
+GameState GameManager::getGameState() const {
+    return _gameState;
+}
+
 
 void GameManager::update(float dt)
 {
@@ -34,39 +67,50 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    /////////////// RESET LOGIC \\\\\\\\\\\\\\\\\
+    //
+    if (_gameState == GameState::GameOver) {
+        _masterText.setString("Game over! Press R to Restart.");
 
-    if (_lives <= 0)
-    {
-        _masterText.setString("Game over.");
+        static float restartTimer = 0.0f;
+        restartTimer += dt;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || restartTimer > 3.0f) {
+            restartTimer = 0.0f;
+            resetGame();
+            _gameState = GameState::Running;
+        }
         return;
     }
-    if (_levelComplete)
-    {
-        _masterText.setString("Level completed.");
-        return;
-    }
+
+    /////////////// PAUSE LOGIC \\\\\\\\\\\\\\\\\\
     // pause and pause handling
     if (_pauseHold > 0.f) _pauseHold -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-    {
-        if (!_pause && _pauseHold <= 0.f)
-        {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-        if (_pause && _pauseHold <= 0.f)
-        {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-    }
-    if (_pause)
-    {
-        return;
+        
+    handlePauseInput();
+
+    if (_gameState == GameState::Paused) {
+       return;
     }
 
+    /////////////// Screen Shake Logic \\\\\\\\\\\\\\\\
+    //Screen shake
+
+    if (_shakeDuration > 0) {
+        _shakeOffset.x = (rand() % 200 - 100) / 100.0f * _shakeIntensity;
+        _shakeOffset.y = (rand() % 200 - 100) / 100.0f * _shakeIntensity;
+
+        _shakeDuration -= dt;
+    }
+    else 
+    {
+        _shakeOffset = { 0.0f, 0.0f };
+    }
+
+    sf::View view = _window->getView();
+    view.setCenter(view.getCenter() + _shakeOffset);
+    _window->setView(view);
+    
     // timer.
     _time += dt;
 
@@ -93,6 +137,16 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+    initiateShake(0.15f, 0.4f);
+
+    if (_lives <= 0) {
+        _gameState = GameState::GameOver;
+    }
+}
+
+void GameManager::initiateShake(float duration, float intensity) {
+    _shakeDuration = duration;
+    _shakeIntensity = intensity;
 }
 
 void GameManager::render()
@@ -109,6 +163,34 @@ void GameManager::levelComplete()
 {
     _levelComplete = true;
 }
+
+
+void GameManager::handlePauseInput() 
+{
+    static bool wasPressed = false;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+        if (!wasPressed) {
+            wasPressed = true;
+
+            if (_gameState == GameState::Running && _pauseHold <= 0.0f) {
+                _gameState = GameState::Paused;
+                _masterText.setString("Paused. ");
+                _pauseHold = PAUSE_TIME_BUFFER;
+            }
+            else if (_gameState == GameState::Paused && _pauseHold <= 0.0f) {
+                _gameState = GameState::Running;
+                _masterText.setString("");
+                _pauseHold = PAUSE_TIME_BUFFER;
+            }
+        }
+    }
+    else 
+    {
+        wasPressed = false; //reset the key press
+    }
+}
+
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }

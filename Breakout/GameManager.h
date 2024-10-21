@@ -8,7 +8,12 @@
 #include "MessagingSystem.h"
 #include "UI.h"
 
-
+enum class GameState {
+    Running,
+    Paused,
+    GameOver,
+    LevelComplete
+};
 
 class GameManager {
 public:
@@ -26,6 +31,10 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void handlePauseInput();
+    void initiateShake(float, float);
+    void resetGame();
+    GameState getGameState() const;
 
 private:
     bool _pause;
@@ -46,6 +55,13 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    GameState _gameState;
+
+    // Screen shake variables
+    float _shakeDuration;
+    float _shakeIntensity;
+    sf::Vector2f _shakeOffset = { 0.0f, 0.0f };
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
