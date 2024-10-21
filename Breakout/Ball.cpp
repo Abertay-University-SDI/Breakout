@@ -3,7 +3,7 @@
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isSmallBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isSmallBall(false), _isBigBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
@@ -23,22 +23,27 @@ void Ball::update(float dt)
     }
     else
     {
+        if (_isBigBall)
+        {
+            setSmallball(0);
+            _sprite.setFillColor(sf::Color::Cyan);
+            _sprite.setRadius(RADIUS);
+        }
         if (_isSmallBall)
-        {      
-            setSmallball(0);   
+        {
+            setBigball(0);
             _sprite.setFillColor(sf::Color::Cyan);
             _sprite.setRadius(RADIUS);
         }
         if (_velocity != VELOCITY)
-            _velocity = VELOCITY; 
+            _velocity = VELOCITY;
         else
-        {    
+        {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }   
-        
-    }
+        }
 
+    }
 
     // Fireball effect
     if (_isFireBall)
@@ -52,6 +57,12 @@ void Ball::update(float dt)
     {
         _sprite.setFillColor(sf::Color::Magenta);
         _sprite.setRadius(2.0f);
+    } 
+
+    if (_isBigBall)
+    {
+        _sprite.setFillColor(sf::Color::Magenta);
+        _sprite.setRadius(15.0f);
     }
 
     // Update position with a subtle floating-point error
@@ -140,5 +151,18 @@ void Ball::setSmallball(float duration)
     }
 
     _isSmallBall = false;
+    _timeWithPowerupEffect = 0.f;
+}
+
+void Ball::setBigball(float duration)
+{
+    if (duration)
+    {
+        _isBigBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+
+    _isBigBall = false;
     _timeWithPowerupEffect = 0.f;
 }

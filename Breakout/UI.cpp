@@ -65,6 +65,11 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setString("small " + oss.str());
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
+	case bigBall:
+		oss << std::fixed << std::setprecision(2) << powerup.second;
+		_powerupText.setString("big " + oss.str());
+		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
 		

@@ -12,6 +12,7 @@ public:
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
     void setSmallball(float duration);
+    void setBigball(float duration);
 
 private:
     sf::CircleShape _sprite;
@@ -21,6 +22,7 @@ private:
     bool _isAlive;
     bool _isFireBall;
     bool _isSmallBall;
+    bool _isBigBall;
     float _timeWithPowerupEffect;
 
     GameManager* _gameManager;  // Reference to the GameManager
