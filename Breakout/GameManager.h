@@ -26,6 +26,7 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void handlePauseInput();
 
 private:
     bool _pause;

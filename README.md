@@ -17,7 +17,7 @@ fire ball (green)
 
 ## Suggested fixes
 
-* Fix the compiler issues in the code
+---------------* Fix the compiler issues in the code -----------
 
 ## Suggested tasks
 
@@ -33,3 +33,5 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+* Fixed the compiler issues with the PowerupBase.h, by not calling PowerupFireball.h in PowerupBase.h. This took about half an hour of googling and digging around in the output.

@@ -3,6 +3,19 @@
 #include "PowerupManager.h"
 #include <iostream>
 
+#pragma region DEFINE PAUSE
+
+//Improvements to pausing.
+enum class GameState {
+    Running,
+    Paused,
+    Transitioning
+};
+
+GameState _gameState = GameState::Running;
+
+#pragma endregion
+
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
@@ -47,23 +60,10 @@ void GameManager::update(float dt)
     }
     // pause and pause handling
     if (_pauseHold > 0.f) _pauseHold -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-    {
-        if (!_pause && _pauseHold <= 0.f)
-        {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-        if (_pause && _pauseHold <= 0.f)
-        {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-    }
-    if (_pause)
-    {
+        
+    handlePauseInput();
+
+    if (_gameState == GameState::Paused) {
         return;
     }
 
@@ -109,6 +109,34 @@ void GameManager::levelComplete()
 {
     _levelComplete = true;
 }
+
+
+void GameManager::handlePauseInput() 
+{
+    static bool wasPressed = false;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+        if (!wasPressed) {
+            wasPressed = true;
+
+            if (_gameState == GameState::Running && _pauseHold <= 0.0f) {
+                _gameState = GameState::Paused;
+                _masterText.setString("Paused. ");
+                _pauseHold = PAUSE_TIME_BUFFER;
+            }
+            else if (_gameState == GameState::Paused && _pauseHold <= 0.0f) {
+                _gameState = GameState::Running;
+                _masterText.setString("");
+                _pauseHold = PAUSE_TIME_BUFFER;
+            }
+        }
+    }
+    else 
+    {
+        wasPressed = false; //reset the key press
+    }
+}
+
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
