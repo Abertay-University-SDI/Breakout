@@ -2,6 +2,7 @@
 #include "Ball.h"
 #include "PowerupManager.h"
 #include <iostream>
+#include "powerbase.h"
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
