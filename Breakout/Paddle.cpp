@@ -2,7 +2,7 @@
 #include <iostream>
 
 Paddle::Paddle(sf::RenderWindow* window)
-    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
+    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true), _usingMouseInput(false)
 {
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
@@ -29,8 +29,28 @@ void Paddle::moveRight(float dt)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
     {
-        _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
+       _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
     }
+}
+
+void Paddle::handleInput(float dt)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
+    {
+        _usingMouseInput = !_usingMouseInput;
+    }
+
+    if (_usingMouseInput)
+    {
+        mousePositionInput(dt);
+    }
+    else
+    {
+
+        moveLeft(dt);
+        moveRight(dt);
+    }
+
 }
 
 void Paddle::update(float dt)
@@ -43,6 +63,11 @@ void Paddle::update(float dt)
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
     }
+}
+
+void Paddle::mousePositionInput(float dt)
+{
+    _sprite.setPosition(sf::Vector2f(sf::Mouse::getPosition(*_window).x, _sprite.getPosition().y));
 }
 
 void Paddle::render()

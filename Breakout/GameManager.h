@@ -19,7 +19,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
-
+    void addScore(int score);
+    int getScore();
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
@@ -34,6 +35,9 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    int _currentLevel;
+    int _score;
+
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
