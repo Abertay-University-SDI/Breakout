@@ -20,14 +20,18 @@ GameManager::GameManager(sf::RenderWindow* window)
     _scoreText.setCharacterSize(48);
     _scoreText.setFillColor(sf::Color::Blue);
     _scoreText.setString("Score : " + std::to_string(_score));
+
+    //sf::Shader shader;
+    //shader.loadFromFile();
 }
 
 void GameManager::initialize()
 {
+
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this);
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 

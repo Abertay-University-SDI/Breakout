@@ -49,11 +49,15 @@ void Paddle::update(float dt)
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
+        _sprite.setFillColor(sf::Color::Red);
     }
     else
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
+        _sprite.setFillColor(sf::Color::Cyan);
     }
+
+
 }
 
 void Paddle::render()

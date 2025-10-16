@@ -23,7 +23,7 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
 
-	_timerBar.setPosition(800, 30);
+	_timerBar.setPosition(800, 55);
 	_timerBar.setFillColor(sf::Color::Cyan);
 	_timerBar.setSize(sf::Vector2f(0, 55));
 	_timerBar.setOrigin(_timerBar.getOrigin());
@@ -84,8 +84,8 @@ void UI::lifeLost(int lives)
 
 void UI::render()
 {
-	_window->draw(_powerupText);
 	_window->draw(_timerBar);
+	_window->draw(_powerupText);
 
 	for (sf::CircleShape life : _lives)
 	{

@@ -14,9 +14,14 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void addTrailEffect();
 
 private:
     sf::CircleShape _sprite;
+    sf::CircleShape _spriteTrail[3]; //////
+    int _seperationDist;    //////
+    std::vector<sf::Vector2f> ballPosVisited;   //////
+
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
