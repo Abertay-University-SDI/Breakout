@@ -6,13 +6,20 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _score(0), _prevScore(_score)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    
+    _scoreText.setFont(_font);
+    _scoreText.setPosition(50, 300);
+    _scoreText.setCharacterSize(48);
+    _scoreText.setFillColor(sf::Color::Blue);
+    _scoreText.setString("Score : " + std::to_string(_score));
 }
 
 void GameManager::initialize()
@@ -34,6 +41,11 @@ void GameManager::update(float dt, sf::RenderWindow* window)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    if (_score != _prevScore)
+    {
+        _scoreText.setString("Score : " + std::to_string(_score));
+        _prevScore = _score;
+    }
 
     if (_lives <= 0)
     {
@@ -103,6 +115,7 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+    _window->draw(_scoreText);
     _ui->render();
 }
 
