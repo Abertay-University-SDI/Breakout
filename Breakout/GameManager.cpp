@@ -6,21 +6,32 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _score(0), _prevScore(_score)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    
+    _scoreText.setFont(_font);
+    _scoreText.setPosition(50, 300);
+    _scoreText.setCharacterSize(48);
+    _scoreText.setFillColor(sf::Color::Blue);
+    _scoreText.setString("Score : " + std::to_string(_score));
+
+    //sf::Shader shader;
+    //shader.loadFromFile();
 }
 
 void GameManager::initialize()
 {
+
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this);
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
@@ -28,12 +39,17 @@ void GameManager::initialize()
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
-void GameManager::update(float dt)
+void GameManager::update(float dt, sf::RenderWindow* window)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    if (_score != _prevScore)
+    {
+        _scoreText.setString("Score : " + std::to_string(_score));
+        _prevScore = _score;
+    }
 
     if (_lives <= 0)
     {
@@ -80,6 +96,7 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) _paddle->moveMouse(dt, sf::Mouse::getPosition(*window).x);
 
     // update everything 
     _paddle->update(dt);
@@ -102,6 +119,7 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+    _window->draw(_scoreText);
     _ui->render();
 }
 

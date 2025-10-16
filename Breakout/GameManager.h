@@ -14,7 +14,7 @@ class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
     void initialize();
-    void update(float dt);
+    void update(float dt, sf::RenderWindow* window);
     void loseLife();
     void render();
     void levelComplete();
@@ -26,6 +26,7 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    int _score;
 
 private:
     bool _pause;
@@ -34,10 +35,13 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    int _prevScore;
+    
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _scoreText;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;

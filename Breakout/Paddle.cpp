@@ -5,7 +5,8 @@ Paddle::Paddle(sf::RenderWindow* window)
     : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
 {
     _sprite.setFillColor(sf::Color::Cyan);
-    _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
+    yPos = window->getSize().y - 50.0f;
+    _sprite.setPosition((window->getSize().x - _width) / 2.0f, yPos);
     _sprite.setSize(sf::Vector2f(_width, PADDLE_HEIGHT));
 }
 
@@ -33,16 +34,30 @@ void Paddle::moveRight(float dt)
     }
 }
 
+void Paddle::moveMouse(float dt, float mouseX)
+{
+    float position = _sprite.getPosition().x;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && position < _window->getSize().x - _width && position > 0)
+    {
+        _sprite.setPosition(mouseX, yPos);
+    }
+}
+
 void Paddle::update(float dt)
 {
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
+        _sprite.setFillColor(sf::Color::Red);
     }
     else
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
+        _sprite.setFillColor(sf::Color::Cyan);
     }
+
+
 }
 
 void Paddle::render()

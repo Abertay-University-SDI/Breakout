@@ -3,11 +3,18 @@
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _seperationDist(50)  //////
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    int i = 0;
+    for (auto& spriteT : _spriteTrail)  //////
+    {
+        spriteT.setRadius(RADIUS - i);
+        spriteT.setFillColor(sf::Color::Green);
+    }
 }
 
 Ball::~Ball()
@@ -90,11 +97,19 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+
+    addTrailEffect();   //////
 }
 
 void Ball::render()
 {
+
+    for (auto& spriteT : _spriteTrail)  //////
+    {
+        _window->draw(spriteT);
+    }
     _window->draw(_sprite);
+
 }
 
 void Ball::setVelocity(float coeff, float duration)
@@ -113,4 +128,28 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::addTrailEffect() /////
+{
+    ballPosVisited.insert(ballPosVisited.begin(), _sprite.getPosition());
+
+    int maxHistorySize = ((std::end(_spriteTrail) - std::begin(_spriteTrail)) * _seperationDist) + 1;
+    if (ballPosVisited.size() > maxHistorySize)
+    {
+        ballPosVisited.pop_back();	
+    }
+
+    int i = 0;
+
+    for (auto spriteT : _spriteTrail)
+    {
+        int framesBehind = (i + 1) * _seperationDist;
+        if (framesBehind < ballPosVisited.size())
+        {
+            _spriteTrail[i].setPosition(ballPosVisited[framesBehind]);
+        }
+        ++i;
+    }	
+
 }

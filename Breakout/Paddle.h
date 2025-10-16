@@ -11,6 +11,8 @@ public:
 
     void moveLeft(float dt);
     void moveRight(float dt);
+    void moveMouse(float dt, float mouseX);
+
     void update(float dt);
     void render();
     sf::FloatRect getBounds() const;
@@ -24,4 +26,5 @@ private:
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    float yPos;
 };
