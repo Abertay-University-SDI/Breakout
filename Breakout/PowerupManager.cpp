@@ -56,29 +56,43 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
+    //Adele Addition: Powerups now have a chance to give two powerups at once
+
 
     // TODO finish this.
-    switch (rand() % 5)
-    {
-    case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
-        break;
-    case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
-        break;
-    case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
-        break;
-    case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
-        break;
-    case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
-        break;
-    case 5:
-       break;
-    }
+    //Temp variable to count current amount of powerups in the same one
+    int powerupsToAssign = 1;
 
+    int powerupsTotal = 1;
+
+    while (powerupsToAssign > 0) {
+
+        switch (rand() % 5 + maxPowerupsAtOnce - powerupsTotal)
+        {
+        case 0:
+            _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
+            break;
+        case 1:
+            _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+            break;
+        case 2:
+            _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+            break;
+        case 3:
+            _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+            break;
+        case 4:
+            _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
+            break;
+        default:
+            powerupsTotal += 1;
+            //Increase by 2 to counter the reduction by 1, effectively increasing the number by 1
+            powerupsToAssign += 2;
+           break;
+        }
+
+        powerupsToAssign--;
+    }
 }
 
 void PowerupManager::checkCollision()

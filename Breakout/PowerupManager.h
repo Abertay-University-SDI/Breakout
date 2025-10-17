@@ -32,4 +32,6 @@ private:
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+
+    int maxPowerupsAtOnce = 3;
 };
