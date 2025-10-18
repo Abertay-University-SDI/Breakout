@@ -6,13 +6,19 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _audioManager(nullptr)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _scoreText.setFont(_font);
+    _scoreText.setPosition(700, 20);
+    _scoreText.setCharacterSize(48);
+    _scoreText.setFillColor(sf::Color::White);
+    _scoreText.setString("Score: 0");
 }
 
 void GameManager::initialize()
@@ -22,6 +28,7 @@ void GameManager::initialize()
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _audioManager = new AudioManager();
     _ui = new UI(_window, _lives, this);
 
     // Create bricks
@@ -78,8 +85,18 @@ void GameManager::update(float dt)
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            _paddle->moveRight(dt*2);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+            _paddle->moveLeft(dt*2);
+    }
+    else {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            _paddle->moveRight(dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+            _paddle->moveLeft(dt);
+    }
 
     // update everything 
     _paddle->update(dt);
@@ -102,6 +119,7 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+    _window->draw(_scoreText);
     _ui->render();
 }
 
@@ -112,6 +130,14 @@ void GameManager::levelComplete()
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
+void GameManager::addScore(int scoreToAdd)
+{
+    score += scoreToAdd;
+    _scoreText.setString("Score: " + std::to_string(score));
+}
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+
+AudioManager* GameManager::getAudioManager() const { return _audioManager; }
+

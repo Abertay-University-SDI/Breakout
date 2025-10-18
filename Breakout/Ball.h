@@ -26,6 +26,8 @@ private:
 
     GameManager* _gameManager;  // Reference to the GameManager
 
+    float currentSoundPitch;
+    float pitchIncrement;
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.

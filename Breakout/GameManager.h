@@ -5,6 +5,7 @@
 #include "Ball.h"
 #include "BrickManager.h"
 #include "PowerupManager.h"
+#include "AudioManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
 
@@ -20,9 +21,12 @@ public:
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
 
+    void addScore(int scoreToAdd);
+
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
+    AudioManager* getAudioManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
@@ -34,10 +38,13 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    int score;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _scoreText;
+    sf::Text _leaderboardText;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -45,6 +52,7 @@ private:
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
+    AudioManager* _audioManager;
     UI* _ui;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;

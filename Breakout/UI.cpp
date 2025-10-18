@@ -18,10 +18,18 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 		_lives.push_back(newLife);
 	}
 	_powerupText.setCharacterSize(30);
-	_powerupText.setPosition(800, 10);
+	_powerupText.setPosition(425, 10);
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_powerupTimerBG.setPosition(350, 50);
+	_powerupTimerBG.setSize(sf::Vector2f(250, 20));
+	_powerupTimerBG.setFillColor(sf::Color::Transparent);
+
+	_powerupTimer.setPosition(355, 55);
+	_powerupTimer.setSize(sf::Vector2f(240, 10));
+	_powerupTimer.setFillColor(sf::Color::Transparent);
 }
 
 UI::~UI()
@@ -31,38 +39,47 @@ UI::~UI()
 
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {
-	std::ostringstream oss;
-
 	switch (powerup.first)
 	{
 	case bigPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("big " + oss.str());
+		_powerupText.setString("big");
 		_powerupText.setFillColor(paddleEffectsColour);
+		_powerupTimerBG.setFillColor(paddleEffectsColour);
+		_powerupTimer.setSize(sf::Vector2f(240.0f * (powerup.second / 5.0f), 10.0f));
+		_powerupTimer.setFillColor(sf::Color::Black);
 		break;
 	case smallPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("small " + oss.str());
+		_powerupText.setString("small");
 		_powerupText.setFillColor(paddleEffectsColour);
+		_powerupTimerBG.setFillColor(paddleEffectsColour);
+		_powerupTimer.setSize(sf::Vector2f(240.0f * (powerup.second / 5.0f), 10.0f));
+		_powerupTimer.setFillColor(sf::Color::Black);
 		break;
 	case slowBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("slow " + oss.str());
+		_powerupText.setString("slow");
 		_powerupText.setFillColor(ballEffectsColour);
+		_powerupTimerBG.setFillColor(ballEffectsColour);
+		_powerupTimer.setSize(sf::Vector2f(240.0f * (powerup.second / 5.0f), 10.0f));
+		_powerupTimer.setFillColor(sf::Color::Black);
 		break;
 	case fastBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fast " + oss.str());
+		_powerupText.setString("fast");
 		_powerupText.setFillColor(ballEffectsColour);
+		_powerupTimerBG.setFillColor(ballEffectsColour);
+		_powerupTimer.setSize(sf::Vector2f(240.0f * (powerup.second / 5.0f), 10.0f));
+		_powerupTimer.setFillColor(sf::Color::Black);
 		break;
 	case fireBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fire " + oss.str());
+		_powerupText.setString("fire");
 		_powerupText.setFillColor(extraBallEffectsColour);
+		_powerupTimerBG.setFillColor(extraBallEffectsColour);
+		_powerupTimer.setSize(sf::Vector2f(240.0f * (powerup.second / 5.0f), 10.0f));
+		_powerupTimer.setFillColor(sf::Color::Black);
 		break;
 	case none:
 		_powerupText.setString("");
-		
+		_powerupTimer.setFillColor(sf::Color::Transparent);
+		_powerupTimerBG.setFillColor(sf::Color::Transparent);
 		break;
 	}
 }
@@ -75,6 +92,8 @@ void UI::lifeLost(int lives)
 void UI::render()
 {
 	_window->draw(_powerupText);
+	_window->draw(_powerupTimerBG);
+	_window->draw(_powerupTimer);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

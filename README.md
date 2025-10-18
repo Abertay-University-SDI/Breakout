@@ -33,3 +33,8 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+- Added an Audio manager class.
+- Added a Sound effect class.
+- Implemented a bounce sound for when the ball hits stuff, its pitch will increase with every bounce until it hits the paddle where its pitch will be reset.
+- Added a progress bar for powerups
+- Implemented a simple dash for the paddle

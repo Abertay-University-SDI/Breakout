@@ -8,6 +8,9 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    currentSoundPitch = 1.0f;
+    pitchIncrement = 0.1f;
 }
 
 Ball::~Ball()
@@ -51,12 +54,18 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _gameManager->getAudioManager()->playSound("Bounce");
+        _gameManager->getAudioManager()->adjustPitch("Bounce", currentSoundPitch);
+        if (currentSoundPitch <= 2.2f) { currentSoundPitch += pitchIncrement; }
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _gameManager->getAudioManager()->playSound("Bounce");
+        _gameManager->getAudioManager()->adjustPitch("Bounce", currentSoundPitch);
+        if (currentSoundPitch <= 2.2f) { currentSoundPitch += pitchIncrement; }
     }
 
     // lose life bounce
@@ -77,6 +86,11 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        _gameManager->getAudioManager()->playSound("Bounce");
+        _gameManager->getAudioManager()->adjustPitch("Bounce", 1);
+        currentSoundPitch = 1.0f;
+        currentSoundPitch += pitchIncrement;
     }
 
     // collision with bricks
@@ -85,10 +99,22 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+
+        _gameManager->addScore(10);
+
+        _gameManager->getAudioManager()->playSound("Bounce");
+        _gameManager->getAudioManager()->adjustPitch("Bounce", currentSoundPitch);
+        if (currentSoundPitch <= 2.2f) { currentSoundPitch += pitchIncrement; }
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+
+        _gameManager->addScore(10);
+
+        _gameManager->getAudioManager()->playSound("Bounce");
+        _gameManager->getAudioManager()->adjustPitch("Bounce", currentSoundPitch);
+        if (currentSoundPitch <= 2.2f) { currentSoundPitch += pitchIncrement; }
     }
 }
 
