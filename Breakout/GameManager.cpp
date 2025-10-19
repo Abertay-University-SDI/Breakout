@@ -30,6 +30,8 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
+    _ui->updateShake();
+
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
@@ -71,7 +73,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand() % POWERUP_SPAWN_CHANCE == 0)      // TODO parameterise
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -93,6 +95,8 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+    _ui->setIsShaking(true);
+    _ui->startShake(10.0f, 0.5f);
 }
 
 void GameManager::render()
