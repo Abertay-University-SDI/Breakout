@@ -32,9 +32,7 @@ R Booth - October 2025
 
 # Time Details and Changelist
 
-## Time Spent:
-
-### 2.5 hours (Approx.)
+## Time Spent: 2.5 hours (Approx.)
 
 ## Changelists:
 
