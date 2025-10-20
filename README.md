@@ -32,10 +32,10 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-Fixed Compiler error where project would not build. due to a Circular dependency.  - 10 Minutes
+Fixed Compiler error where project would not build. due to a Circular dependency.  - 20 Minutes
 Added a ping effect when the ball hits a birck. the pitch for this sound is increased with every hit and reset when the ball hits the padel - 1 Hour
 
 Removed includes int Ball.h and replaced them with forward declearations to avoid Circular dependency and Added a view object - 20 Minutes
-Created an effect where when a ball hits a brick the screen shakes slightly. - 30 Minutes
+Created an effect where when a ball hits a brick the screen shakes slightly.  - 40 Minutes
 Created an effect where when a ball hits the players, the paddle will flicker - 30 Minutes
 
