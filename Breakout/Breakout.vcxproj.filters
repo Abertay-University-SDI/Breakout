@@ -63,6 +63,18 @@
     <ClCompile Include="PowerupFireBall.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
+    <ClCompile Include="SoundObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerupFastPaddle.cpp">
+      <Filter>Powerups</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h">
@@ -108,6 +120,18 @@
       <Filter>Powerups</Filter>
     </ClInclude>
     <ClInclude Include="PowerupFireBall.h">
+      <Filter>Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerupFastPaddle.h">
       <Filter>Powerups</Filter>
     </ClInclude>
   </ItemGroup>

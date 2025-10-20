@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "AudioManager.h"
 
 
 class GameManager;  // forward declaration
@@ -14,6 +15,7 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    float getBounceNum();
 
 private:
     sf::CircleShape _sprite;
@@ -23,6 +25,8 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+
+    float bounceNum = 0.0f;
 
     GameManager* _gameManager;  // Reference to the GameManager
 

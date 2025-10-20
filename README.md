@@ -32,4 +32,12 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Time Taken: 4 hours
+
+Tasks done:
+* Fixed compiler issue
+* Added audio manager that allows for both music and sound effects to be played
+* added background music
+* added sound effects for: bounces(that change pitch), breaking bricks, loosing life
+* added screen shake function allowing for use in both hitting bricks and when taking damage
+* added new power-up that increases the speed of the paddle

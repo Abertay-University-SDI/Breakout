@@ -2,8 +2,13 @@
 #include "Ball.h"
 #include "PowerupManager.h"
 #include <iostream>
+#include <chrono>
+#include <thread>
 
-GameManager::GameManager(sf::RenderWindow* window)
+using namespace std::this_thread;
+using namespace std::chrono;
+
+GameManager::GameManager(sf::RenderWindow* window, AudioManager* audioManager)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
@@ -13,6 +18,15 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    audio = audioManager;
+
+    audio->addMusic("sfx/BackgroundMusic.wav","music");
+    audio->addSound("sfx/beep.ogg", "beep");
+    audio->addSound("sfx/break.ogg", "break");
+    audio->addSound("sfx/damage.ogg", "damage");
+
+    audio->getSound("break")->setVolume(20);
 }
 
 void GameManager::initialize()
@@ -34,16 +48,24 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    if (audio->getMusic()->getStatus() == sf::SoundSource::Stopped)
+    {
+        audio->playMusicbyName("music");
+    }
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
-        return;
+        _masterText.setString("Game over. Press enter to Exit");
+        audio->stopMusic();
+        audio->stopAllSounds();
+        return;        
+        
     }
     if (_levelComplete)
-    {
-        _masterText.setString("Level completed.");
-        return;
+    {  
+
+       return;
+        
     }
     // pause and pause handling
     if (_pauseHold > 0.f) _pauseHold -= dt;
@@ -71,7 +93,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%spawnChance == 0)      // TODO parameterise
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -80,6 +102,30 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+    //for shaking camera
+    if (shaking)
+    {
+        sf::View view = _window->getView();
+        if (shakeDuration > 0)
+        {
+            float offsetX = rand() % shakeX;
+            float offsetY = rand() % shakeY;
+
+           
+            view.setCenter(originalViewX + offsetX, originalViewY + offsetY);
+            _window->setView(view);
+
+            shakeDuration -= shakeFade * dt;
+            
+        }
+        else
+        {
+            shaking = false;
+            view.setCenter(originalViewX, originalViewY);
+            _window->setView(view);
+        }
+    }
 
     // update everything 
     _paddle->update(dt);
@@ -91,7 +137,8 @@ void GameManager::loseLife()
 {
     _lives--;
     _ui->lifeLost(_lives);
-
+    audio->playSoundbyName("damage");
+    shakeCamera(2, 50,50,5);
     // TODO screen shake.
 }
 
@@ -108,6 +155,17 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::shakeCamera(float duration, int x, int y, float fade)
+{
+    shaking = true;
+    shakeDuration = duration;
+    shakeX = x;
+    shakeY = y;
+    shakeFade = fade;
+    originalViewX = _window->getView().getCenter().x;
+    originalViewY = _window->getView().getCenter().y;
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

@@ -16,6 +16,7 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -51,12 +52,18 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _gameManager->audio->getSound("beep")->setPitch(bounceNum);
+        _gameManager->audio->playSoundbyName("beep");
+        bounceNum++;
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _gameManager->audio->getSound("beep")->setPitch(bounceNum);
+        _gameManager->audio->playSoundbyName("beep");
+        bounceNum++;
     }
 
     // lose life bounce
@@ -77,6 +84,9 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        
+        _gameManager->audio->getSound("beep")->setPitch(bounceNum);
+        _gameManager->audio->playSoundbyName("beep");
     }
 
     // collision with bricks
@@ -85,10 +95,17 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        bounceNum++;
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+        bounceNum++;
+    }
+
+    if (bounceNum > 1)
+    {
+        bounceNum -= dt;
     }
 }
 
@@ -113,4 +130,9 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+float Ball::getBounceNum()
+{
+    return bounceNum;
 }

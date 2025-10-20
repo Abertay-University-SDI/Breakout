@@ -50,6 +50,10 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
         _bricks.pop_back();
+        _gameManager->shakeCamera(0.1,10,10,10);
+        _gameManager->audio->playSoundbyName("break");
+        _gameManager->audio->playSoundbyName("beep");
+        
         break;
     }
     if (_bricks.size() == 0)
