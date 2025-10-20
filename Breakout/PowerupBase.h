@@ -6,7 +6,8 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+// not needed, will confuse complier
+// #include "PowerupFireBall.h"
 
 
 class PowerupBase

@@ -26,15 +26,32 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 void BrickManager::render()
 {
     for (auto& brick : _bricks) {
+
         brick.render(*_window);
+
+        // 
+        if (brick.isBrickDestroyed()) {
+            brick = _bricks.back();
+            _bricks.pop_back();
+            break;
+        }
+        else if (brick.isDestructing) {
+            brick.burnOutBrick();
+        }
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+// ideally we would create an enum to identify the state of the ball upon collision with brick 
+int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction, bool onFire)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
+        // if ball has active fire powerup
+        if (onFire) {
+            brick.isDestructing = true;
+            continue;
+        }
 
         sf::Vector2f ballPosition = ball.getPosition();
         float ballY = ballPosition.y + 0.5f * ball.getGlobalBounds().height;
@@ -48,8 +65,10 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+        //brick = _bricks.back();
+        //_bricks.pop_back();
+
+        brick.setIsDestroyed(true);
         break;
     }
     if (_bricks.size() == 0)

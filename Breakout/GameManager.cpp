@@ -13,6 +13,11 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _menuText.setFont(_font);
+    _menuText.setPosition(50, 450);
+    _menuText.setCharacterSize(36);
+    _menuText.setFillColor(sf::Color::White);
 }
 
 void GameManager::initialize()
@@ -37,12 +42,16 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        //_masterText.setString("Game over.");
+        state = Game_Over;
+        _menu(state);
         return;
     }
     if (_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        //_masterText.setString("Level completed.");
+        state = Level_Complete;
+        _menu(state);
         return;
     }
     // pause and pause handling
@@ -52,7 +61,7 @@ void GameManager::update(float dt)
         if (!_pause && _pauseHold <= 0.f)
         {
             _pause = true;
-            _masterText.setString("paused.");
+            //_masterText.setString("paused.");
             _pauseHold = PAUSE_TIME_BUFFER;
         }
         if (_pause && _pauseHold <= 0.f)
@@ -60,10 +69,14 @@ void GameManager::update(float dt)
             _pause = false;
             _masterText.setString("");
             _pauseHold = PAUSE_TIME_BUFFER;
+            state = Started;
+            _menu(state);
         }
     }
     if (_pause)
     {
+        state = Paused;
+        _menu(state);
         return;
     }
 
@@ -102,12 +115,56 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+    _window->draw(_menuText);
     _ui->render();
 }
 
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::_menu(GameState currentState) {
+    switch (currentState) {
+    case(Level_Complete):
+        _masterText.setString("Level completed.");
+        break;
+    case(Game_Over):
+        _masterText.setString("Game over.");
+        break;
+    case(Paused):
+        _masterText.setString("Paused");
+        break;
+    case(Started):
+        _masterText.setString("");
+        _menuText.setString("");
+        return;
+    }
+
+    _menuText.setString("Press 'Q' to quit or 'R' to reset");
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) _window->close();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) _resetGame();
+}
+
+void GameManager::_resetGame() {
+
+    // clearing up pointer references (could use smart pointers instead)
+    delete _paddle;
+    delete _brickManager;
+    delete _messagingSystem;
+    delete _ball;
+    delete _powerupManager;
+    delete _ui;
+
+    // resetting variables
+    _levelComplete = false;
+    _pause = false;
+    _lives = 3;
+    state = Started;
+    _masterText.setString("");
+    _menuText.setString("");
+
+    initialize();
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

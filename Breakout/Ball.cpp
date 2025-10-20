@@ -8,6 +8,7 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+    //_sprite.setOrigin(_sprite.getRadius(), _sprite.getRadius());
 }
 
 Ball::~Ball()
@@ -38,6 +39,12 @@ void Ball::update(float dt)
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+        _addParticle();
+    }
+    else {
+        if (!_trail.empty()) {
+            _trail.clear();
+        }
     }
 
     // Update position with a subtle floating-point error
@@ -80,7 +87,8 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    // ideally change _isFireball to a ball status enum for better responses
+    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction, _isFireBall);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
@@ -94,6 +102,12 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
+   
+    if (!_trail.empty()) {
+        for (const auto& p : _trail) {
+            _window->draw(p);
+        }
+    }
     _window->draw(_sprite);
 }
 
@@ -113,4 +127,18 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::_addParticle() {
+    sf::Vector2f ballPos = _sprite.getPosition();
+    const float pRadius = 5.f;
+    _particle.setRadius(pRadius);
+    _sprite.setOrigin(_particle.getRadius(), _particle.getRadius());
+    _particle.setFillColor(sf::Color::Yellow);
+    _particle.setPosition(ballPos);
+    _trail.push_back(_particle);
+
+    if (_trail.size() > _maxTrailSize) {
+        _trail.erase(_trail.begin());
+    }
 }

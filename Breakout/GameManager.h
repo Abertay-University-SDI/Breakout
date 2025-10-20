@@ -8,6 +8,7 @@
 #include "MessagingSystem.h"
 #include "UI.h"
 
+enum GameState{Game_Over, Level_Complete, Started, Paused};
 
 
 class GameManager {
@@ -26,7 +27,7 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
-
+    GameState state = Started;
 private:
     bool _pause;
     float _pauseHold;
@@ -38,6 +39,7 @@ private:
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _menuText;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -49,4 +51,7 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    void _menu(GameState currentState);
+    void _resetGame();
 };

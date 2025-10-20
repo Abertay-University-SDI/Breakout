@@ -56,6 +56,8 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
+    //testing
+    //_powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
 
     // TODO finish this.
     switch (rand() % 5)
