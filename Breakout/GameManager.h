@@ -1,14 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "CONSTANTS.h"
-#include "Paddle.h"
-#include "Ball.h"
-#include "BrickManager.h"
-#include "PowerupManager.h"
-#include "MessagingSystem.h"
-#include "UI.h"
 
-
+class UI;
+class MessagingSystem;
+class PowerupManager;
+class BrickManager;
+class Ball;
+class Paddle;
 
 class GameManager {
 public:
@@ -18,13 +17,16 @@ public:
     void loseLife();
     void render();
     void levelComplete();
+    void startScreenShake(float shakelength);
     void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
+    float getDeltaTime() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+    sf::View* getView();
 
 
 private:
@@ -38,7 +40,10 @@ private:
 
     sf::Font _font;
     sf::Text _masterText;
-
+    sf::View _view;
+    sf::Clock deltaClock;
+    sf::Time dt;
+    float DeltaTime;
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
@@ -47,6 +52,12 @@ private:
     MessagingSystem* _messagingSystem;
     UI* _ui;
 
+    float _shakeTimeLimit;
+    float _currentShakeTime;
+
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    void screenShake();
+
 };

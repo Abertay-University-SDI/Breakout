@@ -5,8 +5,6 @@
 
 class GameManager;  // forward declaration
 
-
-
 class Ball {
 public:
     Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);
@@ -30,9 +28,10 @@ private:
     float _timeWithPowerupEffect;
     float _brickHitPitch;
     float _brickHitVolume;
+    float _screenShakeOnCollideBrickLength;
+    float _screenShakeOnFireBallLength;
 
     GameManager* _gameManager;  // Reference to the GameManager
-
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.

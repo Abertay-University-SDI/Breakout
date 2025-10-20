@@ -1,6 +1,11 @@
 #include "GameManager.h"
+#include "Paddle.h"
 #include "Ball.h"
+#include "BrickManager.h"
 #include "PowerupManager.h"
+#include "MessagingSystem.h"
+#include "UI.h"
+
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
@@ -13,6 +18,9 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _shakeTimeLimit = 10.0f;
+    _currentShakeTime = _shakeTimeLimit;
 }
 
 void GameManager::initialize()
@@ -26,6 +34,11 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    sf::Vector2u windowSize = _window->getSize();
+    _view.setSize(windowSize.x, windowSize.y);
+    _view.setCenter(windowSize.x / 2.f, windowSize.y / 2.f);
+
 }
 
 void GameManager::update(float dt)
@@ -97,6 +110,12 @@ void GameManager::loseLife()
 
 void GameManager::render()
 {
+    dt = deltaClock.restart();
+    DeltaTime = dt.asSeconds();
+    screenShake();
+
+    _window->setView(_view);
+
     _paddle->render();
     _ball->render();
     _brickManager->render();
@@ -110,8 +129,34 @@ void GameManager::levelComplete()
     _levelComplete = true;
 }
 
+
+void GameManager::startScreenShake(float shakelength) 
+{
+    _currentShakeTime = 0;
+    _shakeTimeLimit = shakelength;
+}
+
+
+void GameManager::screenShake() // with every hit Shake the screen 
+{
+    _currentShakeTime += getDeltaTime();
+
+    if (_currentShakeTime <= _shakeTimeLimit)
+    {
+        float offsetX = (rand() % 10 - 0);
+        float offsetY = (rand() % 10 - 0);
+        _view.setCenter(_window->getSize().x / 2.f + offsetX, _window->getSize().y / 2.f + offsetY);
+    }
+    else
+    {
+        _view.setCenter(_window->getSize().x / 2.f, _window->getSize().y / 2.f);
+    }
+
+}
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
+sf::View* GameManager::getView(){ return &_view;}
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+float GameManager::getDeltaTime() const { return DeltaTime; }

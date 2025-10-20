@@ -1,5 +1,7 @@
 #include "Ball.h"
-#include "GameManager.h" // avoid cicular dependencies
+#include "Paddle.h"
+#include "BrickManager.h"
+#include "GameManager.h" 
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -15,10 +17,14 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _screenShakeOnCollideBrickLength = 0.2;
+    _screenShakeOnFireBallLength = 2;
 }
 
 Ball::~Ball()
 {
+
 }
 
 void Ball::update(float dt)
@@ -91,17 +97,25 @@ void Ball::update(float dt)
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
 
+    if (_isFireBall)
+    {
+        _gameManager->startScreenShake(_screenShakeOnFireBallLength);
+
+    }
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
         playDing();
+        _gameManager->startScreenShake(_screenShakeOnCollideBrickLength);
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
       
-          playDing();
+        playDing();
+        _gameManager->startScreenShake(_screenShakeOnCollideBrickLength);
+
     }
 
 }
@@ -125,8 +139,10 @@ void Ball::playDing() // with every hit increase pitch
 }
 
 
+
 void Ball::render()
 {
+
     _window->draw(_sprite);
 }
 
