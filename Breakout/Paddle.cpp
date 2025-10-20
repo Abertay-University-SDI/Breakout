@@ -35,6 +35,20 @@ void Paddle::moveRight(float dt)
 
 void Paddle::update(float dt)
 {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*_window);
+
+    float targetX = static_cast<float>(mousePos.x) - (_sprite.getSize().x * 0.5f);
+
+    float minX = 0.0f;
+    float maxX = _window->getSize().x - _sprite.getSize().x;
+    targetX = std::max(minX, std::min(maxX, targetX));
+    
+    float smoothingFactor = 0.02f;
+
+    float currentX = _sprite.getPosition().x;
+    float smoothedX = currentX + (targetX - currentX) * smoothingFactor;
+    _sprite.setPosition(smoothedX, _sprite.getPosition().y);
+
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;

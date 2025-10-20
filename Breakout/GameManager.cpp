@@ -26,6 +26,9 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    //stores the base view for shake
+    _baseView = _window->getDefaultView();
 }
 
 void GameManager::update(float dt)
@@ -85,6 +88,16 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+
+    if (_shakeTime > 0.0f)
+    {
+        _shakeTime -= dt;
+        if (_shakeTime < 0)
+            _shakeTime = 0.0f;
+        
+    }
+
+    tickCombo(dt);
 }
 
 void GameManager::loseLife()
@@ -93,21 +106,73 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+
+    _shakeMagnitude = 24.0f;
+    _shakeDuration = 0.1f;
+    _shakeTime = _shakeDuration;
+
 }
 
 void GameManager::render()
 {
+
+    _window->setView(_baseView);
+
+    if (_shakeTime > 0.0f)
+    {
+        float progress = 1.0f - (_shakeTime / _shakeDuration);
+        float strength = _shakeMagnitude * (1.0f - progress);
+
+        float offsetX = ((rand() % 200 - 100) / 100.0f) * strength;
+        float offsetY = ((rand() % 200 - 100) / 100.0f) * strength;
+
+        sf::View shakeView = _baseView;
+        shakeView.move(offsetX, offsetY);
+        _window->setView(shakeView);
+
+    }
+
     _paddle->render();
     _ball->render();
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+
+    _window->setView(_baseView);
+
     _ui->render();
 }
 
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::tickCombo(float dt)
+{
+    if (_combo > 1)
+    {
+        _comboTimeLeft -= dt;
+        if (_comboTimeLeft <= 0.0f)
+        {
+            _combo = 0;
+            _ui->updateScoreText(_score, _combo);
+        }
+    }
+}
+
+void GameManager::onBrickDestroyed(const sf::Vector2f& where, int basePoints)
+{
+    if (_combo <= 0)
+        _combo = 1;
+    else _combo += 1;
+
+    _comboTimeLeft = COMBO_RESET_TIME;
+
+    const int gained = basePoints * _combo;
+    _score += gained;
+
+    _ui->updateScoreText(_score, _combo);
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

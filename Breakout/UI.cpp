@@ -22,10 +22,27 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_scoreText.setCharacterSize(30);
+	_scoreText.setPosition(800, 50);
+	_scoreText.setFillColor(sf::Color::White);
+	_scoreText.setFont(_font);
+
+	_comboText.setCharacterSize(30);
+	_comboText.setPosition(800, 95);
+	_comboText.setFillColor(sf::Color::Blue);
+	_comboText.setFont(_font);
 }
 
 UI::~UI()
 {
+}
+
+void UI::updateScoreText(int score, int combo)
+{
+	_scoreText.setString("Score: " + std::to_string(score));
+	_comboText.setString("Combo x" + std::to_string(combo));
+	_comboText.setFillColor(sf::Color::Blue);
 }
 
 
@@ -79,4 +96,12 @@ void UI::render()
 	{
 		_window->draw(life);
 	}
+
+	_window->draw(_scoreText);
+
+	if (_comboText.getString().getSize() > 0)
+	{
+		_window->draw(_comboText);
+	}
+
 }

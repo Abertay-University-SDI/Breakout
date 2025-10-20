@@ -1,6 +1,6 @@
 # Breakout
 
-W Kavanagh & N Merchant. Summer 2024 
+W Kavanagh \& N Merchant. Summer 2024
 
 ## controls
 
@@ -27,9 +27,21 @@ fire ball (green)
 * GameLoop
 * Better ball physics (Box2D)
 * Leaderboards
-* More ball types (e.g., multiball, sticky ball [where you shoot the ball from the paddle every time], tiny ball, big ball, brick-tracking ball)
+* More ball types (e.g., multiball, sticky ball \[where you shoot the ball from the paddle every time], tiny ball, big ball, brick-tracking ball)
 * Sounds with increasing tone between bounces.
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+Fixed Complier issue - Reference loop. - 29 minutes realising what was wrong - 1 minute fixing it.
+
+Added screenshake when losing life - 45 minutes
+
+Added score and combo tracking - 1 hour
+Added mouse tracking - 1 hour
+
+
+Total 3hr 15mins
+
+
+
