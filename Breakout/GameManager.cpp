@@ -17,6 +17,14 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
+    delete _paddle;
+	delete _ball;
+	delete _brickManager;
+	delete _powerupManager;
+	delete _messagingSystem;
+	delete _ui;
+
+
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
@@ -39,12 +47,34 @@ void GameManager::update(float dt)
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over. \n\nPress ESC to quit or \nPress R to play again");
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            _lives = 3;
+            _levelComplete = false;
+
+            _masterText.setString("");
+            initialize();
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+            _window->close();
+        }
         return;
     }
     if (_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        _masterText.setString("Level completed. \n\nPress ESC to quit or \nPress R to play again");
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            _lives = 3;
+            _levelComplete = false;
+            
+            _masterText.setString("");
+            initialize();
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+            _window->close();
+        }
         return;
     }
     // pause and pause handling
@@ -54,7 +84,7 @@ void GameManager::update(float dt)
         if (!_pause && _pauseHold <= 0.f)
         {
             _pause = true;
-            _masterText.setString("paused.");
+            _masterText.setString("Paused.");
             _pauseHold = PAUSE_TIME_BUFFER;
         }
         if (_pause && _pauseHold <= 0.f)
@@ -67,6 +97,23 @@ void GameManager::update(float dt)
     if (_pause)
     {
         return;
+    }
+
+    // Handle Particle
+    for (auto it = _particles.begin(); it != _particles.end(); ) {
+        it->particleShape.move(it->velocity * dt);
+        it->lifetime -= dt;
+
+        // Fade out
+        sf::Color color = it->particleShape.getFillColor();
+        if (it->lifetime > 0.f) {
+            color.a = static_cast<sf::Uint8>(255 * (it->lifetime / 2.0f)); // fade
+            it->particleShape.setFillColor(color);
+            ++it;
+        }
+        else {
+            it = _particles.erase(it); // remove expired particle
+        }
     }
 
     // timer.
@@ -106,12 +153,37 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+
+    for (const auto& p : _particles) {
+        _window->draw(p.particleShape);
+    }
+
     _ui->render();
 }
 
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::particleEffect(sf::Vector2f position)
+{
+    const int particleCount = 500;
+
+    for (int i = 0; i < particleCount; ++i) {
+        Particle p;
+        p.particleShape = sf::CircleShape(3.f);
+        p.particleShape.setFillColor(sf::Color::Yellow);
+        p.particleShape.setPosition(position);
+
+        float angle = (std::rand() % 360) * 3.14 / 180.f;
+        float speed = ((std::rand() % 100) / 10.f + 50.f); // 50 to 60
+
+        p.velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
+        p.lifetime = 1.0f + (std::rand() % 100) / 100.f;
+
+        _particles.push_back(p); // store in member vector
+    }
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

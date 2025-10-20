@@ -51,6 +51,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         brick = _bricks.back();
         _bricks.pop_back();
 
+        _gameManager->particleEffect(ballPosition);
         _gameManager->getUI()->startShake(5.0f, 0.25f);
 
         break;

@@ -32,13 +32,16 @@ R Booth - October 2025
 
 # Time Details and Changelist
 
-## Time Spent: 2.5 hours (Approx.)
+## Time Spent: 4 hours (Approx.)
 
 ## Changelists:
 
 ### Added
 - Smooth screen shake for when player misses ball or breaks a block
 - New powerup that will make the ball bigger for 5s
+- New particle effect that explodes when bricks are destroyed
+- Restart game if game is over (win or lose)
+- Access to quit game via "ESC" key
 
 ### Changed
 - Parameterised powerup spawn chance
