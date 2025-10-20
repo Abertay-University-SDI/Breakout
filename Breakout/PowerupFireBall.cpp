@@ -23,6 +23,6 @@ PowerupFireBall::~PowerupFireBall()
 
 std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
 {
-    _ball->setFireBall(5.0f);
+    _ball->setPowerup(5.0f, POWERUPS::fireBall);
     return { fireBall, 5.0f };
 }

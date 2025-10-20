@@ -1,15 +1,5 @@
 #pragma once
-
-// implemented powerups
-enum POWERUPS
-{
-    bigPaddle,
-    smallPaddle,
-    fastBall,
-    slowBall,
-    fireBall,
-    none
-};
+#include "POWERUPS.h"
 
 // Window settings
 constexpr unsigned int WINDOW_WIDTH = 800;

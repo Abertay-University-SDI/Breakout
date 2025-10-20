@@ -1,17 +1,19 @@
 #include "GameManager.h"
 #include "Ball.h"
 #include "PowerupManager.h"
+#include <cmath>
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _resetHold(RESET_TIME_BUFFER)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
-    _masterText.setPosition(50, 400);
-    _masterText.setCharacterSize(48);
+    _masterText.setOrigin(175, 0);
+    _masterText.setPosition(window->getSize().x/2, window->getSize().y/2);
+    _masterText.setCharacterSize(64);
     _masterText.setFillColor(sf::Color::Yellow);
 }
 
@@ -30,6 +32,17 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
+
+    if (_isGameResetting) {
+        if (_resetHold > 0.f) _resetHold -= dt;
+        if (_resetHold <= 0.f) {
+            resetGame();
+            _resetHold = RESET_TIME_BUFFER;
+            _isGameResetting = false;
+        }
+        return;
+    }
+
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
@@ -38,11 +51,13 @@ void GameManager::update(float dt)
     if (_lives <= 0)
     {
         _masterText.setString("Game over.");
+        _isGameResetting = true;
         return;
     }
     if (_levelComplete)
     {
         _masterText.setString("Level completed.");
+        _isGameResetting = true;
         return;
     }
     // pause and pause handling
@@ -108,6 +123,21 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::resetGame()
+{
+    _time = 0.f, _lives = 3, _pauseHold = 0.f, _levelComplete = false,
+        _powerupInEffect = { none,0.f }, _timeLastPowerupSpawned = 0.f;
+
+    _ball->resetBall();
+
+    _brickManager->clearBricks();
+    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    _ui->resetLives(_lives);
+
+    _masterText.setString("");
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

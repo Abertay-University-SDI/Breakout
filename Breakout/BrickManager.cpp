@@ -18,9 +18,14 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, i, j);
         }
     }
+}
+
+void BrickManager::clearBricks() //clear brick vector and free memory
+{
+    _bricks = std::vector<Brick>(); 
 }
 
 void BrickManager::render()
@@ -30,7 +35,7 @@ void BrickManager::render()
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction, POWERUPS ballpowerup)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
@@ -48,6 +53,25 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
+
+        if (ballpowerup == POWERUPS::bombBall) {
+            for (auto& surroundingBrick : _bricks) {
+
+                if (surroundingBrick.getLocation().y == brick.getLocation().y) {
+                    if (surroundingBrick.getLocation().x + 1 == brick.getLocation().x || surroundingBrick.getLocation().x - 1 == brick.getLocation().x) {
+                        surroundingBrick = _bricks.back();
+                        _bricks.pop_back();
+                    }
+                }
+                else if (surroundingBrick.getLocation().x == brick.getLocation().x) {
+                    if (surroundingBrick.getLocation().y + 1 == brick.getLocation().y || surroundingBrick.getLocation().y - 1 == brick.getLocation().y) {
+                        surroundingBrick = _bricks.back();
+                        _bricks.pop_back();
+                    }
+                }
+            }
+        }
+
         brick = _bricks.back();
         _bricks.pop_back();
         break;

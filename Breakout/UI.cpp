@@ -60,6 +60,11 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setString("fire " + oss.str());
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
+	case bombBall:
+		oss << std::fixed << std::setprecision(2) << powerup.second;
+		_powerupText.setString("bomb " + oss.str());
+		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
 		
@@ -70,6 +75,22 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+}
+
+void UI::resetLives(int lives)
+{
+	_lives = std::vector<sf::CircleShape>();
+
+	for (int i = lives; i > 0; --i)
+	{
+		sf::CircleShape newLife;
+		newLife.setFillColor(sf::Color::Red);
+		newLife.setOutlineColor(sf::Color::Cyan);
+		newLife.setOutlineThickness(4.0f);
+		newLife.setRadius(LIFE_RADIUS);
+		newLife.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * i, LIFE_PADDING);
+		_lives.push_back(newLife);
+	}
 }
 
 void UI::render()
