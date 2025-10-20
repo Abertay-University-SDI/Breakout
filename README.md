@@ -34,9 +34,17 @@ fire ball (green)
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
 
-## Complier issue fixed
-Cause: derived powerup class (PowerUpFireBall) header file was included into the base class header causing a compiler loop
+## Issues fixed
+
+### Complier issue fixed
 Time to fix: 9 mins
+Cause: derived powerup class (PowerUpFireBall) header file was included into the base class header causing a compiler loop
+
+### Fireball memory leak
+Time to fix: 1 min
+Cause: On destruction of a fireball powerup, a new int pointer is created but is not destroyed.
+Fix: Since there is no additional use of this pointer it has been commented out.
+
 
 ## Features added
 
