@@ -16,6 +16,7 @@ public:
 	void updatePowerupText(std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
 	void render();
+	void updateScoreText(int score, int combo);
 
 private:
 	GameManager* _gameManager;
@@ -23,6 +24,9 @@ private:
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+
+	sf::Text _scoreText;
+	sf::Text _comboText;
 
 	std::vector<sf::CircleShape> _lives;
 

@@ -38,6 +38,7 @@ private:
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::View _baseView;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -49,4 +50,8 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    float _shakeTime = 0.0f;
+    float _shakeDuration = 0.0f;
+    float _shakeMagnitude = 0.0f;
 };
