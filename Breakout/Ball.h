@@ -17,13 +17,15 @@ public:
 
 private:
     sf::CircleShape _sprite;
+    std::vector<sf::CircleShape> _trail;
+    std::vector<sf::Vector2f> _trailPositions;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
-
+    float timer;
     GameManager* _gameManager;  // Reference to the GameManager
 
 

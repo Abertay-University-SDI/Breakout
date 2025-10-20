@@ -23,6 +23,7 @@ private:
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+	sf::RectangleShape powerupBar;
 
 	std::vector<sf::CircleShape> _lives;
 

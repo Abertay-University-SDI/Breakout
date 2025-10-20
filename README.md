@@ -4,7 +4,7 @@ W Kavanagh & N Merchant. Summer 2024
 
 ## controls
 
-A/D to move the paddle right and left.
+A/D or MOUSE to move the paddle right and left.
 P to pause.
 
 ## Powerups
@@ -32,4 +32,11 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+Time taken: ~5 hours
+
+Changelist:
+* Fixed errors
+* Mouse input for pad
+* Better UI (Progress bar for powerup countdown)
+* Improved VFX (Ball Trail)

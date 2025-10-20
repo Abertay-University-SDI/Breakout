@@ -22,6 +22,11 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	// powerup bar properties
+	powerupBar.setSize(sf::Vector2f(0,20));
+	powerupBar.setPosition(800, 50);
+	powerupBar.setFillColor(sf::Color::Magenta);
 }
 
 UI::~UI()
@@ -31,34 +36,32 @@ UI::~UI()
 
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {
-	std::ostringstream oss;
-
 	switch (powerup.first)
 	{
 	case bigPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("big " + oss.str());
+		_powerupText.setString("big");
 		_powerupText.setFillColor(paddleEffectsColour);
+		powerupBar.setSize(sf::Vector2f(powerup.second * 20, 20));
 		break;
 	case smallPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("small " + oss.str());
+		_powerupText.setString("small");
 		_powerupText.setFillColor(paddleEffectsColour);
+		powerupBar.setSize(sf::Vector2f(powerup.second * 20, 20));
 		break;
 	case slowBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("slow " + oss.str());
+		_powerupText.setString("slow");
 		_powerupText.setFillColor(ballEffectsColour);
+		powerupBar.setSize(sf::Vector2f(powerup.second * 20, 20));
 		break;
 	case fastBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fast " + oss.str());
+		_powerupText.setString("fast");
 		_powerupText.setFillColor(ballEffectsColour);
+		powerupBar.setSize(sf::Vector2f(powerup.second * 20, 20));
 		break;
 	case fireBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fire " + oss.str());
+		_powerupText.setString("fire");
 		_powerupText.setFillColor(extraBallEffectsColour);
+		powerupBar.setSize(sf::Vector2f(powerup.second * 20, 20));
 		break;
 	case none:
 		_powerupText.setString("");
@@ -75,6 +78,7 @@ void UI::lifeLost(int lives)
 void UI::render()
 {
 	_window->draw(_powerupText);
+	_window->draw(powerupBar);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

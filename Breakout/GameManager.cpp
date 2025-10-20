@@ -79,7 +79,13 @@ void GameManager::update(float dt)
 
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+    // mouse handle input for paddle movement
+    else if (sf::Mouse::getPosition(*_window).x >= _paddle->getPosition() && sf::Mouse::getPosition(*_window).x <= _paddle->getPosition() + _paddle->getWidth()) {}
+        //do nothing, mouse is above the paddle
+    else if (sf::Mouse::getPosition(*_window).x < (_paddle->getPosition())) _paddle->moveLeft(dt);
+    else if (sf::Mouse::getPosition(*_window).x > (_paddle->getPosition())) _paddle->moveRight(dt);
 
     // update everything 
     _paddle->update(dt);

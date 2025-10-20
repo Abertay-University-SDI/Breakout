@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -8,6 +9,24 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    // setup vector of circle objects
+    for (int i = 0; i < 20; i++)
+    {
+        sf::CircleShape s;
+        s.setRadius(RADIUS);
+        s.setFillColor(sf::Color(0, 255, 255, 128));
+        s.setPosition(0, 300);
+        _trail.push_back(s);
+    }
+    // fill the trail position vector with starting position
+    for (int i = 0; i < 20; i++)
+    {
+        _trailPositions.push_back(sf::Vector2f(0, 300));
+        std::cout << "worked";
+    }
+
+    float timer;
 }
 
 Ball::~Ball()
@@ -40,8 +59,31 @@ void Ball::update(float dt)
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
     }
 
+    // timer for elapsed time
+    timer += dt;
+
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
+
+    // check elapsed time and add the balls current position to the trail positions vector
+    if (timer >= 0.016)
+    {
+        _trailPositions.push_back(_sprite.getPosition());
+        timer = 0;
+    }
+
+    // if there is more than 20 trail positions remove the first 
+    if (_trailPositions.size() > 20)
+    {
+        _trailPositions.erase(_trailPositions.begin());
+    }
+
+    // for each of the circles in the trail vector set the position to be the ball in fronts position
+    int count = 19;
+    for (auto& balls : _trail) {
+        balls.setPosition(_trailPositions[count]);
+        count --;
+    }
 
     // check bounds and bounce
     sf::Vector2f position = _sprite.getPosition();
@@ -94,7 +136,12 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
+    // draw the trail
+    for (auto& circle : _trail) {
+        _window->draw(circle);
+    }
     _window->draw(_sprite);
+
 }
 
 void Ball::setVelocity(float coeff, float duration)
