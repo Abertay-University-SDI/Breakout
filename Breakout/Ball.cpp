@@ -5,6 +5,13 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
+    _brickHitPitch = 0.2;
+    _brickHitVolume = 60;
+
+    _hitSoundBuffer.loadFromFile("Audio/Ding.wav");
+    _audioSource.setBuffer(_hitSoundBuffer);   /// Load Audio File and insert into the audio Source
+    _audioSource.setVolume(_brickHitVolume);
+
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
@@ -77,20 +84,46 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        _brickHitPitch = 0; // Rest Pitch Sound when the ball hits the paddle
     }
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        playDing();
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+      
+          playDing();
     }
+
 }
+
+void Ball::playDing() // with every hit increase pitch 
+{
+    float increaseAmount = 0.2f;
+
+
+    if (_brickHitPitch > 0.9)
+    {
+        increaseAmount = 0.1;
+    }
+    else {
+        _brickHitPitch += increaseAmount;
+
+    }
+    
+    _audioSource.setPitch(_brickHitPitch);
+    _audioSource.play();
+}
+
 
 void Ball::render()
 {
