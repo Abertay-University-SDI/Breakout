@@ -32,4 +32,5 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+downloaded 15:08 20/10/25
+fixed compiler issues 15:40 20/10/25
