@@ -5,7 +5,7 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
-    _sprite.setRadius(RADIUS);
+    _sprite.setRadius(_ballSize);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
 }
@@ -25,11 +25,16 @@ void Ball::update(float dt)
     {
         if (_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
+        else if (_sprite.getRadius() != RADIUS) {
+			_ballSize = RADIUS;
+			_sprite.setRadius(_ballSize);
+            setSize(1.f, 0.f);
+        }
         else
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+        }       
     }
 
     // Fireball effect
@@ -48,7 +53,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= windowDimensions.x - 2 * _ballSize && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -67,6 +72,7 @@ void Ball::update(float dt)
         _gameManager->loseLife();
     }
 
+
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
@@ -76,7 +82,7 @@ void Ball::update(float dt)
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
         // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * _ballSize);
     }
 
     // collision with bricks
@@ -113,4 +119,19 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setSize(float sizeMultiplier, float duration)
+{
+    if (duration) {
+        _ballSize *= sizeMultiplier;
+        _sprite.setRadius(_ballSize);
+
+        _isSizeDiff = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+
+    _isSizeDiff = false;
+    _timeWithPowerupEffect = 0.f;
 }

@@ -15,8 +15,11 @@ public:
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
+	void startShake(float intensity, float duration);
+	void updateShake();
 	void render();
 
+	bool setIsShaking(bool isShaking) { return this->isShaking = isShaking; }
 private:
 	GameManager* _gameManager;
 	
@@ -28,5 +31,12 @@ private:
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
+
+	float isShaking = false;
+	float shakeIntensity = 0.f;
+	float shakeDuration = 0.f;
+
+	sf::Vector2f originalPos;
+	sf::Clock shakeClock;
 };
 

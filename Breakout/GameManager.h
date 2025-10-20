@@ -18,6 +18,7 @@ public:
     void loseLife();
     void render();
     void levelComplete();
+    void particleEffect(sf::Vector2f position);
     void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
@@ -49,4 +50,13 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    static constexpr int POWERUP_SPAWN_CHANCE = 700;
+
+    struct Particle {
+        sf::CircleShape particleShape;
+        sf::Vector2f velocity;
+		float lifetime;
+    };
+
+    std::vector<Particle> _particles;
 };

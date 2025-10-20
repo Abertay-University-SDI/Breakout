@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iostream>
 
 #include "UI.h"
 #include "GameManager.h"
@@ -27,7 +28,6 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 UI::~UI()
 {
 }
-
 
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {
@@ -60,6 +60,11 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setString("fire " + oss.str());
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
+	case largeBall:
+		oss << std::fixed << std::setprecision(2) << powerup.second;
+		_powerupText.setString("large ball " + oss.str());
+		_powerupText.setFillColor(ballEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
 		
@@ -70,6 +75,43 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+}
+
+void UI::startShake(float intensity, float duration)
+{
+	originalPos = _window->getDefaultView().getCenter();
+	shakeClock.restart();
+	isShaking = true;
+	shakeIntensity = intensity;
+	shakeDuration = duration;
+}
+
+void UI::updateShake()
+{
+	if (isShaking) {
+		sf::View view = _window->getDefaultView();
+		float elapsedTime = shakeClock.getElapsedTime().asSeconds();
+		std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+		if (elapsedTime < shakeDuration) {
+			float progress = elapsedTime / shakeDuration;
+			float shake = shakeIntensity * (1.0f - progress);
+
+			float frequencyX = 10.0f + (rand() / (float)RAND_MAX) * 20.0f;
+			float frequencyY = 10.0f + (rand() / (float)RAND_MAX) * 20.0f;
+
+			float offsetX = std::sin(elapsedTime * frequencyX) * shake;
+			float offsetY = std::cos(elapsedTime * frequencyY * 1.3f) * shake;
+
+			view.setCenter(originalPos + sf::Vector2f(offsetX, offsetY));
+			_window->setView(view);
+		}
+		else {
+			isShaking = false;
+			view.setCenter(originalPos);
+			_window->setView(view);
+		}
+	}
 }
 
 void UI::render()

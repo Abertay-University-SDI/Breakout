@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
+#include "UI.h"
 #include <iostream>
 
 int main()
