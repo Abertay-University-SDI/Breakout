@@ -2,6 +2,7 @@
 #include <vector>
 #include "Brick.h"
 #include <SFML/Graphics.hpp>
+#include "SFML/Audio.hpp"
 
 class GameManager;
 
@@ -12,10 +13,17 @@ public:
     void render();
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
+    bool checkPointCollision(sf::Vector2f point);
+
+    void update(float dt);
+
 private:
     std::vector<Brick> _bricks;
     sf::RenderWindow* _window;
 
     GameManager* _gameManager;
     static constexpr float TOP_PADDING = 100.0f;
+
+    sf::SoundBuffer buffer; // Throws sf::Exception if an error occurs
+    sf::Sound sound;
 };

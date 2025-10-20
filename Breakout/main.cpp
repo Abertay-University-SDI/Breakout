@@ -12,6 +12,8 @@ int main()
     sf::Clock clock;
     float deltaTime;
 
+    window.setMouseCursorVisible(false);
+
     while (window.isOpen())
     {
         sf::Event event;

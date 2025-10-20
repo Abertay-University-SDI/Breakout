@@ -24,6 +24,8 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
+    gun = new Gun(_window, this);
+
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
@@ -71,7 +73,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand() % POWERUP_CHANCE == 0)      // TODO parameterise: done
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -81,10 +83,28 @@ void GameManager::update(float dt)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
 
+
+    //fire gun
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) gun->fire();
+
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _brickManager->update(dt);
+
+    // Get mouse position in window coordinates
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(*_window);
+
+    // Convert to world coordinates
+    sf::Vector2f worldPosition = _window->mapPixelToCoords(mousePosition);
+
+    gun->update(dt, worldPosition);
+
+    if (shake_time > 0)
+    {
+        shake_screen(dt);
+    }
 }
 
 void GameManager::loseLife()
@@ -93,6 +113,8 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+    shake_time = 0.5;
+
 }
 
 void GameManager::render()
@@ -101,6 +123,7 @@ void GameManager::render()
     _ball->render();
     _brickManager->render();
     _powerupManager->render();
+    gun->render();
     _window->draw(_masterText);
     _ui->render();
 }
@@ -109,6 +132,29 @@ void GameManager::levelComplete()
 {
     _levelComplete = true;
 }
+
+
+
+void GameManager::shake_screen(float dt)
+{
+    sf::View window_view = _window->getView();
+
+    shake_time -= dt;
+
+    double strength = 45 * shake_time;
+
+    float x_rand = rand() % int(_window->getSize().x / 10);
+    float x_offset = std::sin(strength) * x_rand;
+
+    float y_rand = rand() % int(_window->getSize().y / 10);
+    float y_offset = std::sin(strength) * y_rand;
+
+
+    window_view.setCenter({500 - x_offset, 400 - y_offset });
+    _window->setView(window_view);
+}
+
+
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }

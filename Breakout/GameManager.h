@@ -9,6 +9,7 @@
 #include "UI.h"
 
 
+#include "Gun.h"
 
 class GameManager {
 public:
@@ -19,6 +20,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+
+    void shake_screen(float dt);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -49,4 +52,12 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    static constexpr int POWERUP_CHANCE = 700.f;    
+
+    static const inline sf::Vector2f MAX_SHAKE = sf::Vector2f({4.f,4.f});
+    float shake_time = 0;
+
+    Gun* gun;
+
+
 };
