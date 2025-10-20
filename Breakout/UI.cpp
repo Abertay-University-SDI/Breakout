@@ -22,6 +22,17 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+
+	_timerText.setCharacterSize(30);
+	_timerText.setPosition(500, 10);
+	_timerText.setFillColor(sf::Color::Cyan);
+	_timerText.setFont(_font);
+
+	_scoreText.setCharacterSize(30);
+	_scoreText.setPosition(250, 10);
+	_scoreText.setFillColor(sf::Color::Yellow);
+	_scoreText.setFont(_font);
 }
 
 UI::~UI()
@@ -67,6 +78,32 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
+void UI::updateTimerText(float dt)
+{
+	std::ostringstream timerString;
+
+	if (!stopTimer) {
+		timer += (dt);
+		timerString << std::fixed << std::setprecision(2) << timer;
+		_timerText.setString("Time: \t" + timerString.str());
+	}
+}
+
+void UI::setStopTimer()
+{
+	stopTimer = true;
+}
+
+void UI::updateScoreText()
+{
+	std::ostringstream scoreString;
+
+	score += 10;
+	_scoreText.setString("Score: \t" + std::to_string(score));
+}
+
+
+
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
@@ -75,6 +112,8 @@ void UI::lifeLost(int lives)
 void UI::render()
 {
 	_window->draw(_powerupText);
+	_window->draw(_timerText);
+	_window->draw(_scoreText);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

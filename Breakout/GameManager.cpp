@@ -26,6 +26,7 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _ui->updateScoreText();
 }
 
 void GameManager::update(float dt)
@@ -33,16 +34,21 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
-    
+
+    if (!_pause) {
+        _ui->updateTimerText(dt);
+    }
 
     if (_lives <= 0)
     {
         _masterText.setString("Game over.");
+        _ui->setStopTimer();
         return;
     }
     if (_levelComplete)
     {
         _masterText.setString("Level completed.");
+        _ui->setStopTimer();
         return;
     }
     // pause and pause handling
@@ -80,6 +86,8 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+    _paddle->moveWithMouse();
 
     // update everything 
     _paddle->update(dt);

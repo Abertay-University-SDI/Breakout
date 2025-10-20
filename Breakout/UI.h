@@ -14,6 +14,9 @@ public:
 	~UI();
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
+	void updateTimerText(float dt);
+	void setStopTimer();
+	void updateScoreText();
 	void lifeLost(int lives);
 	void render();
 
@@ -23,8 +26,14 @@ private:
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+	sf::Text _timerText;
+	sf::Text _scoreText;
 
 	std::vector<sf::CircleShape> _lives;
+
+	double timer;
+	bool stopTimer;
+	int score = -10;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
