@@ -1,10 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 class GameManager;  // forward declaration
 
-
+struct BallTrail {
+    sf::CircleShape shape;
+    float lifetime;
+};
 
 class Ball {
 public:
@@ -23,6 +27,15 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+
+    std::vector<BallTrail> trail; // Store all the points for the ball trail
+
+    // Audio 
+    sf::SoundBuffer paddle_hit_buffer;
+    sf::Sound paddle_hit_sound;
+
+    sf::SoundBuffer brick_break_buffer;
+    sf::Sound brick_break_sound;
 
     GameManager* _gameManager;  // Reference to the GameManager
 
