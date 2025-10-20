@@ -96,6 +96,8 @@ void GameManager::update(float dt)
             _shakeTime = 0.0f;
         
     }
+
+    tickCombo(dt);
 }
 
 void GameManager::loseLife()
@@ -144,6 +146,33 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::tickCombo(float dt)
+{
+    if (_combo > 1)
+    {
+        _comboTimeLeft -= dt;
+        if (_comboTimeLeft <= 0.0f)
+        {
+            _combo = 0;
+            _ui->updateScoreText(_score, _combo);
+        }
+    }
+}
+
+void GameManager::onBrickDestroyed(const sf::Vector2f& where, int basePoints)
+{
+    if (_combo <= 0)
+        _combo = 1;
+    else _combo += 1;
+
+    _comboTimeLeft = COMBO_RESET_TIME;
+
+    const int gained = basePoints * _combo;
+    _score += gained;
+
+    _ui->updateScoreText(_score, _combo);
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

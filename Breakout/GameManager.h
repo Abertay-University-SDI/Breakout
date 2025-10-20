@@ -26,6 +26,8 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void onBrickDestroyed(const sf::Vector2f& where, int basePoints = BASE_BRICK_POINTS);
+    void tickCombo(float dt);
 
 private:
     bool _pause;
@@ -51,7 +53,14 @@ private:
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
 
+    static constexpr float COMBO_RESET_TIME = 2.0f;
+    static constexpr int BASE_BRICK_POINTS = 100;
+
     float _shakeTime = 0.0f;
     float _shakeDuration = 0.0f;
     float _shakeMagnitude = 0.0f;
+
+    int _score = 0;
+    int _combo = 1;
+    float _comboTimeLeft = 2.0f;
 };
