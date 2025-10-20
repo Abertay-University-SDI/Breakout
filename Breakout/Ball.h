@@ -17,17 +17,24 @@ public:
 
 private:
     sf::CircleShape _sprite;
+    sf::CircleShape _particle;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
-
+   
     GameManager* _gameManager;  // Reference to the GameManager
 
+    
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
+
+    // trail additions
+    const size_t _maxTrailSize = 200;
+    std::vector<sf::CircleShape> _trail;
+    void _addParticle();
 };
 

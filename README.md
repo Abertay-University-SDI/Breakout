@@ -59,3 +59,15 @@ Changes made:
 - Menu UI is activated by: pausing game and completing or losing game
 - Function added to close game windows when input key is activated (Q) while menu UI is active
 - Function added to reset game when input key is activated (R) while menu UI is active
+
+### Fireball trail effect
+Time to implement: 26m
+
+Changes made:
+- Additions to ball class for trail system
+    - trail size
+    - vector to hole trail shapes (circles)
+    - add particle function
+- Trail is generated and rendered when fireball powerup is activated
+- will create small yellow circles from balls current postion and will render the 200 most current ones.
+- after powerup is finished, the vector holding the trail circles is cleared and will not be rendered.
