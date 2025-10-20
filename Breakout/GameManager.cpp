@@ -6,7 +6,7 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _powerupTimer(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -28,21 +28,46 @@ void GameManager::initialize()
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
+void GameManager::newLevel()
+{
+    _brickManager->clearBricks();
+    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    _powerupManager->reset();
+
+    _ball->reset();
+    _paddle->reset();
+    _lives = 3;
+    _ui->resetLives();
+    _masterText.setString("");
+
+    _levelComplete = false;
+}
+
 void GameManager::update(float dt)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    // handle screenshake
+    // doing it here so that screenshake completes even if game over
+    screenShake(dt);
 
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over.\nR to reset.");
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            newLevel();
+        }
         return;
     }
     if (_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        _masterText.setString("Level completed.\nR to continue.");
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            newLevel();
+        }
         return;
     }
     // pause and pause handling
@@ -69,17 +94,16 @@ void GameManager::update(float dt)
 
     // timer.
     _time += dt;
+    _powerupTimer += dt;
 
-
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if ((_powerupTimer > POWERUP_FREQUENCY) && rand() % POWERUP_CHANCE == 0)
     {
         _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        _powerupTimer = 0;
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    _paddle->movePaddle(dt);
 
     // update everything 
     _paddle->update(dt);
@@ -92,7 +116,12 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    // center at 500, 400
+    sf::Vector2f p = _window->getView().getCenter();
+    p.x += 1.0f;
+
+    // TODO screen shake (done)
+    trauma = 1.0f;
 }
 
 void GameManager::render()
@@ -108,6 +137,22 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::screenShake(float dt)
+{
+    if (trauma <= 0.0f) return;
+    trauma -= dt;
+    float power = pow(trauma, 2);
+
+    sf::View v = _window->getView();
+    float xOff = (float)((rand() % 200) - 100) / 100.0f;
+    float yOff = (float)((rand() % 200) - 100) / 100.0f;
+
+    float xPosition = 500.0f + (MAX_OFFSET.x * power * xOff);
+    float yPosition = 400.0f + (MAX_OFFSET.y * power * yOff);
+    v.setCenter({ xPosition, yPosition });
+    _window->setView(v);
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

@@ -12,6 +12,9 @@ int main()
     sf::Clock clock;
     float deltaTime;
 
+    // seed rng for actually random numbers
+    srand(time(NULL));
+
     while (window.isOpen())
     {
         sf::Event event;

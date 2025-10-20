@@ -62,8 +62,7 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
+        respawn();
         _gameManager->loseLife();
     }
 
@@ -90,6 +89,24 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+}
+
+void Ball::respawn()
+{
+    // random spawn position and direction
+    float posX = (float)(rand() % 800) + 100;
+    float dirX = (float)((rand() % 200) - 100) / 100.0f;
+
+    _direction = { dirX, -1 };
+    _sprite.setPosition(posX, 650.0f);
+}
+
+void Ball::reset()
+{
+    respawn();
+    setFireBall(0.0f);
+    _isAlive = true;
+    _timeWithPowerupEffect = 0.0f;
 }
 
 void Ball::render()

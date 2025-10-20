@@ -8,6 +8,7 @@ enum POWERUPS
     fastBall,
     slowBall,
     fireBall,
+    timeExtend,
     none
 };
 
@@ -42,12 +43,13 @@ constexpr float UI_LIFE_PADDING = 20.0f;
 
 // Other game settings
 constexpr float PAUSE_TIME_BUFFER = 0.5f;
-constexpr float POWERUP_FREQUENCY = 7.5f;
+constexpr float POWERUP_FREQUENCY = 0.5f;
 constexpr int INITIAL_LIVES = 3;
 
 // Colour Palette
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
+const sf::Color timeExtendEffectsColour = sf::Color(252, 177, 27); // orangey
 
 

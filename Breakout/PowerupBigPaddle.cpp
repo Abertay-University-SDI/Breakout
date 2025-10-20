@@ -10,8 +10,8 @@ PowerupBigPaddle::~PowerupBigPaddle()
 {
 }
 
-std::pair<POWERUPS,float> PowerupBigPaddle::applyEffect()
+std::pair<POWERUPS,float> PowerupBigPaddle::applyEffect(float timeMult)
 {
-    _paddle->setWidth(1.5f, 5.0f);
-    return { bigPaddle, 5.0f };
+    _paddle->setWidth(1.5f, 5.0f * timeMult);
+    return { bigPaddle, 5.0f * timeMult };
 }

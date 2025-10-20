@@ -11,17 +11,20 @@ public:
 
     void moveLeft(float dt);
     void moveRight(float dt);
+    void movePaddle(float dt);
     void update(float dt);
+    void reset();
     void render();
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
 
 private:
 
-
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+
+    bool mouseMove = true;
 };

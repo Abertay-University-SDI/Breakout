@@ -10,8 +10,8 @@ PowerupSmallPaddle::~PowerupSmallPaddle()
 {
 }
 
-std::pair<POWERUPS, float> PowerupSmallPaddle::applyEffect()
+std::pair<POWERUPS, float> PowerupSmallPaddle::applyEffect(float timeMult)
 {
-    _paddle->setWidth(0.67f, 5.0f);
-    return { smallPaddle, 5.0f };
+    _paddle->setWidth(0.67f, 5.0f * timeMult);
+    return { smallPaddle, 5.0f * timeMult };
 }

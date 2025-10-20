@@ -46,6 +46,13 @@ void PowerupManager::update(float dt)
     }
 }
 
+void PowerupManager::reset()
+{
+    _powerupInEffect.reset();
+    _powerups.clear();
+    _powerupTimeExtendCount = 0;
+}
+
 void PowerupManager::render()
 {
     for (auto& powerup : _powerups)
@@ -58,7 +65,7 @@ void PowerupManager::spawnPowerup()
 {
 
     // TODO finish this.
-    switch (rand() % 5)
+    switch (rand() % 6)
     {
     case 0:
         _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
@@ -76,6 +83,9 @@ void PowerupManager::spawnPowerup()
         _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
         break;
     case 5:
+        _powerups.push_back(new PowerupTimeExtender(_window, _paddle, _ball));
+        break;
+    default:
        break;
     }
 
@@ -88,7 +98,13 @@ void PowerupManager::checkCollision()
 
         if (powerup->checkCollisionWithPaddle())
         {
-            _powerupInEffect = powerup->applyEffect();
+            auto acquiredPowerup = powerup->applyEffect(1.0f + (_powerupTimeExtendCount * 0.25f));
+
+            // increment number of time extensions when a time extender is collected
+            if (acquiredPowerup.first == timeExtend) {
+                _powerupTimeExtendCount++;
+            }
+            _powerupInEffect = acquiredPowerup;
             powerup->setAlive(false);
         }
     }

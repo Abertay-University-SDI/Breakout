@@ -10,8 +10,8 @@ PowerupSlowBall::~PowerupSlowBall()
 {
 }
 
-std::pair<POWERUPS, float> PowerupSlowBall::applyEffect()
+std::pair<POWERUPS, float> PowerupSlowBall::applyEffect(float timeMult)
 {
-    _ball->setVelocity(0.5f, 5.0f);
-    return { slowBall, 5.0f };
+    _ball->setVelocity(0.5f, 5.0f * timeMult);
+    return { slowBall, 5.0f * timeMult };
 }

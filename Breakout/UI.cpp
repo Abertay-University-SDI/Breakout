@@ -60,9 +60,14 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setString("fire " + oss.str());
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
+	case timeExtend:
+		_powerupText.setString("powerup\ntimes\n+25%!");
+		_powerupText.setFillColor(timeExtendEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
-		
+		break;
+	default:
 		break;
 	}
 }
@@ -78,5 +83,12 @@ void UI::render()
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);
+	}
+}
+
+void UI::resetLives()
+{
+	for (auto &life : _lives) {
+		life.setFillColor(sf::Color::Red);
 	}
 }
