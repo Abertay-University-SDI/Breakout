@@ -92,6 +92,7 @@ void Ball::update(float dt)
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
 
         _brickHitPitch = 0; // Rest Pitch Sound when the ball hits the paddle
+        _gameManager->getPaddle()->flicker();
     }
 
     // collision with bricks

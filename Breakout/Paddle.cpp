@@ -38,16 +38,33 @@ void Paddle::update(float dt)
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
+
     }
     else
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
+    }
+
+    if (_timeflicker > 0)
+    {
+        _timeflicker -= dt;
+        _sprite.setFillColor(sf::Color::White);
+    }
+    else
+    {
+        _sprite.setFillColor(sf::Color::Cyan);
+
     }
 }
 
 void Paddle::render()
 {
     _window->draw(_sprite);
+}
+
+void Paddle::flicker()
+{
+    _timeflicker = 0.2;
 }
 
 sf::FloatRect Paddle::getBounds() const

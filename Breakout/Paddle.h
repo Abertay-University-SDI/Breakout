@@ -13,6 +13,7 @@ public:
     void moveRight(float dt);
     void update(float dt);
     void render();
+    void flicker();
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
 
@@ -24,4 +25,5 @@ private:
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    float _timeflicker  = 0.0f;
 };
