@@ -8,7 +8,10 @@ class Paddle
 public:
     Paddle(sf::RenderWindow* window);
     ~Paddle();
-
+    
+    sf::Vector2f GetPosition();
+    float getSize();
+    void SetPosition(sf::Vector2f position);
     void moveLeft(float dt);
     void moveRight(float dt);
     void update(float dt);
@@ -18,7 +21,7 @@ public:
 
 private:
 
-
+    sf::Vector2f position;
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
     float _width = PADDLE_WIDTH;

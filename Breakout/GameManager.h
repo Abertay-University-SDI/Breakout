@@ -19,6 +19,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void GetScore();
+    void SetScore(int i);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -33,11 +35,13 @@ private:
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
+    int _score = 0;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _scoreText;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -49,4 +53,5 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    static const int POWERUP_CHANCE = 300;
 };

@@ -8,7 +8,11 @@ MessagingSystem::MessagingSystem(sf::RenderWindow* window)
 	_message.setFont(_font);
 	_message.setFillColor(sf::Color::White);
 	_message.setPosition(10, 10);
-		
+
+	_score.setCharacterSize(6);
+	_score.setFont(_font);
+	_score.setFillColor(sf::Color::White);
+	_score.setPosition(10, 20);
 }
 
 MessagingSystem::~MessagingSystem()
@@ -17,6 +21,8 @@ MessagingSystem::~MessagingSystem()
 
 void MessagingSystem::update(float dt)
 {
+
+	
 	// early exit
 	if (_timeToDisplay == 0.f) return;
 	

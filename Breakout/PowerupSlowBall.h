@@ -1,7 +1,5 @@
 #pragma once
-
 #include "PowerupBase.h"
-
 class PowerupSlowBall : public PowerupBase
 {
 public:

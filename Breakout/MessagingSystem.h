@@ -19,6 +19,7 @@ private:
 	sf::RenderWindow* _window;
 
 	sf::Text _message;
+	sf::Text _score;
 	sf::Font _font;
 	float _messageTimer = 0.f;
 	float _timeToDisplay = 0.f;

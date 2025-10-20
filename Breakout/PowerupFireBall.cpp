@@ -1,6 +1,5 @@
 #include "PowerupFireBall.h"
 
-
 PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : PowerupBase(window, paddle, ball)
 {
