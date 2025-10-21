@@ -43,7 +43,11 @@ void GameManager::initialize()
     _pause = true;
     
     // Create bricks
-    _brickManager->createBricks(1, 1, 80.0f, 30.0f, 5.0f);
+    int randomNum1 = rand() % 5 + 3;
+    int randomNum2 = rand() % 5 + 5;
+
+    if (randomNum2 % 2 != 0) randomNum2 += 1;
+    _brickManager->createBricks(randomNum1, randomNum2, 80.0f, 30.0f, 5.0f);
 }
 
 void GameManager::update(float dt)
