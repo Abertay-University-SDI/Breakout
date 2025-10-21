@@ -4,8 +4,6 @@
 
 class GameManager;  // forward declaration
 
-
-
 class Ball {
 public:
     Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);
@@ -14,6 +12,12 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setFrenzyBall(float duration);
+    void setPosition(float x, float y);
+    void setDirection(const sf::Vector2f& direction);
+    void normaliseDirection();
+    sf::Vector2f getPosition() const; // Added for UI progress bar
+    sf::FloatRect getBounds() const; // Added for UI progress bar
 
 private:
     sf::CircleShape _sprite;
@@ -22,12 +26,12 @@ private:
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
+    bool _isFrenzyBall;
     float _timeWithPowerupEffect;
 
     GameManager* _gameManager;  // Reference to the GameManager
 
 
-    static constexpr float RADIUS = 10.0f;      
+    static constexpr float RADIUS = 10.0f;
     static constexpr float VELOCITY = 350.0f;   // for reference.
 };
-

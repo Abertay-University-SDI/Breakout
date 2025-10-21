@@ -1,16 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
+#include "Menu.h"
 #include <iostream>
 
 int main()
 {
 
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
+    bool gameStarted = false;
     GameManager gameManager(&window);
-    gameManager.initialize();
+    Menu menu(&window);
+    gameManager.playMenuMusic();
+    menu.initialize();
 
     sf::Clock clock;
     float deltaTime;
+
+
 
     while (window.isOpen())
     {
@@ -19,15 +25,47 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (!gameStarted)
+            {
+                menu.HandleEvent(event);
+            }
         }
 
-        deltaTime = clock.restart().asSeconds();
+        if (!gameStarted)
+        {
+            window.setMouseCursorVisible(true);
+            menu.update();
 
-        gameManager.update(deltaTime);
+            if (menu.shouldStartGame())
+            {
+                gameManager.initialize();
+                gameStarted = true;
+            }
 
-        window.clear();
-        gameManager.render();
-        window.display();
+            window.clear();
+            menu.render();
+            window.display();
+        }
+
+        else
+        {
+            window.setMouseCursorVisible(false);
+            deltaTime = clock.restart().asSeconds();
+
+            gameManager.update(deltaTime);
+
+            if (gameManager.returnToMenu())
+            {
+                menu.initialize();
+                gameManager.initialize();
+                gameStarted = false;
+            }
+
+            window.clear();
+            gameManager.render();
+            window.display();
+        }
     }
 
     return 0;

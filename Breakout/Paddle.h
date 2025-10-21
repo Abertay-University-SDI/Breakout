@@ -15,10 +15,10 @@ public:
     void render();
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
+    void setPosition(float x, float y);
+    sf::Vector2f getPosition() const;
 
 private:
-
-
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
     float _width = PADDLE_WIDTH;
