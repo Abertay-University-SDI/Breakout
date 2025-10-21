@@ -42,3 +42,7 @@ I have also added a screenshake feature when a life is lost. This took around 3 
 
 I have also created a gameloop, with the player being able to restart the game at any time (press 'space'), and being able to end the game at any time (press 'escape'). This took around 30 minutes.
 
+Fixed not being able to replay game when it's completed. 2 minutes.
+
+Added random number of bricks to simulate different difficulty each run. 10 minutes.
+
