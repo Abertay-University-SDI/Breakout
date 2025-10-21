@@ -6,7 +6,7 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), powerupSpawn(0), powerupSpawnRate(1)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -77,6 +77,7 @@ void GameManager::update(float dt)
     if (_pauseHold > 0.f) _pauseHold -= dt;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
+        
         if (!_pause && _pauseHold <= 0.f)
         {
             _pause = true;
@@ -92,6 +93,8 @@ void GameManager::update(float dt)
     }
     if (_pause)
     {
+        //can leave game when paused
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) _window->close();
         return;
     }
 

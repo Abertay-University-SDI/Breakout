@@ -37,7 +37,6 @@ private:
     int _lives;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
-
     int powerupSpawn;
     int powerupSpawnRate;
 
