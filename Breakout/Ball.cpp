@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(float velocity, GameManager* gameManager)
+    : _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
@@ -45,22 +45,23 @@ void Ball::update(float dt)
 
     // check bounds and bounce
     sf::Vector2f position = _sprite.getPosition();
-    sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= GAME_DIMENSIONS.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _gameManager->addScreenShake(0.07f);
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _gameManager->addScreenShake(0.07f);
     }
 
     // lose life bounce
-    if (position.y > windowDimensions.y)
+    if (position.y > GAME_DIMENSIONS.y)
     {
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
@@ -71,6 +72,7 @@ void Ball::update(float dt)
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
         _direction.y *= -1; // Bounce vertically
+        _gameManager->addScreenShake(0.15f);
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
@@ -80,21 +82,23 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    BrickCollision collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
-    if (collisionResponse == 1)
+    if (collisionResponse == BrickCollision::horizontal)
     {
         _direction.x *= -1; // Bounce horizontally
+        _gameManager->addScreenShake(0.15f);
     }
-    else if (collisionResponse == 2)
+    else if (collisionResponse == BrickCollision::vertical)
     {
         _direction.y *= -1; // Bounce vertically
+        _gameManager->addScreenShake(0.15f);
     }
 }
 
-void Ball::render()
+void Ball::render(sf::RenderWindow& window)
 {
-    _window->draw(_sprite);
+    window.draw(_sprite);
 }
 
 void Ball::setVelocity(float coeff, float duration)

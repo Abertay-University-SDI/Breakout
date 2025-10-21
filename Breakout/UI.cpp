@@ -4,19 +4,13 @@
 #include "GameManager.h"
 #include <iomanip>
 
-UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager) 
-	: _window(window), _gameManager(gameManager)
+UI::UI(int lives, GameManager* gameManager)
+	: _gameManager(gameManager), _newLifeStar(4, 0.0f, 0.0f)
 {
-	for (int i = lives; i > 0; --i)
-	{
-		sf::CircleShape newLife;
-		newLife.setFillColor(sf::Color::Red);	
-		newLife.setOutlineColor(sf::Color::Cyan);
-		newLife.setOutlineThickness(4.0f);
-		newLife.setRadius(LIFE_RADIUS);
-		newLife.setPosition((LIFE_RADIUS*2 + LIFE_PADDING) * i, LIFE_PADDING);
-		_lives.push_back(newLife);
-	}
+	_lifeCircle.setOutlineColor(sf::Color::Cyan);
+	_lifeCircle.setOutlineThickness(4.0f);
+	_lifeCircle.setRadius(LIFE_RADIUS);
+	_newLifeStar.setFillColor(sf::Color::Red);
 	_powerupText.setCharacterSize(30);
 	_powerupText.setPosition(800, 10);
 	_powerupText.setFillColor(sf::Color::Cyan);
@@ -67,16 +61,32 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
-void UI::lifeLost(int lives)
+void UI::setLives(int lives)
 {
-	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+	_lives = lives;
 }
 
-void UI::render()
+void UI::setNewLifeFraction(float fraction) {
+	_newLifeFraction = fraction;
+}
+
+void UI::update(float dt) {
+	_newLifeStar.rotate(dt * 90.0f);
+}
+
+void UI::render(sf::RenderWindow& window)
 {
-	_window->draw(_powerupText);
-	for (sf::CircleShape life : _lives)
+	window.draw(_powerupText);
+	for (int i = 0; i < INITIAL_LIVES; i++)
 	{
-		_window->draw(life);
+		_lifeCircle.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * (i + 1), LIFE_PADDING);
+		_lifeCircle.setFillColor(i < _lives ? sf::Color::Red : sf::Color::Transparent);
+		window.draw(_lifeCircle);
+	}
+	if (_newLifeFraction > 0) {
+		_newLifeStar.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * (_lives + 1) + LIFE_RADIUS, LIFE_PADDING + LIFE_RADIUS);
+		_newLifeStar.setInnerRadius((0.2f + 0.3f * _newLifeFraction) * LIFE_RADIUS);
+		_newLifeStar.setOuterRadius((0.4f + 0.6f * _newLifeFraction) * LIFE_RADIUS);
+		window.draw(_newLifeStar);
 	}
 }

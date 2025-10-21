@@ -16,20 +16,22 @@
 class PowerupManager
 {
 public:
-    PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
+    PowerupManager(Paddle* paddle, Ball* ball);
     ~PowerupManager();
 
     void update(float dt);
-    void render();
+    void render(sf::RenderWindow& window);
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle
     int getPowerupsSpawned();
+    int getPowerupCount() const;
+    void resetPowerupCount();
     std::pair<POWERUPS, float> getPowerupInEffect();
 
 private:
-    sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    int _powerupCount;
 };

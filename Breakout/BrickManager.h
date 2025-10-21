@@ -5,16 +5,21 @@
 
 class GameManager;
 
+enum class BrickCollision {
+    none,
+    horizontal,
+    vertical
+};
+
 class BrickManager {
 public:
-    BrickManager(sf::RenderWindow* window, GameManager* gameManager);
+    BrickManager(GameManager* gameManager);
     void createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing);
-    void render();
-    int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
+    void render(sf::RenderWindow& window);
+    BrickCollision checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
 private:
     std::vector<Brick> _bricks;
-    sf::RenderWindow* _window;
 
     GameManager* _gameManager;
     static constexpr float TOP_PADDING = 100.0f;

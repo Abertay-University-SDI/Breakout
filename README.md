@@ -32,4 +32,12 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Total Time = 185 minutes
+Fix compile error - 1 min
+Window Resizing - 52 minutes
+Background Color - 5 minutes
+Anti-aliasing - 9 minutes
+Screen Shake - 33 minutes
+Make powerup spawning framerate independent - 12 minutes
+Add custom star shape for powerups - 23 minutes
+Regain life when you collect 3 powerups - 50 minutes

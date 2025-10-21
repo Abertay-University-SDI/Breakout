@@ -1,8 +1,8 @@
 #include "PowerupFireBall.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFireBall::PowerupFireBall(Paddle* paddle, Ball* ball)
+    : PowerupBase(paddle, ball)
 {
     _sprite.setFillColor(ballEffectsColour);
 }

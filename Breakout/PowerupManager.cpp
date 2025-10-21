@@ -1,8 +1,8 @@
 #include "PowerupManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball)
+PowerupManager::PowerupManager(Paddle* paddle, Ball* ball)
+    : _paddle(paddle), _ball(ball), _powerupCount(0)
 {
 }
 
@@ -46,11 +46,11 @@ void PowerupManager::update(float dt)
     }
 }
 
-void PowerupManager::render()
+void PowerupManager::render(sf::RenderWindow& window)
 {
     for (auto& powerup : _powerups)
     {
-        powerup->render();
+        powerup->render(window);
     }
 }
 
@@ -61,19 +61,19 @@ void PowerupManager::spawnPowerup()
     switch (rand() % 5)
     {
     case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupBigPaddle(_paddle, _ball));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSlowBall(_paddle, _ball));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupFastBall(_paddle, _ball));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSmallPaddle(_paddle, _ball));
         break;
     case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupFireBall(_paddle, _ball));
         break;
     case 5:
        break;
@@ -89,6 +89,7 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
+            _powerupCount++;
             powerup->setAlive(false);
         }
     }
@@ -97,6 +98,14 @@ void PowerupManager::checkCollision()
 int PowerupManager::getPowerupsSpawned()
 {
     return _powerups.size();
+}
+
+int PowerupManager::getPowerupCount() const {
+    return _powerupCount;
+}
+
+void PowerupManager::resetPowerupCount() {
+    _powerupCount = 0;
 }
 
 std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()

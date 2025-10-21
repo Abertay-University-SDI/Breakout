@@ -1,14 +1,12 @@
 #include "MessagingSystem.h"
 
-MessagingSystem::MessagingSystem(sf::RenderWindow* window)
+MessagingSystem::MessagingSystem()
 {
-	_window = window;
 	_message.setCharacterSize(24);
 	_font.loadFromFile("font/montS.ttf");
 	_message.setFont(_font);
 	_message.setFillColor(sf::Color::White);
 	_message.setPosition(10, 10);
-		
 }
 
 MessagingSystem::~MessagingSystem()
@@ -33,9 +31,9 @@ void MessagingSystem::update(float dt)
 	}
 }
 
-void MessagingSystem::render()
+void MessagingSystem::render(sf::RenderWindow& window)
 {
-	_window->draw(_message);
+	window.draw(_message);
 }
 
 // update alert with str <message> for float <timeToDisplay> in seconds.

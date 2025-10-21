@@ -1,8 +1,8 @@
 #include "BrickManager.h"
 #include "GameManager.h"
 
-BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
-    : _window(window), _gameManager(gameManager)
+BrickManager::BrickManager(GameManager* gameManager)
+    : _gameManager(gameManager)
 {
 }
 
@@ -10,9 +10,9 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 {
     float leftEdge;
     if (cols % 2 == 0) 
-        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
+        leftEdge = GAME_DIMENSIONS.x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
     else
-        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
+        leftEdge = GAME_DIMENSIONS.x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
@@ -23,16 +23,16 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     }
 }
 
-void BrickManager::render()
+void BrickManager::render(sf::RenderWindow& window)
 {
     for (auto& brick : _bricks) {
-        brick.render(*_window);
+        brick.render(window);
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+BrickCollision BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
-    int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
+    BrickCollision collisionResponse = BrickCollision::none;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
@@ -41,15 +41,16 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         sf::FloatRect brickBounds = brick.getBounds();
 
         // default vertical bounce (collision is top/bottom)
-        collisionResponse = 2;
+        collisionResponse = BrickCollision::vertical;
         if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
             // unless it's horizontal (collision from side)
-            collisionResponse = 1;
+            collisionResponse = BrickCollision::horizontal;
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
         _bricks.pop_back();
+        _gameManager->addScreenShake(0.15f);
         break;
     }
     if (_bricks.size() == 0)

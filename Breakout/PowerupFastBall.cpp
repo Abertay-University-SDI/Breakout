@@ -1,7 +1,7 @@
 #include "PowerupFastBall.h"
 
-PowerupFastBall::PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFastBall::PowerupFastBall(Paddle* paddle, Ball* ball)
+    : PowerupBase(paddle, ball)
 {
     _sprite.setFillColor(ballEffectsColour);
 }
