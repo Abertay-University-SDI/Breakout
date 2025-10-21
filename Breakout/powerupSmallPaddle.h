@@ -1,5 +1,4 @@
 #pragma once
-
 #include "PowerupBase.h"
 
 class PowerupSmallPaddle : public PowerupBase

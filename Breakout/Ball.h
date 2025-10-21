@@ -14,12 +14,14 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setSize(float scale, float duration);
 
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
+    float _radius;
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;

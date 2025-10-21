@@ -8,6 +8,5 @@ public:
 
     std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
 
-
 };
 
