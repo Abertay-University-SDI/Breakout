@@ -18,13 +18,13 @@ public:
 	void render();
 
 private:
-	GameManager* _gameManager;
+	GameManager* m_gameManager;
 	
-	sf::RenderWindow* _window;
-	sf::Font _font;
-	sf::Text _powerupText;
+	sf::RenderWindow* m_window;
+	sf::Font m_font;
+	sf::Text m_powerupText;
 
-	std::vector<sf::CircleShape> _lives;
+	std::vector<sf::CircleShape> m_lives;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;

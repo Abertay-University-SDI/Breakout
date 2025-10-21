@@ -28,24 +28,24 @@ public:
 
 
 private:
-    bool _pause;
-    float _pauseHold;
-    float _time;
-    float _timeLastPowerupSpawned;
-    int _lives;
-    bool _levelComplete;
-    std::pair<POWERUPS, float> _powerupInEffect;
+    bool m_pause;
+    float m_pauseHold;
+    float m_time;
+    float m_timeLastPowerupSpawned;
+    int m_lives;
+    bool m_levelComplete;
+    std::pair<POWERUPS, float> m_powerupInEffect;
 
-    sf::Font _font;
-    sf::Text _masterText;
+    sf::Font m_font;
+    sf::Text m_masterText;
 
-    sf::RenderWindow* _window;
-    Paddle* _paddle;
-    Ball* _ball;
-    BrickManager* _brickManager;
-    PowerupManager* _powerupManager;
-    MessagingSystem* _messagingSystem;
-    UI* _ui;
+    sf::RenderWindow* m_window;
+    Paddle* m_paddle;
+    Ball* m_ball;
+    BrickManager* m_brickManager;
+    PowerupManager* m_powerupManager;
+    MessagingSystem* m_messagingSystem;
+    UI* m_ui;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

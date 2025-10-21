@@ -16,11 +16,11 @@ public:
 
 private:
 
-	sf::RenderWindow* _window;
+	sf::RenderWindow* m_window;
 
-	sf::Text _message;
-	sf::Font _font;
-	float _messageTimer = 0.f;
-	float _timeToDisplay = 0.f;
+	sf::Text m_message;
+	sf::Font m_font;
+	float m_messageTimer = 0.f;
+	float m_timeToDisplay = 0.f;
 };
 

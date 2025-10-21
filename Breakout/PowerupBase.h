@@ -6,9 +6,6 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
-
-
 class PowerupBase
 {
 public:
@@ -31,15 +28,15 @@ protected: // Protected so derived classes can access these members
     static constexpr float AMPLITUDE_OF_FALL = 80.0f;   // waviness of fall
 
     // Game logic
-    float _time;
-    bool _isAlive;
-    Paddle* _paddle;
-    Ball* _ball;
-    sf::Vector2f _direction;
+    float m_time;
+    bool m_isAlive;
+    Paddle* m_paddle;
+    Ball* m_ball;
+    sf::Vector2f m_direction;
 
     // Render
-    sf::CircleShape _sprite;
-    sf::Color _colour;
-    sf::RenderWindow* _window;
+    sf::CircleShape m_sprite;
+    sf::Color m_colour;
+    sf::RenderWindow* m_window;
 
 };

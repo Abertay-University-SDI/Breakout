@@ -1,21 +1,22 @@
 #include "Brick.h"
 
-Brick::Brick(float x, float y, float width, float height)
-    : _isDestroyed(false)
+Brick::Brick(float x, float y, float width, float height) :
+    m_isDestroyed(false)
 {
-    _shape.setPosition(x, y);
-    _shape.setSize(sf::Vector2f(width, height));
-    _shape.setFillColor(sf::Color::Red);
+    m_shape.setPosition(x, y);
+    m_shape.setSize(sf::Vector2f(width, height));
+    m_shape.setFillColor(sf::Color::Red);
 }
 
 void Brick::render(sf::RenderWindow& window)
 {
-    if (!_isDestroyed) {
-        window.draw(_shape);
+    if (!m_isDestroyed)
+    {
+        window.draw(m_shape);
     }
 }
 
 sf::FloatRect Brick::getBounds() const
 {
-    return _shape.getGlobalBounds();
+    return m_shape.getGlobalBounds();
 }

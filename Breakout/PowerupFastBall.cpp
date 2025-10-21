@@ -1,9 +1,9 @@
 #include "PowerupFastBall.h"
 
-PowerupFastBall::PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFastBall::PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball) :
+    PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(ballEffectsColour);
+    m_sprite.setFillColor(ballEffectsColour);
 }
 
 PowerupFastBall::~PowerupFastBall()
@@ -12,6 +12,6 @@ PowerupFastBall::~PowerupFastBall()
 
 std::pair<POWERUPS, float> PowerupFastBall::applyEffect()
 {
-    _ball->setVelocity(2.f, 5.0f);
+    m_ball->setVelocity(2.f, 5.0f);
     return { fastBall, 5.0f };
 }
