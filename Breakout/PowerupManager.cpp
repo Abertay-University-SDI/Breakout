@@ -57,7 +57,7 @@ void PowerupManager::render()
 void PowerupManager::spawnPowerup()
 {
 
-    // TODO finish this.
+
     switch (rand() % 5)
     {
     case 0:

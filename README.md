@@ -33,3 +33,6 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+fixed compiler issues (5 minutes)
+implemented mouse input (1 hour)
+added brick fade out on hit (2 hours)
