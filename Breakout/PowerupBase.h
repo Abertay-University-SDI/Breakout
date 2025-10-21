@@ -6,7 +6,8 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+//#include "PowerupFireBall.h"
+//Including a class that's supposed to be derived from the base class shouldn't be allowed, this is what is causing the issue here
 
 
 class PowerupBase
@@ -32,6 +33,7 @@ protected: // Protected so derived classes can access these members
 
     // Game logic
     float _time;
+    float maxTime = 5;
     bool _isAlive;
     Paddle* _paddle;
     Ball* _ball;

@@ -15,6 +15,9 @@ public:
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
+
+	//readding lives once the player restarts the game
+	void addLivesBack();
 	void render();
 
 private:
@@ -24,9 +27,16 @@ private:
 	sf::Font _font;
 	sf::Text _powerupText;
 
+	 
+	sf::RectangleShape timeLeftBar;
+	sf::RectangleShape timeElapsedBar;
+
 	std::vector<sf::CircleShape> _lives;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
+
+	int barSize = 200;
+	bool powerupActivated = false;
 };
 

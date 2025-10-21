@@ -56,7 +56,7 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
-
+    srand(time(0));
     // TODO finish this.
     switch (rand() % 5)
     {
@@ -89,6 +89,8 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
+           // maxPowerUpTime = powerup->applyEffect().second;
+            maxPowerUpTime = _powerupInEffect->second;
             powerup->setAlive(false);
         }
     }
