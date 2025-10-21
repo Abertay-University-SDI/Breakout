@@ -1,6 +1,5 @@
 #include "Ball.h"
 #include "GameManager.h"
-#include <cmath> // for std::sqrt
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
