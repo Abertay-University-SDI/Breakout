@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "ScreenShake.h"
 
 
 class GameManager {
@@ -18,14 +18,16 @@ public:
     void loseLife();
     void render();
     void levelComplete();
-    void powerupEffect(POWERUPS pu, float t);
+
+    void reset();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
-
+    
+    ScreenShake _shake; 
 
 private:
     bool _pause;
@@ -35,6 +37,8 @@ private:
     int _lives;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
+    int powerupSpawn;
+    int powerupSpawnRate;
 
     sf::Font _font;
     sf::Text _masterText;
