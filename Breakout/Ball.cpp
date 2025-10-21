@@ -43,6 +43,12 @@ void Ball::update(float dt)
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
 
+
+    if (_trailPositions.size() >= TRAIL_LENGTH) {
+        _trailPositions.erase(_trailPositions.begin());
+    }
+    _trailPositions.push_back(_sprite.getPosition());
+
     // check bounds and bounce
     sf::Vector2f position = _sprite.getPosition();
     sf::Vector2u windowDimensions = _window->getSize();
@@ -77,6 +83,8 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        _gameManager->getPaddle()->changeColorForASecond();
     }
 
     // collision with bricks
@@ -94,6 +102,15 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
+    // trail
+    for (size_t i = 0; i < _trailPositions.size(); ++i) {
+        sf::CircleShape trailSegment(RADIUS);
+        trailSegment.setPosition(_trailPositions[i]);
+        trailSegment.setFillColor(sf::Color(255, 255, 255, 255 - (i * (255 / TRAIL_LENGTH)))); // Fading effect
+        _window->draw(trailSegment);
+    }
+
+    //ball
     _window->draw(_sprite);
 }
 

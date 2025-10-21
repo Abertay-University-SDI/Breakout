@@ -1,8 +1,9 @@
 #include "Paddle.h"
 #include <iostream>
+#include <SFML/Window/Mouse.hpp>
 
 Paddle::Paddle(sf::RenderWindow* window)
-    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
+    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true), _colorChangeTimer(0.0f)
 {
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
@@ -35,13 +36,23 @@ void Paddle::moveRight(float dt)
 
 void Paddle::update(float dt)
 {
+  
+    if (_colorChangeTimer > 0)
+    {
+        _colorChangeTimer -= dt;
+        if (_colorChangeTimer <= 0)
+        {
+            _sprite.setFillColor(sf::Color::White);
+        }
+    }
+
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
     }
     else
     {
-        setWidth(1.0f, 0.0f); // Reset to default width after duration
+        setWidth(1.0f, 0.0f);
     }
 }
 
@@ -64,4 +75,24 @@ void Paddle::setWidth(float coeff, float duration)
     _timeInNewSize = duration;
     float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
     _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
+void Paddle::trackMouse(const sf::RenderWindow& window)
+{
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+
+    float newX = static_cast<float>(mousePosition.x) - (_sprite.getSize().x / 2);
+
+
+    float windowWidth = static_cast<float>(window.getSize().x);
+    newX = std::max(0.0f, std::min(newX, windowWidth - _sprite.getSize().x));
+
+
+    _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
+void Paddle::paddleHit()
+{
+    _sprite.setFillColor(sf::Color::Red);
+    _colorChangeTimer = 1.0f;
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+
 
 
 class GameManager;  // forward declaration
@@ -24,9 +26,13 @@ private:
     bool _isFireBall;
     float _timeWithPowerupEffect;
 
-    GameManager* _gameManager;  // Reference to the GameManager
+    std::vector<sf::Vector2f> _trailPositions;
+    
 
 
+    GameManager* _gameManager;
+
+    static constexpr size_t TRAIL_LENGTH = 100;
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
 };

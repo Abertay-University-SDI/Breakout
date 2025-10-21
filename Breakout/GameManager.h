@@ -19,6 +19,7 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void reset();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -32,7 +33,7 @@ private:
     float _pauseHold;
     float _time;
     float _timeLastPowerupSpawned;
-    int _lives;
+    int _lives = 3;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
@@ -46,6 +47,8 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    bool _useMouseInput;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
