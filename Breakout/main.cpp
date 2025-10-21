@@ -1,34 +1,43 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
-#include <iostream>
 
 int main()
 {
+	sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
+	window.setFramerateLimit(60);
 
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
-    GameManager gameManager(&window);
-    gameManager.initialize();
+	GameManager gameManager(&window);
+	gameManager.initialize();
 
-    sf::Clock clock;
-    float deltaTime;
+	sf::Clock clock;
+	float deltaTime;
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
 
-        deltaTime = clock.restart().asSeconds();
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.scancode == sf::Keyboard::Scan::Escape)
+					window.close();
 
-        gameManager.update(deltaTime);
+				gameManager.handleInput(event.key);
+			}
+		}
 
-        window.clear();
-        gameManager.render();
-        window.display();
-    }
+		deltaTime = clock.restart().asSeconds();
 
-    return 0;
+		gameManager.update(deltaTime);
+
+		window.clear();
+		gameManager.render();
+		window.display();
+	}
+
+	return 0;
 }

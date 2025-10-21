@@ -1,17 +1,16 @@
 #include "PowerupSlowBall.h"
 
-PowerupSlowBall::PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupSlowBall::PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle,
+								 Ball* ball) : PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(ballEffectsColour); 
+	_sprite.setFillColor(ballEffectsColour);
 }
 
 PowerupSlowBall::~PowerupSlowBall()
-{
-}
+{}
 
-std::pair<POWERUPS, float> PowerupSlowBall::applyEffect()
+std::pair<POWERUPS, sf::Vector2f> PowerupSlowBall::applyEffect()
 {
-    _ball->setVelocity(0.5f, 5.0f);
-    return { slowBall, 5.0f };
+	_ball->setVelocity(0.5f, _maxDuration);
+	return {slowBall, {_maxDuration, _maxDuration}};
 }

@@ -1,28 +1,24 @@
 #include "PowerupFireBall.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle,
+								 Ball* ball) : PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(ballEffectsColour);
+	_sprite.setFillColor(ballEffectsColour);
 }
 
 PowerupFireBall::~PowerupFireBall()
 {
+	auto pInteger = new int();
 
-    int* pInteger = new int();
-
-    if (pInteger != nullptr)
-    {
-        // use my pointer to do things.
-    }
-
-
-    
+	if (pInteger != nullptr)
+	{
+		// use my pointer to do things.
+	}
 }
 
-std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
+std::pair<POWERUPS, sf::Vector2f> PowerupFireBall::applyEffect()
 {
-    _ball->setFireBall(5.0f);
-    return { fireBall, 5.0f };
+	_ball->setFireBall(_maxDuration);
+	return {fireBall, {_maxDuration, _maxDuration}};
 }

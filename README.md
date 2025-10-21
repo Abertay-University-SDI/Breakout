@@ -32,4 +32,15 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Time taken: 04:43:27.04
+
+Work Done
+- Fixed implicated conversion(float, doable) warning in PowerupBase.cpp.
+- Implemented a screen shake effect on lose of life.
+- Implemented a progress bar for the powerup duration replacing the countdown.
+- Implemented mouse-based paddle movement.
+- Implemented toggling of the mouse-based paddle movement through the 'M' key.
+- Added a "handleInput()" to the GameManager class.
+- Implemented a SoundManager for playing audio clips.
+- Turned the SoundManager into a singleton.
+- Added sounds effects into the game, different ball hit sounds depending on if it's hitting the bricks or something else, a hurt sound for when the player looses a life, and a sound for when a level is completed.

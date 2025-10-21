@@ -5,8 +5,9 @@
 class PowerupSmallPaddle : public PowerupBase
 {
 public:
-    PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
-    ~PowerupSmallPaddle();
+	PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
+	~PowerupSmallPaddle() override;
 
-    std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
+	std::pair<POWERUPS, sf::Vector2f> applyEffect() override;
+	// Method to apply the power-up effect
 };

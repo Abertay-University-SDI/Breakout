@@ -1,17 +1,17 @@
 #include "PowerupSmallPaddle.h"
 
-PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle,
+									   Ball* ball) : PowerupBase(
+		window, paddle, ball)
 {
-    _sprite.setFillColor(paddleEffectsColour); // Same colour as SmallPaddle
+	_sprite.setFillColor(paddleEffectsColour); // Same colour as SmallPaddle
 }
 
 PowerupSmallPaddle::~PowerupSmallPaddle()
-{
-}
+{}
 
-std::pair<POWERUPS, float> PowerupSmallPaddle::applyEffect()
+std::pair<POWERUPS, sf::Vector2f> PowerupSmallPaddle::applyEffect()
 {
-    _paddle->setWidth(0.67f, 5.0f);
-    return { smallPaddle, 5.0f };
+	_paddle->setWidth(0.67f, _maxDuration);
+	return {smallPaddle, {_maxDuration, _maxDuration}};
 }
