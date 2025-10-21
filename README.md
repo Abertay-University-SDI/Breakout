@@ -1,11 +1,11 @@
 # Breakout
 
-W Kavanagh & N Merchant. Summer 2024 
+Kieran Stuart 2025
 
 ## controls
 
-A/D to move the paddle right and left.
-P to pause.
+Mouse Position for pad controls
+Esc to pause.
 
 ## Powerups
 
@@ -15,21 +15,20 @@ fire ball (green)
 
 # Tasklist
 
-## Suggested fixes
-
-* Fix the compiler issues in the code
-
-## Suggested tasks
-
-* Implement mouse input for pad
-* Improved VFX (ball trail, paddle hit response, brick particle destruction)
-* Better UI (progress bar rather than timer for countdown).
-* GameLoop
-* Better ball physics (Box2D)
-* Leaderboards
-* More ball types (e.g., multiball, sticky ball [where you shoot the ball from the paddle every time], tiny ball, big ball, brick-tracking ball)
-* Sounds with increasing tone between bounces.
-* Implement commentary with calls to an LLM such as LLama
+* Fix compiler bugs
+* Create a menu system
+* Create a game loop
+* Add a frenzy mode
+* Add a boss
+* Add sounds
 
 # Time Details and Changelist
+
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+* Understanding the code and fixing compiler bugs (45 minutes)
+* Creating a menu system (1 hour)
+* Creating a boss battle (1 hour)
+* Creating a game loop (45 minutes)
+* Adding a frenzy mode (45 minutes)
+* Adding sound effects (1 hour)

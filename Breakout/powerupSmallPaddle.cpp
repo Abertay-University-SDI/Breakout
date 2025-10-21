@@ -3,7 +3,7 @@
 PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(paddleEffectsColour); // Same colour as SmallPaddle
+    _sprite.setFillColor(paddleEffectsColour); 
 }
 
 PowerupSmallPaddle::~PowerupSmallPaddle()

@@ -1,6 +1,5 @@
 #include "PowerupManager.h"
 
-
 PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : _window(window), _paddle(paddle), _ball(ball)
 {
@@ -17,7 +16,6 @@ PowerupManager::~PowerupManager()
 
 void PowerupManager::update(float dt)
 {
-    // tick down powerup effect time. Reset if elapsed.
     if (_powerupInEffect)
     {
         _powerupInEffect->second -= dt;
@@ -27,12 +25,9 @@ void PowerupManager::update(float dt)
         }
     }
 
-
     for (auto it = _powerups.begin(); it != _powerups.end(); )
     {
         checkCollision();
-        
-        // Delete powerups queued for removal
         (*it)->update(dt);
         if (!(*it)->isAlive())
         {
@@ -56,8 +51,6 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
-
-    // TODO finish this.
     switch (rand() % 5)
     {
     case 0:
@@ -75,23 +68,43 @@ void PowerupManager::spawnPowerup()
     case 4:
         _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
         break;
-    case 5:
-       break;
     }
+}
 
+void PowerupManager::frenzyMode()
+{
+    _ball->setFrenzyBall(3.0f);
+    _ball->setVelocity(1.5f, 3.0f);
+    _powerupInEffect = std::make_pair(frenzyBall, 3.0f);
 }
 
 void PowerupManager::checkCollision()
 {
     for (auto& powerup : _powerups)
     {
-
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
             powerup->setAlive(false);
         }
     }
+}
+
+void PowerupManager::resetPowerups()
+{
+    for (auto powerup : _powerups)
+    {
+        delete powerup;
+    }
+    _powerups.clear();
+    _powerupInEffect.reset();
+
+    _ball->setVelocity(1.0f, 0.f); 
+    _ball->setFireBall(0.f); 
+    _ball->setFrenzyBall(0.f); 
+    _ball->setPosition(_paddle->getPosition().x + _paddle->getBounds().width / 2.0f - 5, _paddle->getPosition().y - 150);
+
+    _paddle->setWidth(1.0f, 0.f); 
 }
 
 int PowerupManager::getPowerupsSpawned()
