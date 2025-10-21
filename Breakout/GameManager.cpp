@@ -17,6 +17,7 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
+    _levelComplete = false;
     //delete on reinitialise
     delete _paddle;
     delete _brickManager;
@@ -42,7 +43,7 @@ void GameManager::initialize()
     _pause = true;
     
     // Create bricks
-    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _brickManager->createBricks(1, 1, 80.0f, 30.0f, 5.0f);
 }
 
 void GameManager::update(float dt)
