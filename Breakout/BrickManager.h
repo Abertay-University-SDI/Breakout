@@ -13,9 +13,9 @@ public:
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
 private:
-    std::vector<Brick> _bricks;
-    sf::RenderWindow* _window;
+    std::vector<Brick> m_bricks;
+    sf::RenderWindow* m_window;
 
-    GameManager* _gameManager;
+    GameManager* m_gameManager;
     static constexpr float TOP_PADDING = 100.0f;
 };

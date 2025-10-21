@@ -2,12 +2,12 @@
 
 MessagingSystem::MessagingSystem(sf::RenderWindow* window)
 {
-	_window = window;
-	_message.setCharacterSize(24);
-	_font.loadFromFile("font/montS.ttf");
-	_message.setFont(_font);
-	_message.setFillColor(sf::Color::White);
-	_message.setPosition(10, 10);
+	m_window = window;
+	m_message.setCharacterSize(24);
+	m_font.loadFromFile("font/montS.ttf");
+	m_message.setFont(m_font);
+	m_message.setFillColor(sf::Color::White);
+	m_message.setPosition(10, 10);
 		
 }
 
@@ -18,29 +18,29 @@ MessagingSystem::~MessagingSystem()
 void MessagingSystem::update(float dt)
 {
 	// early exit
-	if (_timeToDisplay == 0.f) return;
+	if (m_timeToDisplay == 0.f) return;
 	
 	// increment timer if it should be running, or reset message if expired.
-	if (_messageTimer < _timeToDisplay)
+	if (m_messageTimer < m_timeToDisplay)
 	{
-		_messageTimer += dt;
+		m_messageTimer += dt;
 	}
 	else
 	{
-		_message.setString("");
-		_timeToDisplay = 0.f;
-		_messageTimer = 0.f;
+		m_message.setString("");
+		m_timeToDisplay = 0.f;
+		m_messageTimer = 0.f;
 	}
 }
 
 void MessagingSystem::render()
 {
-	_window->draw(_message);
+	m_window->draw(m_message);
 }
 
 // update alert with str <message> for float <timeToDisplay> in seconds.
 void MessagingSystem::setMessage(std::string message, float timeToDisplay)
 {
-	_message.setString(message);
-	_timeToDisplay = timeToDisplay;
+	m_message.setString(message);
+	m_timeToDisplay = timeToDisplay;
 }

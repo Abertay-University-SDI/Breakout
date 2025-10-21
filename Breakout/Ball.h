@@ -16,15 +16,15 @@ public:
     void setFireBall(float duration);
 
 private:
-    sf::CircleShape _sprite;
-    sf::Vector2f _direction;
-    sf::RenderWindow* _window;
-    float _velocity;
-    bool _isAlive;
-    bool _isFireBall;
-    float _timeWithPowerupEffect;
+    sf::CircleShape m_sprite;
+    sf::Vector2f m_direction;
+    sf::RenderWindow* m_window;
+    float m_velocity;
+    bool m_isAlive;
+    bool m_isFireBall;
+    float m_timeWithPowerupEffect;
 
-    GameManager* _gameManager;  // Reference to the GameManager
+    GameManager* m_gameManager;  // Reference to the GameManager
 
 
     static constexpr float RADIUS = 10.0f;      

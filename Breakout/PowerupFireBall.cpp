@@ -1,10 +1,10 @@
 #include "PowerupFireBall.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball) :
+    PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(ballEffectsColour);
+    m_sprite.setFillColor(ballEffectsColour);
 }
 
 PowerupFireBall::~PowerupFireBall()
@@ -23,6 +23,6 @@ PowerupFireBall::~PowerupFireBall()
 
 std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
 {
-    _ball->setFireBall(5.0f);
+    m_ball->setFireBall(5.0f);
     return { fireBall, 5.0f };
 }

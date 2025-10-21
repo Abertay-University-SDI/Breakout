@@ -1,43 +1,46 @@
 #include "PowerupManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball)
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball) :
+    m_window(window), m_paddle(paddle), m_ball(ball)
 {
 }
 
 PowerupManager::~PowerupManager()
 {
-    for (auto powerup : _powerups)
+    for (auto powerup : m_powerups)
     {
         delete powerup;
     }
-    _powerups.clear();
+
+    m_powerups.clear();
 }
 
 void PowerupManager::update(float dt)
 {
     // tick down powerup effect time. Reset if elapsed.
-    if (_powerupInEffect)
+    if (m_powerupInEffect)
     {
-        _powerupInEffect->second -= dt;
-        if (_powerupInEffect->second <= 0)
+        m_powerupInEffect->second -= dt;
+
+        if (m_powerupInEffect->second <= 0)
         {
-            _powerupInEffect.reset();
+            m_powerupInEffect.reset();
         }
     }
 
 
-    for (auto it = _powerups.begin(); it != _powerups.end(); )
+    for (auto it = m_powerups.begin(); it != m_powerups.end(); )
     {
         checkCollision();
         
         // Delete powerups queued for removal
         (*it)->update(dt);
+
         if (!(*it)->isAlive())
         {
             delete* it;
-            it = _powerups.erase(it);
+            it = m_powerups.erase(it);
         }
         else
         {
@@ -48,7 +51,7 @@ void PowerupManager::update(float dt)
 
 void PowerupManager::render()
 {
-    for (auto& powerup : _powerups)
+    for (auto& powerup : m_powerups)
     {
         powerup->render();
     }
@@ -60,35 +63,41 @@ void PowerupManager::spawnPowerup()
     // TODO finish this.
     switch (rand() % 5)
     {
-    case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
-        break;
-    case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
-        break;
-    case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
-        break;
-    case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
-        break;
-    case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
-        break;
-    case 5:
-       break;
+        case 0:
+            m_powerups.push_back(new PowerupBigPaddle(m_window, m_paddle, m_ball));
+            break;
+
+        case 1:
+            m_powerups.push_back(new PowerupSlowBall(m_window, m_paddle, m_ball));
+            break;
+
+        case 2:
+            m_powerups.push_back(new PowerupFastBall(m_window, m_paddle, m_ball));
+            break;
+
+        case 3:
+            m_powerups.push_back(new PowerupSmallPaddle(m_window, m_paddle, m_ball));
+            break;
+
+        case 4:
+            m_powerups.push_back(new PowerupFireBall(m_window, m_paddle, m_ball));
+            break;
+
+        case 5:
+           break;
     }
 
 }
 
 void PowerupManager::checkCollision()
 {
-    for (auto& powerup : _powerups)
+    for (auto& powerup : m_powerups)
     {
 
         if (powerup->checkCollisionWithPaddle())
         {
-            _powerupInEffect = powerup->applyEffect();
+            m_powerupInEffect = powerup->applyEffect();
+
             powerup->setAlive(false);
         }
     }
@@ -96,11 +105,12 @@ void PowerupManager::checkCollision()
 
 int PowerupManager::getPowerupsSpawned()
 {
-    return _powerups.size();
+    return m_powerups.size();
 }
 
 std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()
 {
-    if (!_powerupInEffect) return { none, 0.f };
-    return *_powerupInEffect;
+    if (!m_powerupInEffect) return { none, 0.f };
+
+    return *m_powerupInEffect;
 }

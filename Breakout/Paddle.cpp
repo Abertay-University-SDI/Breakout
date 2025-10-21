@@ -1,12 +1,12 @@
 #include "Paddle.h"
 #include <iostream>
 
-Paddle::Paddle(sf::RenderWindow* window)
-    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
+Paddle::Paddle(sf::RenderWindow* window) :
+    m_window(window), m_width(PADDLE_WIDTH), m_timeInNewSize(0.0f), m_isAlive(true)
 {
-    _sprite.setFillColor(sf::Color::Cyan);
-    _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
-    _sprite.setSize(sf::Vector2f(_width, PADDLE_HEIGHT));
+    m_sprite.setFillColor(sf::Color::Cyan);
+    m_sprite.setPosition((window->getSize().x - m_width) / 2.0f, window->getSize().y - 50.0f);
+    m_sprite.setSize(sf::Vector2f(m_width, PADDLE_HEIGHT));
 }
 
 Paddle::~Paddle()
@@ -15,29 +15,29 @@ Paddle::~Paddle()
 
 void Paddle::moveLeft(float dt)
 {
-    float position = _sprite.getPosition().x;
+    float position = m_sprite.getPosition().x;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && position > 0)
     {
-        _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
+        m_sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
     }
 }
 
 void Paddle::moveRight(float dt)
 {
-    float position = _sprite.getPosition().x;
+    float position = m_sprite.getPosition().x;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < m_window->getSize().x - m_width)
     {
-        _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
+        m_sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
     }
 }
 
 void Paddle::update(float dt)
 {
-    if (_timeInNewSize > 0)
+    if (m_timeInNewSize > 0)
     {
-        _timeInNewSize -= dt;
+        m_timeInNewSize -= dt;
     }
     else
     {
@@ -47,21 +47,21 @@ void Paddle::update(float dt)
 
 void Paddle::render()
 {
-    _window->draw(_sprite);
+    m_window->draw(m_sprite);
 }
 
 sf::FloatRect Paddle::getBounds() const
 {
-    return _sprite.getGlobalBounds();
+    return m_sprite.getGlobalBounds();
 }
 
 // update width by SF of coeff. 
 // ensure centre remains consistent.
 void Paddle::setWidth(float coeff, float duration)
 {
-    _width = coeff * PADDLE_WIDTH;
-    _sprite.setSize(sf::Vector2f(_width, _sprite.getSize().y));
-    _timeInNewSize = duration;
-    float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
-    _sprite.setPosition(newX, _sprite.getPosition().y);
+    m_width = coeff * PADDLE_WIDTH;
+    m_sprite.setSize(sf::Vector2f(m_width, m_sprite.getSize().y));
+    m_timeInNewSize = duration;
+    float newX = m_sprite.getPosition().x + (m_width - PADDLE_WIDTH) / 2;
+    m_sprite.setPosition(newX, m_sprite.getPosition().y);
 }

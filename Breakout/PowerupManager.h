@@ -27,9 +27,9 @@ public:
     std::pair<POWERUPS, float> getPowerupInEffect();
 
 private:
-    sf::RenderWindow* _window;
-    Paddle* _paddle;
-    Ball* _ball;
-    std::vector<PowerupBase*> _powerups;            // used to manage deletion.
-    std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    sf::RenderWindow* m_window;
+    Paddle* m_paddle;
+    Ball* m_ball;
+    std::vector<PowerupBase*> m_powerups;            // used to manage deletion.
+    std::optional<std::pair<POWERUPS, float>> m_powerupInEffect;    // used for gameManager to get reference.
 };

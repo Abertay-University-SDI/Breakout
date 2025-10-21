@@ -19,9 +19,9 @@ public:
 private:
 
 
-    sf::RenderWindow* _window;
-    sf::RectangleShape _sprite;
-    float _width = PADDLE_WIDTH;
-    bool _isAlive;
-    float _timeInNewSize = 0.0f;
+    sf::RenderWindow* m_window;
+    sf::RectangleShape m_sprite;
+    float m_width = PADDLE_WIDTH;
+    bool m_isAlive;
+    float m_timeInNewSize = 0.0f;
 };

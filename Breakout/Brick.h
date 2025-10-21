@@ -8,6 +8,6 @@ public:
     sf::FloatRect getBounds() const;
 
 private:
-    sf::RectangleShape _shape;
-    bool _isDestroyed;
+    sf::RectangleShape m_shape;
+    bool m_isDestroyed;
 };

@@ -3,115 +3,124 @@
 #include "PowerupManager.h"
 #include <iostream>
 
-GameManager::GameManager(sf::RenderWindow* window)
-    : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
-    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+GameManager::GameManager(sf::RenderWindow* window) :
+    m_window(window), m_paddle(nullptr), m_ball(nullptr), m_brickManager(nullptr), m_powerupManager(nullptr),
+    m_messagingSystem(nullptr), m_ui(nullptr), m_pause(false), m_time(0.f), m_lives(3), m_pauseHold(0.f), m_levelComplete(false),
+    m_powerupInEffect({ none,0.f }), m_timeLastPowerupSpawned(0.f)
 {
-    _font.loadFromFile("font/montS.ttf");
-    _masterText.setFont(_font);
-    _masterText.setPosition(50, 400);
-    _masterText.setCharacterSize(48);
-    _masterText.setFillColor(sf::Color::Yellow);
+    m_font.loadFromFile("font/montS.ttf");
+    m_masterText.setFont(m_font);
+    m_masterText.setPosition(50, 400);
+    m_masterText.setCharacterSize(48);
+    m_masterText.setFillColor(sf::Color::Yellow);
 }
 
 void GameManager::initialize()
 {
-    _paddle = new Paddle(_window);
-    _brickManager = new BrickManager(_window, this);
-    _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
-    _ui = new UI(_window, _lives, this);
+    m_paddle = new Paddle(m_window);
+    m_brickManager = new BrickManager(m_window, this);
+    m_messagingSystem = new MessagingSystem(m_window);
+    m_ball = new Ball(m_window, 400.0f, this); 
+    m_powerupManager = new PowerupManager(m_window, m_paddle, m_ball);
+    m_ui = new UI(m_window, m_lives, this);
 
     // Create bricks
-    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    m_brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
 void GameManager::update(float dt)
 {
-    _powerupInEffect = _powerupManager->getPowerupInEffect();
-    _ui->updatePowerupText(_powerupInEffect);
-    _powerupInEffect.second -= dt;
+    m_powerupInEffect = m_powerupManager->getPowerupInEffect();
+    m_ui->updatePowerupText(m_powerupInEffect);
+    m_powerupInEffect.second -= dt;
     
 
-    if (_lives <= 0)
+    if (m_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        m_masterText.setString("GAME OVER");
         return;
     }
-    if (_levelComplete)
+
+    if (m_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        m_masterText.setString("LEVEL COMPLETED");
         return;
     }
+
     // pause and pause handling
-    if (_pauseHold > 0.f) _pauseHold -= dt;
+    if (m_pauseHold > 0.f) m_pauseHold -= dt;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
-        if (!_pause && _pauseHold <= 0.f)
+        if (!m_pause && m_pauseHold <= 0.f)
         {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
+            m_pause = true;
+            m_masterText.setString("PAUSED");
+            m_pauseHold = PAUSE_TIME_BUFFER;
         }
-        if (_pause && _pauseHold <= 0.f)
+
+        if (m_pause && m_pauseHold <= 0.f)
         {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
+            m_pause = false;
+            m_masterText.setString("");
+            m_pauseHold = PAUSE_TIME_BUFFER;
         }
     }
-    if (_pause)
+
+    if (m_pause)
     {
         return;
     }
 
     // timer.
-    _time += dt;
+    m_time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (m_time > m_timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
     {
-        _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        m_powerupManager->spawnPowerup();
+        m_timeLastPowerupSpawned = m_time;
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) m_paddle->moveRight(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) m_paddle->moveLeft(dt);
 
     // update everything 
-    _paddle->update(dt);
-    _ball->update(dt);
-    _powerupManager->update(dt);
+    m_paddle->update(dt);
+    m_ball->update(dt);
+    m_powerupManager->update(dt);
 }
 
 void GameManager::loseLife()
 {
-    _lives--;
-    _ui->lifeLost(_lives);
+    m_lives--;
+    m_ui->lifeLost(m_lives);
 
     // TODO screen shake.
 }
 
 void GameManager::render()
 {
-    _paddle->render();
-    _ball->render();
-    _brickManager->render();
-    _powerupManager->render();
-    _window->draw(_masterText);
-    _ui->render();
+    m_paddle->render();
+    m_ball->render();
+    m_brickManager->render();
+    m_powerupManager->render();
+    m_window->draw(m_masterText);
+    m_ui->render();
 }
 
 void GameManager::levelComplete()
 {
-    _levelComplete = true;
+    m_levelComplete = true;
 }
 
-sf::RenderWindow* GameManager::getWindow() const { return _window; }
-UI* GameManager::getUI() const { return _ui; }
-Paddle* GameManager::getPaddle() const { return _paddle; }
-BrickManager* GameManager::getBrickManager() const { return _brickManager; }
-PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+sf::RenderWindow* GameManager::getWindow() const { return m_window; }
+
+UI* GameManager::getUI() const { return m_ui; }
+
+Paddle* GameManager::getPaddle() const { return m_paddle; }
+
+BrickManager* GameManager::getBrickManager() const { return m_brickManager; }
+
+PowerupManager* GameManager::getPowerupManager() const { return m_powerupManager; }
