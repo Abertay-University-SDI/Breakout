@@ -1,8 +1,9 @@
 #include "PowerupManager.h"
+#include "GameManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball)
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball, GameManager* gameManager)
+    : _window(window), _paddle(paddle), _ball(ball), _gameManager(gameManager)
 {
 }
 
@@ -24,7 +25,17 @@ void PowerupManager::update(float dt)
         if (_powerupInEffect->second <= 0)
         {
             _powerupInEffect.reset();
+            _gameManager->getAudioManager()->changePitch(1.f); // Reset audio pitch
         }
+    }
+
+    if (getPowerupInEffect().first == fastBall)
+    {
+        _gameManager->getAudioManager()->changePitch(1.5f); // Reset audio pitch
+    }  
+    if (getPowerupInEffect().first == slowBall)
+    {
+        _gameManager->getAudioManager()->changePitch(0.5f); // Reset audio pitch
     }
 
 
@@ -90,6 +101,7 @@ void PowerupManager::checkCollision()
         {
             _powerupInEffect = powerup->applyEffect();
             powerup->setAlive(false);
+            _gameManager->getAudioManager()->playSound("powerup_collect");
         }
     }
 }

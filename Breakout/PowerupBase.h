@@ -6,7 +6,8 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+// Having this include here causes a circular dependency.
+//#include "PowerupFireBall.h"
 
 
 class PowerupBase

@@ -29,5 +29,12 @@ private:
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
+
+    struct TrailDot {
+        sf::CircleShape shape;
+        float lifetime;
+    };
+    std::vector<TrailDot> _trail;
+
 };
 

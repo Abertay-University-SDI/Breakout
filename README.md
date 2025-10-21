@@ -32,4 +32,10 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+* Fixed compiler issue - Time Taken: 3 minutes
+* Added mouse movement for the paddle and hidden & locked cursor - Time taken: 1 hour 
+* Created a restart function upon level loss or completion - Time taken: 15 minutes
+* Added a screen shake whenever the player loses a life - Time taken: 45 minutes
+* Added a trail following the ball's position - Time taken: 30 minutes
+* Created an audio manager to handle sound effects and background music - Time taken: 1 hour 15 minutes
+* Changed the power up timer to a decreasing bar instead of text - Time taken: 10 minutes
