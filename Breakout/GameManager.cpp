@@ -15,26 +15,21 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setCharacterSize(96);
     _masterText.setFillColor(sf::Color::Yellow);
 
-    // Load sound buffers
     if (!_wallHitBuffer.loadFromFile("sounds/wall_hit.wav"))
     {
         std::cout << "Failed to load wall_hit.wav" << std::endl;
-        // Replace with your sound file or handle error
     }
     if (!_paddleHitBuffer.loadFromFile("sounds/paddle_hit.wav"))
     {
         std::cout << "Failed to load paddle_hit.wav" << std::endl;
-        // Replace with your sound file or handle error
     }
     if (!_brickHitBuffer.loadFromFile("sounds/brick_hit.wav"))
     {
         std::cout << "Failed to load brick_hit.wav" << std::endl;
-        // Replace with your sound file or handle error
     }
     if (!_playerHitBuffer.loadFromFile("sounds/damage_hit.wav"))
     {
         std::cout << "Failed to load damage_hit.wav" << std::endl;
-        // Replace with your sound file or handle error
     }
     _playerHitSound.setBuffer(_playerHitBuffer);
     _wallHitSound.setBuffer(_wallHitBuffer);
@@ -139,7 +134,6 @@ void GameManager::update(float dt)
                 playBossMusic();
             }
 
-            // Added paddle movement during boss countdown
             sf::Vector2i mousePos = sf::Mouse::getPosition(*_window);
             float windowWidth = static_cast<float>(_window->getSize().x);
             float paddleWidth = _paddle->getBounds().width;

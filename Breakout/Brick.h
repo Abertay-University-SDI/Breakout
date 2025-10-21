@@ -14,7 +14,7 @@ public:
     bool isBoss() const;
     void takeDamage();
     void update(float dt);
-    int getHealth() const; // Added to match usage in BrickManager.cpp
+    int getHealth() const; 
 
 private:
     sf::RectangleShape _shape;
@@ -23,5 +23,5 @@ private:
     int _bossHealth;
     bool _isBoss;
     sf::Vector2f _bossVelocity;
-    float _hitColorTimer; // Added for tracking red color duration
+    float _hitColorTimer; 
 };

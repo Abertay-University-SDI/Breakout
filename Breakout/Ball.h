@@ -16,8 +16,8 @@ public:
     void setPosition(float x, float y);
     void setDirection(const sf::Vector2f& direction);
     void normaliseDirection();
-    sf::Vector2f getPosition() const; // Added for UI progress bar
-    sf::FloatRect getBounds() const; // Added for UI progress bar
+    sf::Vector2f getPosition() const;
+    sf::FloatRect getBounds() const; 
 
 private:
     sf::CircleShape _sprite;
@@ -29,9 +29,8 @@ private:
     bool _isFrenzyBall;
     float _timeWithPowerupEffect;
 
-    GameManager* _gameManager;  // Reference to the GameManager
-
+    GameManager* _gameManager; 
 
     static constexpr float RADIUS = 10.0f;
-    static constexpr float VELOCITY = 350.0f;   // for reference.
+    static constexpr float VELOCITY = 350.0f;  
 };

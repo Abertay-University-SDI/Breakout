@@ -20,12 +20,12 @@ public:
     void render();
     void levelComplete();
     void startBossLevel();
-    void triggerShake(float duration, float magnitude); // Added for shake effect on ball hits
+    void triggerShake(float duration, float magnitude); 
     bool isBossLevel() const;
     bool returnToMenu() const;
-    void playWallHitSound(); // Added for wall/ceiling hit sound
-    void playPaddleHitSound(); // Added for paddle hit sound
-    void playBrickHitSound(); // Added for brick hit sound
+    void playWallHitSound();
+    void playPaddleHitSound(); 
+    void playBrickHitSound(); 
     void playMenuMusic();
     void playGameMusic();
     void playBossMusic();
@@ -71,16 +71,16 @@ private:
     bool _isBossLevel;
     float _bossLevelStartTimer;
 
-    float _lifeLostTimer; // Added for "LIFE LOST!" text duration
+    float _lifeLostTimer;
 
-    sf::SoundBuffer _wallHitBuffer; // Added for wall/ceiling hit sound
-    sf::SoundBuffer _paddleHitBuffer; // Added for paddle hit sound
-    sf::SoundBuffer _brickHitBuffer; // Added for brick hit sound
-    sf::SoundBuffer _playerHitBuffer; // Added for brick hit sound
-    sf::Sound _wallHitSound; // Added for wall/ceiling hit sound
-    sf::Sound _paddleHitSound; // Added for paddle hit sound
-    sf::Sound _brickHitSound; // Added for brick hit sound
-    sf::Sound _playerHitSound; // Added for player hit sound
+    sf::SoundBuffer _wallHitBuffer; 
+    sf::SoundBuffer _paddleHitBuffer; 
+    sf::SoundBuffer _brickHitBuffer; 
+    sf::SoundBuffer _playerHitBuffer; 
+    sf::Sound _wallHitSound; 
+    sf::Sound _paddleHitSound; 
+    sf::Sound _brickHitSound;
+    sf::Sound _playerHitSound; 
 
     sf::Music _menuMusic;
     sf::Music _gameMusic;
@@ -97,6 +97,6 @@ private:
     static constexpr float FRENZY_MAGNITUDE = 5.0f;
     static constexpr float GAME_OVER_DISPLAY_TIME = 2.0f;
     static constexpr float BOSS_LEVEL_START_DELAY = 2.0f;
-    static constexpr float LIFE_LOST_DISPLAY_TIME = 0.5f; // Added for "LIFE LOST!" duration
+    static constexpr float LIFE_LOST_DISPLAY_TIME = 0.5f; 
     static constexpr int RAND_POWERUP_TIME = 400;
 };

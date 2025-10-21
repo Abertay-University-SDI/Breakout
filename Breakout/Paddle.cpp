@@ -41,7 +41,7 @@ void Paddle::update(float dt)
     }
     else
     {
-        setWidth(1.0f, 0.0f); // Reset to default width after duration
+        setWidth(1.0f, 0.0f);
     }
 }
 
@@ -55,8 +55,6 @@ sf::FloatRect Paddle::getBounds() const
     return _sprite.getGlobalBounds();
 }
 
-// update width by SF of coeff. 
-// ensure centre remains consistent.
 void Paddle::setWidth(float coeff, float duration)
 {
     _width = coeff * PADDLE_WIDTH;
