@@ -33,3 +33,7 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+* Time within the given assessment parameters was taken, approximately three to eight hours
+* Fixed circular dependency bug
+* Amended poor code formatting (unfinished)
