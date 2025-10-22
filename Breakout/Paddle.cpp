@@ -33,6 +33,18 @@ void Paddle::moveRight(float dt)
     }
 }
 
+// @param newCoords | The new coordinates of the mouse
+// @brief This function moves the paddle to the position of the mouse within an acceptable area of movement
+void Paddle::mouseMoveTo(sf::Vector2f newCoords)
+{
+    auto sixthHeightViewport = _window->getViewport(_window->getView()).height / 4 + _window->getViewport(_window->getView()).height/2+100;
+
+    //if (newCoords.y > quarterHeightViewport)
+    //    _sprite.setPosition(newCoords); // this sets the paddle to the position of the mouse
+    //else
+        _sprite.setPosition(newCoords.x, sixthHeightViewport);
+}
+
 void Paddle::update(float dt)
 {
     if (_timeInNewSize > 0)

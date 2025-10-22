@@ -26,6 +26,9 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+
+    _window->setMouseCursorVisible(false);
 }
 
 void GameManager::update(float dt)
@@ -77,14 +80,38 @@ void GameManager::update(float dt)
         _timeLastPowerupSpawned = _time;
     }
 
-    // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    // move paddle (Keyboard)
+   /* if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);*/
+
+
+    // ---- Mouse Paddle Movement ---- //
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(*_window);
+
+    // Map pixel position to world coordinates
+    sf::Vector2f worldPos = _window->mapPixelToCoords(pixelPos);
+
+    _paddle->mouseMoveTo(worldPos);
+    // ------------------------------- // 
 
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+}
+
+// @brief This function is the same as play() for a sound, but allows a vector of sounds to be passed in as a reference so that the user of the function
+// may play multiple sounds simultaneously
+void GameManager::playVectorSound(std::vector<sf::Sound> &vector)
+{
+    for (int i = 0; i < vector.size()-1, ++i;)
+    {
+        if (vector[i].getStatus() != sf::Sound::Status::Playing) // if the sound variable in the vector is not playing then:
+        {
+            vector[i].play(); // although, this would work better with longer audio files
+            return;
+        }
+    }
 }
 
 void GameManager::loseLife()

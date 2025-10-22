@@ -4,6 +4,12 @@
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
 {
+    buffer.loadFromFile("audio/puh.wav");
+    hit.setBuffer(buffer);
+    hit.setPitch(2.f);
+
+
+    _font.loadFromFile("font/montS.ttf");
 }
 
 void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
@@ -28,15 +34,24 @@ void BrickManager::render()
     for (auto& brick : _bricks) {
         brick.render(*_window);
     }
+
+    for (auto& Hitmarker : Hitmarkers)
+    {
+        Hitmarker.render(*_window);
+    }
 }
 
 int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
+    
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
+        hit.play();
+
         sf::Vector2f ballPosition = ball.getPosition();
+        //Hitmarkers.push_back(Hitmarker(_window, ballPosition, &_font));
         float ballY = ballPosition.y + 0.5f * ball.getGlobalBounds().height;
         sf::FloatRect brickBounds = brick.getBounds();
 

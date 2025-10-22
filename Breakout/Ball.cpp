@@ -8,6 +8,20 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    trailManager = new Trail(window, gameManager);
+
+    // ---- Audio ---- //
+    buffer.loadFromFile("audio/puh.wav");
+
+    for (int i = 0; i < 10; ++i)
+    {
+        bounce.push_back(*new sf::Sound);
+
+        bounce[i].setBuffer(buffer);
+        bounce[i].setPitch(0.5f);
+    }
+
 }
 
 Ball::~Ball()
@@ -16,6 +30,8 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+    _dt = dt;
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -51,12 +67,14 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        GameManager::playVectorSound(bounce);
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        GameManager::playVectorSound(bounce);
     }
 
     // lose life bounce
@@ -70,6 +88,7 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        GameManager::playVectorSound(bounce);
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
@@ -90,11 +109,18 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+
+    // ball trail
+    float radius = _sprite.getRadius(); // This is the radius of the ball
+    trailManager->CreateTrail(_sprite.getPosition()+sf::Vector2f(radius, radius));
+    
 }
 
 void Ball::render()
 {
     _window->draw(_sprite);
+    trailManager->render(_dt);
+    
 }
 
 void Ball::setVelocity(float coeff, float duration)
