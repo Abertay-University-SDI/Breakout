@@ -1,13 +1,21 @@
 #include "Ball.h"
+#include "imgui.h"
 #include "GameManager.h" // avoid cicular dependencies
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _consecutiveBrickHits(0)
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _brickSmash_sfx.loadFromFile("./Assets/brickHit.wav");
+    _paddleHit_sfx.loadFromFile("./Assets/paddleHit.wav");
+    _wallHit_sfx.loadFromFile("./Assets/wallHit.wav");
+    _brickSmash_Sound.setBuffer(_brickSmash_sfx);
+    _paddleHit_Sound.setBuffer(_paddleHit_sfx);
+    _wallHit_Sound.setBuffer(_wallHit_sfx);
 }
 
 Ball::~Ball()
@@ -51,12 +59,16 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+
+        _wallHit_Sound.play();
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+
+        _wallHit_Sound.play();
     }
 
     // lose life bounce
@@ -65,6 +77,7 @@ void Ball::update(float dt)
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
         _gameManager->loseLife();
+        _consecutiveBrickHits = 0;
     }
 
     // collision with paddle
@@ -77,11 +90,74 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        // Set consecutive brick count to 0
+        _consecutiveBrickHits = 0;
+
+        // Paddle jiggle (switch case for big and small powerup could be better)
+        switch (_gameManager->getPowerupManager()->getPowerupInEffect().first) {
+        case bigPaddle:
+            _gameManager->getTweenManager()->addTweenWithCallback(1.5f, 2.0f, 10, TweenManager::EasingFunction::SINE_IN_OUT,
+                [&](float value) {
+                    _gameManager->getPaddle()->setWidth(value, 1.0f);
+                },
+                [&]() {
+                    _gameManager->getTweenManager()->addTween(2.0f, 1.5f, 5, TweenManager::EasingFunction::BOUNCE_OUT,
+                        [&](float value) {
+                            _gameManager->getPaddle()->setWidth(value, _gameManager->getPowerupManager()->getPowerupInEffect().second);
+                        });
+                });
+            break;
+        case smallPaddle:
+            _gameManager->getTweenManager()->addTweenWithCallback(0.67f, 1.33f, 10, TweenManager::EasingFunction::SINE_IN_OUT,
+                [&](float value) {
+                    _gameManager->getPaddle()->setWidth(value, 1.0f);
+                },
+                [&]() {
+                    _gameManager->getTweenManager()->addTween(1.33f, 0.67f, 5, TweenManager::EasingFunction::BOUNCE_OUT,
+                        [&](float value) {
+                            _gameManager->getPaddle()->setWidth(value, _gameManager->getPowerupManager()->getPowerupInEffect().second);
+                        });
+                });
+            break;
+        default:
+            _gameManager->getTweenManager()->addTweenWithCallback(1, 1.5f, 10, TweenManager::EasingFunction::SINE_IN_OUT,
+                [&](float value) {
+                    _gameManager->getPaddle()->setWidth(value, 1.0f);
+                },
+                [&]() {
+                    _gameManager->getTweenManager()->addTween(1.5f, 1, 5, TweenManager::EasingFunction::BOUNCE_OUT,
+                        [&](float value) {
+                            _gameManager->getPaddle()->setWidth(value, 1.0f);
+                        });
+                });
+            break;
+        }
+        
+        // Audio
+        _paddleHit_Sound.play();
     }
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
+    if (collisionResponse != 0) {
+        ++_consecutiveBrickHits;
+        _gameManager->getTweenManager()->addTweenWithCallback(RADIUS, RADIUS * 1.5f, 10, TweenManager::EasingFunction::SINE_IN_OUT,
+            [&](float value) {
+                _sprite.setRadius(value);
+            },
+            [&]() {
+                _gameManager->getTweenManager()->addTween(RADIUS * 1.5f, RADIUS, 10, TweenManager::EasingFunction::SINE_IN_OUT,
+                    [&](float value) {
+                        _sprite.setRadius(value);
+                    });
+            });
+
+        // Play sound with pitch increase
+        _brickSmash_Sound.setPitch(1 + 0.1f * _consecutiveBrickHits);
+        _brickSmash_Sound.play();
+    }
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
@@ -113,4 +189,14 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+int Ball::getConsecutiveBrickHits()
+{
+    return _consecutiveBrickHits;
+}
+
+void Ball::renderDebugInformation()
+{
+    ImGui::Text("Ball speed: %f", _velocity);
 }

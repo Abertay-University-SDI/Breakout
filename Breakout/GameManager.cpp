@@ -2,11 +2,12 @@
 #include "Ball.h"
 #include "PowerupManager.h"
 #include <iostream>
+#include "imgui.h"
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
-    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _debugOpen(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _timeLastPowerupRollDone(0.f), _twixifyRanThisRound(false), _tweenManager(nullptr)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -21,11 +22,18 @@ void GameManager::initialize()
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _powerupManager = new PowerupManager(_window, _paddle, _ball, this);
     _ui = new UI(_window, _lives, this);
+    _tweenManager = new TweenManager();
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    // Load audio
+    _death_sfx.loadFromFile("./Assets/death.wav");
+    _death_Sound.setBuffer(_death_sfx);
+
+    _win_Music.openFromFile("./Assets/WhoLikestoParty.mp3");
 }
 
 void GameManager::update(float dt)
@@ -43,6 +51,7 @@ void GameManager::update(float dt)
     if (_levelComplete)
     {
         _masterText.setString("Level completed.");
+        _tweenManager->update(dt);
         return;
     }
     // pause and pause handling
@@ -67,14 +76,22 @@ void GameManager::update(float dt)
         return;
     }
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    {
+        _debugOpen = !_debugOpen;
+    }
+
     // timer.
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && _time > _timeLastPowerupRollDone + POWERUP_ROLL_FREQUENCY)
     {
-        _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        if (rand() % POWERUP_CHANCE_PER_ROLL == 0) {
+            _powerupManager->spawnPowerup();
+            _timeLastPowerupSpawned = _time;
+        }
+        _timeLastPowerupRollDone = _time;
     }
 
     // move paddle
@@ -85,6 +102,13 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _tweenManager->update(dt);
+
+    // If ball has done 5+ consecutive breaks, twixifify the board
+    if (!_twixifyRanThisRound && _ball->getConsecutiveBrickHits() >= 5) {
+        _brickManager->twixifyAllBricks();
+        _twixifyRanThisRound = true;
+    }
 }
 
 void GameManager::loseLife()
@@ -92,7 +116,17 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    _tweenManager->addTweenWithCallback(0, 1, 2.f, TweenManager::EasingFunction::LINEAR_IN_OUT, [&](float value) {
+        float interpolatedValue = sin(7 * value) * sin(45 * value);
+        sf::View toEdit = _window->getDefaultView();
+        toEdit.setRotation(interpolatedValue);
+        _window->setView(toEdit);
+        }, [&]() {
+            _window->setView(_window->getDefaultView());
+        });
+
+    // Play audio
+    _death_Sound.play();
 }
 
 void GameManager::render()
@@ -103,15 +137,37 @@ void GameManager::render()
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
+
+    if (_debugOpen) {
+        renderDebugWindow();
+        _brickManager->renderDebugWindow();
+        _powerupManager->renderDebugWindow();
+        _tweenManager->renderDebugWindow();
+    }
 }
 
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+    _win_Music.play();
+    _brickManager->createPartyBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
+TweenManager* GameManager::getTweenManager() const {return _tweenManager; }
 UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+
+void GameManager::renderDebugWindow()
+{
+    ImGui::Begin("Game");
+    _ball->renderDebugInformation();
+    _paddle->renderDebugInformation();
+    if (ImGui::Button("Instant Win")) {
+        _brickManager->removeBricksRandom(_brickManager->getBricksLeft());
+    }
+
+    ImGui::End();
+}

@@ -1,4 +1,5 @@
 #include "Paddle.h"
+#include "imgui.h"
 #include <iostream>
 
 Paddle::Paddle(sf::RenderWindow* window)
@@ -59,9 +60,21 @@ sf::FloatRect Paddle::getBounds() const
 // ensure centre remains consistent.
 void Paddle::setWidth(float coeff, float duration)
 {
+    float previousWidth = _width;
     _width = coeff * PADDLE_WIDTH;
     _sprite.setSize(sf::Vector2f(_width, _sprite.getSize().y));
     _timeInNewSize = duration;
-    float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
+    float newX = _sprite.getPosition().x + (previousWidth - _width) / 2.0f;
     _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
+float Paddle::getWidthCoeff()
+{
+    return _width / PADDLE_WIDTH;
+}
+
+void Paddle::renderDebugInformation()
+{
+    ImGui::Text("Paddle Width: %f", getWidthCoeff());
+    ImGui::Text("Paddle Position: %f, %f", _sprite.getPosition().x, _sprite.getPosition().y);
 }

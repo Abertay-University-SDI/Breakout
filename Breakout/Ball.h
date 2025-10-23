@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 class GameManager;  // forward declaration
@@ -15,6 +16,13 @@ public:
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
 
+    /// <summary>
+    /// Returns the number of brick hits in a row
+    /// </summary>
+    /// <returns>Number of consecutive brick hits</returns>
+    int getConsecutiveBrickHits();
+
+    void renderDebugInformation();
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
@@ -22,10 +30,18 @@ private:
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
+    int _consecutiveBrickHits;
     float _timeWithPowerupEffect;
 
     GameManager* _gameManager;  // Reference to the GameManager
 
+    // Sound Effects
+    sf::SoundBuffer _brickSmash_sfx;
+    sf::SoundBuffer _paddleHit_sfx;
+    sf::SoundBuffer _wallHit_sfx;
+    sf::Sound _brickSmash_Sound;
+    sf::Sound _paddleHit_Sound;
+    sf::Sound _wallHit_Sound;
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.

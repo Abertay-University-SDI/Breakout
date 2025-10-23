@@ -1,9 +1,12 @@
 #include "BrickManager.h"
 #include "GameManager.h"
+#include "imgui.h"
 
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
 {
+    _twixTexture = std::make_shared<sf::Texture>();
+    _twixTexture->loadFromFile("./Assets/twix.png");
 }
 
 void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
@@ -18,7 +21,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, _twixTexture);
         }
     }
 }
@@ -57,4 +60,71 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         _gameManager->levelComplete();
     }
     return collisionResponse;
+}
+
+int BrickManager::getBricksLeft()
+{
+    return _bricks.size();
+}
+
+void BrickManager::removeBricksRandom(int count)
+{
+    for (int b = 0; b < count; b++) {
+        int toRemoveIndex = rand() % _bricks.size();
+
+        _bricks.erase(_bricks.begin() + toRemoveIndex);
+    }
+}
+
+void BrickManager::twixifyAllBricks()
+{
+    for (auto& brick : _bricks) {
+        brick.twixify();
+    }
+}
+
+void BrickManager::createPartyBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
+{
+    float leftEdge;
+    if (cols % 2 == 0)
+        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
+    else
+        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            float x = j * (brickWidth + spacing) + leftEdge;
+            float y = i * (brickHeight + spacing) + TOP_PADDING;
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, _twixTexture);
+        }
+    }
+
+    for (auto& brick : _bricks) {
+        brick.twixify();
+    }
+    
+    for (auto& brick : _bricks) {
+        _gameManager->getTweenManager()->addTween((rand() % 100) / 100.0f, 1000, 0.001f, TweenManager::EasingFunction::LINEAR_IN_OUT,
+            [&](float value) {
+                value = value - floor(value);
+                float r = (value < 0.33f) ? (0.33f - value) * 3.0f : (value < 0.66f) ? 0.0f : (value - 0.66f) * 3.0f;
+                float g = (value < 0.33f) ? (value - 0.0f) * 3.0f : (value < 0.66f) ? (0.66f - value) * 3.0f : 0.0f;
+                float b = (value < 0.33f) ? 0.0f : (value < 0.66f) ? (value - 0.33f) * 3.0f : (1.0f - value) * 3.0f;
+                r *= 255;
+                g *= 255;
+                b *= 255;
+                brick.setColor(sf::Color(r, g, b));
+            });
+    }
+    
+}
+
+void BrickManager::renderDebugWindow()
+{
+    ImGui::Begin("Brick Manager");
+    ImGui::Text("Bricks Remaining: %i", _bricks.size());
+    if (ImGui::Button("Remove 1 Brick at random")) {
+        removeBricksRandom(1);
+    }
+    ImGui::End();
 }
