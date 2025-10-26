@@ -1,6 +1,9 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
+#include "explodeParticle.h"
+#include "Particle.h"
+
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
@@ -8,6 +11,13 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    bounceBuffer.loadFromFile("sfx/bounce.wav");
+    bounceSound.setBuffer(bounceBuffer);
+    bounceSound.setVolume(25.0f);
+
+    collectBuffer.loadFromFile("sfx/collect.wav");
+    collectSound.setBuffer(collectBuffer);
 }
 
 Ball::~Ball()
@@ -51,12 +61,16 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+
+        bounceSound.play();
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+
+        bounceSound.play();
     }
 
     // lose life bounce
@@ -77,6 +91,9 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        bounceSound.play();
+        successiveCollects = 0;
     }
 
     // collision with bricks
@@ -85,16 +102,46 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        collectSound.setPitch(1.0f + successiveCollects * 0.1);
+        collectSound.play();
+        ++successiveCollects;
+
+        triggerParticles();
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+        collectSound.setPitch(1.0f + successiveCollects * 0.1);
+        collectSound.play();
+        ++successiveCollects;
+
+        triggerParticles();
     }
+    
+    for (int i = particles.size() - 1; i >= 0; --i)
+    {
+        if (particles.at(i)->getActive())
+        {
+            particles.at(i)->update(dt);
+        }
+        else
+        {
+            particles.erase(particles.begin() + i);
+        }
+
+    }
+
+
 }
 
 void Ball::render()
 {
     _window->draw(_sprite);
+
+    for (auto& particle : particles)
+    {
+        particle->render();
+    }
 }
 
 void Ball::setVelocity(float coeff, float duration)
@@ -113,4 +160,30 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::triggerParticles()
+{
+    for (int i = 0; i < 10; ++i)
+    {
+        std::unique_ptr<ExplodeParticle> particle = std::make_unique<ExplodeParticle>(_window);
+        particle->setPosition(_sprite.getPosition());
+
+        particles.emplace_back(std::move(particle));
+    }
+}
+
+sf::Vector2f Ball::getPosition(bool centre)
+{
+    if (!centre)
+    {
+        return _sprite.getPosition();
+    }
+    else
+    {
+        sf::Vector2f position{ _sprite.getPosition() };
+        position.x += _sprite.getGlobalBounds().width;
+        position.y += _sprite.getGlobalBounds().height;
+        return position;
+    }
 }

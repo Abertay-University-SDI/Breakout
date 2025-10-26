@@ -32,4 +32,10 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Total time: 4 hours
+<br>Add sound effects: - 1 hour
+* Simple sound when hitting walls
+* Sound that increases in pitch with each broken block. Pitch resets when hitting the paddle. 
+<!-- -->
+Add particle effects when breaking blocks - 2 hours
+<br>Add mouse controls to paddle - 1 hour

@@ -13,6 +13,11 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+
+
+  
+
 }
 
 void GameManager::initialize()
@@ -26,6 +31,21 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+}
+
+void GameManager::handleInput(sf::Event event)
+{
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+    {
+        sf::Vector2i mousePos{ sf::Mouse::getPosition(*_window) };
+        sf::Vector2f translatedMousePos{ _window->mapPixelToCoords(mousePos) };
+
+
+        if (_paddle->getBounds().contains(translatedMousePos))
+        {
+            mouseHeld = true;
+        }
+    }
 }
 
 void GameManager::update(float dt)
@@ -80,6 +100,26 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+
+    sf::Vector2i mousePos{ sf::Mouse::getPosition(*_window) };
+    sf::Vector2f translatedMousePos{ _window->mapPixelToCoords(mousePos) };
+
+    sf::Vector2f paddlePos{ _paddle->getPosition() };
+
+    sf::FloatRect bounds{ _paddle->getBounds() };
+    paddlePos.x += bounds.width / 2;
+    paddlePos.y += bounds.height / 2;
+
+    //move paddle with mouse
+    if (mouseHeld && translatedMousePos.x < paddlePos.x)
+    {
+        _paddle->moveLeft(dt);
+    }
+    else if (mouseHeld && translatedMousePos.x > paddlePos.x)
+    {
+        _paddle->moveRight(dt);
+    }
 
     // update everything 
     _paddle->update(dt);

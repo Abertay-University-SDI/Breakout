@@ -10,10 +10,12 @@
 
 
 
+
 class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
     void initialize();
+    void handleInput(sf::Event event);
     void update(float dt);
     void loseLife();
     void render();
@@ -38,6 +40,8 @@ private:
 
     sf::Font _font;
     sf::Text _masterText;
+
+    bool mouseHeld{ false };
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
