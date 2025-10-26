@@ -4,6 +4,7 @@
 
 #include "CONSTANTS.h"
 #include "PowerupManager.h"
+#include "Paddle.h"
 
 class GameManager;
 
@@ -19,7 +20,7 @@ public:
 
 private:
 	GameManager* _gameManager;
-	
+
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;

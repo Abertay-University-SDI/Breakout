@@ -14,6 +14,7 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setNewBall();
 
 private:
     sf::CircleShape _sprite;
@@ -22,7 +23,11 @@ private:
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
+    bool _isNewBall;
+    bool _ballOnPaddle;
+    bool isColliding;
     float _timeWithPowerupEffect;
+    sf::Vector2f mousePos;
 
     GameManager* _gameManager;  // Reference to the GameManager
 

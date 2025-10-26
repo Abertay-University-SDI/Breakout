@@ -8,6 +8,8 @@ enum POWERUPS
     fastBall,
     slowBall,
     fireBall,
+    newEffect,
+    freePaddle,
     none
 };
 

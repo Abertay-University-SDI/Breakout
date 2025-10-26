@@ -71,7 +71,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -80,6 +80,7 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (_paddle->_isFreeMove) _paddle->freeMove(dt);
 
     // update everything 
     _paddle->update(dt);
@@ -91,8 +92,6 @@ void GameManager::loseLife()
 {
     _lives--;
     _ui->lifeLost(_lives);
-
-    // TODO screen shake.
 }
 
 void GameManager::render()

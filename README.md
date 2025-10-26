@@ -32,4 +32,8 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+17th October: Initial compiler errors fixed - 10 mins
+17th October: Learnt how the program functioned - 1hr
+19th October: Began implementation of a powerup that shoots ball to the cursor - 1hr
+20th October: Scrapped plan for shooting ball at cursor (still in code base will revisit) - 1hr
+20th October: Added a powerup which moves the paddle close to the cursor for the user to move about freely - 1hr

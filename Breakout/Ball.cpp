@@ -1,5 +1,7 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
+#include <math.h>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -8,6 +10,8 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _window = window;
 }
 
 Ball::~Ball()
@@ -77,6 +81,44 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        if (_isNewBall == true)
+        {
+            _ballOnPaddle = true;
+            _direction = sf::Vector2f(0, 0);
+        }
+    }
+
+    if (_ballOnPaddle == true)
+    {
+        _sprite.setPosition(_gameManager->getPaddle()->getPaddlePos().x + _gameManager->getPaddle()->getPaddleWidth() / 2, _gameManager->getPaddle()->getPaddlePos().y - _gameManager->getPaddle()->getPaddleHeight());
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            if (_direction == sf::Vector2f(0, 0) && _gameManager->getPaddle()->getFreeMove() == false)
+            {
+
+                //if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                //{
+                mousePos = sf::Vector2f(sf::Mouse::getPosition(*_window).x, sf::Mouse::getPosition(*_window).y);
+                std::cout << mousePos.x * 0.001f << " " << mousePos.y * 0.001f;
+                _direction.x = atan(mousePos.x - _sprite.getPosition().x);
+                _direction.y = atan(mousePos.y - _sprite.getPosition().y);
+                _velocity = 7;
+                isColliding = false;
+                _ballOnPaddle = false;
+                _isNewBall = false;
+                //}
+            }
+            else if (_direction == sf::Vector2f(0, 0) && _gameManager->getPaddle()->getFreeMove() == true)
+            {
+                _velocity = 3;
+                _direction.y = 1;
+                isColliding = false;
+                _ballOnPaddle = false;
+                _isNewBall = false;
+            }
+        }
     }
 
     // collision with bricks
@@ -113,4 +155,17 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setNewBall()
+{
+
+    _isNewBall = true;
+
+    if (_isNewBall == true && isColliding == true) 
+    {
+        _isNewBall = false;
+        isColliding = false;
+    }
+
 }
