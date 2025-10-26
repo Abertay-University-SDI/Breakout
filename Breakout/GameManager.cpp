@@ -30,19 +30,29 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
+    UpdateScreenShake(dt);
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    //quick close for convenience
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        _window->close();
+    }
 
+    //restart game on press R
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+    {
+        RestartGame();
+    }
     if (_lives <= 0)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over. Press R to restart");
         return;
     }
     if (_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        _masterText.setString("Level completed. Press R to restart");
         return;
     }
     // pause and pause handling
@@ -51,12 +61,16 @@ void GameManager::update(float dt)
     {
         if (!_pause && _pauseHold <= 0.f)
         {
+            _window->setMouseCursorVisible(true);
+            _window->setMouseCursorGrabbed(false);
             _pause = true;
             _masterText.setString("paused.");
             _pauseHold = PAUSE_TIME_BUFFER;
         }
         if (_pause && _pauseHold <= 0.f)
         {
+            _window->setMouseCursorVisible(false);
+            _window->setMouseCursorGrabbed(true);
             _pause = false;
             _masterText.setString("");
             _pauseHold = PAUSE_TIME_BUFFER;
@@ -80,6 +94,16 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    
+    // set mousePos to the psotition of the mouse within the window
+    mousePos = sf::Mouse::getPosition(*_window);
+    // move paddle if mouse is in the window
+    if ((mousePos.x >= _paddle->getWidth() / 2 && mousePos.x < (_window->getSize().x - _paddle->getWidth()/2)) && (mousePos.y >= 0 && mousePos.y < _window->getSize().y))
+    {
+        _window->setMouseCursorVisible(false);
+        _window->setMouseCursorGrabbed(true);
+        _paddle->mouseMovement(dt);
+    }
 
     // update everything 
     _paddle->update(dt);
@@ -92,11 +116,111 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    // trigger screen shake.
+    StartShake(1.5f,100.f,0.08f);
+}
+
+void GameManager::StartShake(float duration, float intensity, float fade)
+{
+    // save the center of the view
+    if (!isShaking) {
+        originalCenter = _window->getView().getCenter();
+    }
+    shakeDuration = duration;
+    shakeIntensity = intensity;
+    shakeFade = fade;
+    isShaking = true;
+}
+
+void GameManager::UpdateScreenShake(float dt)
+{
+    if (isShaking) {
+        sf::View view = _window->getView();
+
+        if (shakeDuration > 0) {
+            // set screens view to original center plus the offset
+            offset = GetRandomOffset() * shakeIntensity;
+
+            // apply fading
+            shakeIntensity *= (1.0f - shakeFade);
+
+            view.setCenter(originalCenter + offset);
+            _window->setView(view);
+        }
+        else {
+            isShaking = false;
+            view.setCenter(originalCenter); // reset view to original center
+            _window->setView(view);
+        }
+        // decrease shake duration
+        shakeDuration -= dt;
+    }
+}
+
+sf::Vector2f GameManager::GetRandomOffset()
+{
+    // ensures the offset is between -1 and 1
+    sf::Vector2f off = sf::Vector2f(((rand() % 100) / 100 * 2 - 1), ((rand() % 100) / 100 * 2 - 1));
+    return off;
+}
+
+void GameManager::RestartGame()
+{
+    // delete objects
+    delete _paddle;
+    delete _brickManager;
+    delete _messagingSystem;
+    delete _ball;
+    delete _powerupManager;
+    delete _ui;
+
+    // reset variables
+    _lives = 3;
+    _pause = false;
+    _time = 0;
+    _pauseHold = 0;
+    _levelComplete = false;
+    _powerupInEffect = {none,0.0f};
+    _timeLastPowerupSpawned = 0.0f;
+    _masterText.setString("");
+
+    // re-initialize deleted objects
+    initialize();
+}
+
+void GameManager::ChangeBackground()
+{
+    switch (rand() % 5)
+    {
+    case 0:
+        _backgroundColour = sf::Color(100.f, 150.f, 200.f);
+        break;
+    case 1:
+        _backgroundColour = sf::Color(0.f, 0.f, 0.f);
+        break;
+    case 2:
+        _backgroundColour = sf::Color(5.f, 242.f, 68.f);        
+        break;
+    case 3:
+        _backgroundColour = sf::Color(242.f, 5.f, 238.f);
+        break;
+    case 4:
+        _backgroundColour = sf::Color(242.f, 171.f, 5.f);
+        break;
+    case 5:
+        break;
+    }
+}
+
+sf::Color GameManager::GetBackground()
+{
+    return _backgroundColour;
 }
 
 void GameManager::render()
 {
+    _window->clear(_backgroundColour);
+
     _paddle->render();
     _ball->render();
     _brickManager->render();

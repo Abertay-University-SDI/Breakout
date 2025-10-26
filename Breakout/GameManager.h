@@ -19,6 +19,11 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void StartShake(float duration, float intensity, float fade);
+    void UpdateScreenShake(float dt);
+    void RestartGame();
+    void ChangeBackground();
+    sf::Color GetBackground();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -34,7 +39,9 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    sf::Vector2i mousePos;
     std::pair<POWERUPS, float> _powerupInEffect;
+    sf::Color _backgroundColour = sf::Color::Black;
 
     sf::Font _font;
     sf::Text _masterText;
@@ -49,4 +56,15 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+
+    // screenshake variables
+    bool isShaking;
+    float shakeDuration;
+    float shakeIntensity;
+    float shakeFade;
+    sf::Vector2f originalCenter;
+    sf::Vector2f offset;
+
+    sf::Vector2f GetRandomOffset();
 };
