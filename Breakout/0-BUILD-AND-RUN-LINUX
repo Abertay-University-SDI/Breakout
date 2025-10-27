@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+mkdir -p build
+cp -r -T SFML/lib build/lib
+cp -r -T font build/font
+cp -r -T textures build/textures
+cp LinuxRun build/0-RUN
+konsole -e g++ *.cpp -ISFML/include -o build/Breakout -LSFML/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+cd build
+./0-RUN

@@ -1,23 +1,14 @@
 #include "PowerupFireBall.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, sf::Texture* tex)
+    : PowerupBase(window, paddle, ball, tex)
 {
-    _sprite.setFillColor(ballEffectsColour);
+
 }
 
 PowerupFireBall::~PowerupFireBall()
 {
-
-    int* pInteger = new int();
-
-    if (pInteger != nullptr)
-    {
-        // use my pointer to do things.
-    }
-
-
     
 }
 

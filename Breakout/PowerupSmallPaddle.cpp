@@ -1,9 +1,9 @@
 #include "PowerupSmallPaddle.h"
 
-PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball, sf::Texture* tex)
+    : PowerupBase(window, paddle, ball, tex)
 {
-    _sprite.setFillColor(paddleEffectsColour); // Same colour as SmallPaddle
+
 }
 
 PowerupSmallPaddle::~PowerupSmallPaddle()

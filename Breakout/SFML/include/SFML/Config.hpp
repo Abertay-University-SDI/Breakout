@@ -46,28 +46,6 @@
         #define NOMINMAX
     #endif
 
-#elif defined(__APPLE__) && defined(__MACH__)
-
-    // Apple platform, see which one it is
-    #include "TargetConditionals.h"
-
-    #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
-
-        // iOS
-        #define SFML_SYSTEM_IOS
-
-    #elif TARGET_OS_MAC
-
-        // MacOS
-        #define SFML_SYSTEM_MACOS
-
-    #else
-
-        // Unsupported Apple system
-        #error This Apple operating system is not supported by SFML library
-
-    #endif
-
 #elif defined(__unix__)
 
     // UNIX system, see which one it is

@@ -1,8 +1,8 @@
 #include "BrickManager.h"
 #include "GameManager.h"
 
-BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
-    : _window(window), _gameManager(gameManager)
+BrickManager::BrickManager(sf::RenderWindow* window, sf::Texture* brickNormalTex, sf::Texture* brickStrongTex, GameManager* gameManager)
+    : _window(window), _brickNormalTex(brickNormalTex), _brickStrongTex(brickStrongTex), _gameManager(gameManager)
 {
 }
 
@@ -18,7 +18,9 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            // 1 / [STRONG_BRICK_CHANCE] chance of being a strong brick (takes 2 hits)
+            bool isStrong = rand() % STRONG_BRICK_CHANCE == 0;
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, isStrong, _brickNormalTex, _brickStrongTex);
         }
     }
 }
@@ -30,9 +32,10 @@ void BrickManager::render()
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+int BrickManager::checkCollision(sf::Sprite& ball, sf::Vector2f& direction, bool isfireBall)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
+
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
@@ -45,6 +48,13 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
+        
+        // if strong (and ball isn't not fireball), make weak then continue to next brick
+        if (brick.getIsStrong() && !isfireBall)
+        {
+            brick.setIsStrong(false);
+            continue;
+        }
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
@@ -52,6 +62,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         _bricks.pop_back();
         break;
     }
+
     if (_bricks.size() == 0)
     {
         _gameManager->levelComplete();

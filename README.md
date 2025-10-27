@@ -1,35 +1,26 @@
 # Breakout
 
-W Kavanagh & N Merchant. Summer 2024 
+W Kavanagh & N Merchant. Summer 2024
 
-## controls
+## Controls
 
-A/D to move the paddle right and left.
-P to pause.
+A/D, arrows or mouse to move the paddle right and left.
+ESC to pause.
 
 ## Powerups
 
-big/small paddle (blue)
-fast/slow ball (fancy yellow)
-fire ball (green)
-
-# Tasklist
-
-## Suggested fixes
-
-* Fix the compiler issues in the code
-
-## Suggested tasks
-
-* Implement mouse input for pad
-* Improved VFX (ball trail, paddle hit response, brick particle destruction)
-* Better UI (progress bar rather than timer for countdown).
-* GameLoop
-* Better ball physics (Box2D)
-* Leaderboards
-* More ball types (e.g., multiball, sticky ball [where you shoot the ball from the paddle every time], tiny ball, big ball, brick-tracking ball)
-* Sounds with increasing tone between bounces.
-* Implement commentary with calls to an LLM such as LLama
+Big/small paddle (orange/blue)
+Fast/slow ball (red/cyan)
+Fireball (flame)
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+(top = took the longest time, bottom = took the shortest, spent a good few hours in total, not sure the exact amount)
+
+* Added stronger brick variant, requires 2 hits
+* Screen shake upon ball collision
+* Implemented mouse input for paddle
+* Textures for bricks, ball, power-ups, health ui
+* Collisions now scale properly with window when resized
+* Added arrow key support for paddle (previously was just A/D)
+* Fixed the compiler issues in the code
