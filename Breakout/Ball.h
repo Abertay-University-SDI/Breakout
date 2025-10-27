@@ -14,12 +14,24 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void resetBall();
+
+    int getScore()
+    {
+        return score;
+    }
+
+    void setScore(int s)
+    {
+        score = s;
+    }
 
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
+    int score;
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;

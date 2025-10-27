@@ -23,6 +23,11 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     }
 }
 
+void BrickManager::resetBricks()
+{
+    _bricks.clear();
+}
+
 void BrickManager::render()
 {
     for (auto& brick : _bricks) {

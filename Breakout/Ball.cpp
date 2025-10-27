@@ -8,6 +8,8 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    score = 0;
 }
 
 Ball::~Ball()
@@ -81,13 +83,19 @@ void Ball::update(float dt)
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+
     if (collisionResponse == 1)
     {
+        score = score + 50;
+        if (_isFireBall) return; // no collisisons when in fireBall mode.
+
         _direction.x *= -1; // Bounce horizontally
     }
     else if (collisionResponse == 2)
     {
+        score = score + 50;
+        if (_isFireBall) return; // no collisisons when in fireBall mode.
+
         _direction.y *= -1; // Bounce vertically
     }
 }
@@ -95,6 +103,13 @@ void Ball::update(float dt)
 void Ball::render()
 {
     _window->draw(_sprite);
+}
+
+void Ball::resetBall()
+{
+    _sprite.setPosition(0, 300);
+    _direction = { 1, 1 };
+    _timeWithPowerupEffect = 0;
 }
 
 void Ball::setVelocity(float coeff, float duration)

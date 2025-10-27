@@ -23,7 +23,9 @@ int main()
 
         deltaTime = clock.restart().asSeconds();
 
+        //Game loop updated to include seperate input function
         gameManager.update(deltaTime);
+        gameManager.handleInput(deltaTime);
 
         window.clear();
         gameManager.render();

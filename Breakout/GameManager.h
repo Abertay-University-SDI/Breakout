@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "FailScreen.h"
 
 
 class GameManager {
@@ -15,9 +15,11 @@ public:
     GameManager(sf::RenderWindow* window);
     void initialize();
     void update(float dt);
+    void handleInput(float dt);
     void loseLife();
     void render();
     void levelComplete();
+    void resetGame();
     void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
@@ -45,6 +47,7 @@ private:
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
+    FailScreen* _failScreen;
     UI* _ui;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;

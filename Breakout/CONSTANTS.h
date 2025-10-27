@@ -8,6 +8,7 @@ enum POWERUPS
     fastBall,
     slowBall,
     fireBall,
+    fastPaddle,
     none
 };
 
@@ -20,6 +21,10 @@ constexpr const char* WINDOW_TITLE = "Game";
 constexpr float PADDLE_WIDTH = 150.0f;
 constexpr float PADDLE_HEIGHT = 20.0f;
 constexpr float PADDLE_SPEED = 300.0f;
+constexpr float PADDLE_POWERUP_SPEED = 2000.0f;
+
+constexpr float BEAST_PADDLE_WIDTH = 20.0f;
+constexpr float BEAST_PADDLE_SPEED = 2000.0f;
 
 // Ball settings
 constexpr float BALL_RADIUS = 10.0f;
@@ -50,4 +55,5 @@ const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
 
+const sf::Color fastPaddleEffectsColour = sf::Color(255.0f, 0.0f, 0.0f); //RED
 
