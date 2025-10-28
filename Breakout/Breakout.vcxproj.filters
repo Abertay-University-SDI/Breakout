@@ -14,7 +14,10 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Powerups">
-      <UniqueIdentifier>{f3758f5c-ad80-41b1-a2fb-fb910363ec2a}</UniqueIdentifier>
+      <UniqueIdentifier>{7224503e-8ee4-444a-8e5b-9bd4e54570ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Powerups\Effects">
+      <UniqueIdentifier>{df7aded5-15c7-4f9d-98be-ccf99af9068a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,26 +45,38 @@
     <ClCompile Include="PowerupManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupBase.cpp">
-      <Filter>Powerups</Filter>
-    </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupBigPaddle.cpp">
+    <ClCompile Include="PowerupContainer.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupSlowBall.cpp">
+    <ClCompile Include="BaseEffect.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupSmallPaddle.cpp">
-      <Filter>Powerups</Filter>
+    <ClCompile Include="BallSizeEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupFastBall.cpp">
-      <Filter>Powerups</Filter>
+    <ClCompile Include="BallSpeedEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupFireBall.cpp">
-      <Filter>Powerups</Filter>
+    <ClCompile Include="DebugEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBallEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleSizeEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleSpeedEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="StickyBallEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="GodModeEffect.cpp">
+      <Filter>Powerups\Effects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,29 +101,44 @@
     <ClInclude Include="PowerupManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PowerupBase.h">
-      <Filter>Powerups</Filter>
-    </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerupBigPaddle.h">
-      <Filter>Powerups</Filter>
     </ClInclude>
     <ClInclude Include="CONSTANTS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PowerupSlowBall.h">
+    <ClInclude Include="BaseEffect.h">
       <Filter>Powerups</Filter>
     </ClInclude>
-    <ClInclude Include="PowerupSmallPaddle.h">
+    <ClInclude Include="PowerupContainer.h">
       <Filter>Powerups</Filter>
     </ClInclude>
-    <ClInclude Include="PowerupFastBall.h">
+    <ClInclude Include="BallSizeEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="BallSpeedEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBallEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PaddleSizeEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects.h">
       <Filter>Powerups</Filter>
     </ClInclude>
-    <ClInclude Include="PowerupFireBall.h">
-      <Filter>Powerups</Filter>
+    <ClInclude Include="PaddleSpeedEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyBallEffect.h">
+      <Filter>Powerups\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="GodModeEffect.h">
+      <Filter>Powerups\Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

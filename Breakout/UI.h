@@ -13,7 +13,7 @@ public:
 	UI(sf::RenderWindow* window, int lives, GameManager* gameManager);
 	~UI();
 
-	void updatePowerupText(std::pair<POWERUPS, float>);
+	void updatePowerupText(const std::vector<std::shared_ptr<BaseEffect>> effects);
 	void lifeLost(int lives);
 	void render();
 
@@ -25,6 +25,9 @@ private:
 	sf::Text _powerupText;
 
 	std::vector<sf::CircleShape> _lives;
+
+	const sf::Color lifeColor = sf::Color::Red;
+	const sf::Color lostLifeColor = sf::Color::Transparent;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;

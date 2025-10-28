@@ -42,7 +42,7 @@ constexpr float UI_LIFE_PADDING = 20.0f;
 
 // Other game settings
 constexpr float PAUSE_TIME_BUFFER = 0.5f;
-constexpr float POWERUP_FREQUENCY = 7.5f;
+constexpr float POWERUP_FREQUENCY = 0.1f;
 constexpr int INITIAL_LIVES = 3;
 
 // Colour Palette

@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "LivesCounter.h"
 
 
 class GameManager {
@@ -15,7 +15,6 @@ public:
     GameManager(sf::RenderWindow* window);
     void initialize();
     void update(float dt);
-    void loseLife();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
@@ -32,7 +31,6 @@ private:
     float _pauseHold;
     float _time;
     float _timeLastPowerupSpawned;
-    int _lives;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
@@ -46,7 +44,7 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    LivesCounter* _livesCounter;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
 };

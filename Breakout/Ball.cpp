@@ -1,9 +1,10 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, LivesCounter* livesCounter)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+     _isAlive(true), _direction({1,1}), _livesCounter{livesCounter}
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
@@ -16,24 +17,23 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
-    // check for powerup, tick down or correct
-    if (_timeWithPowerupEffect > 0.f)
+    if (_isStuck)
     {
-        _timeWithPowerupEffect -= dt;
-    }
-    else
-    {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
-        else
+        Paddle* paddle = _gameManager->getPaddle();
+        _sprite.setPosition(paddle->getPosition() + sf::Vector2f(paddle->getBounds().width / 2, -_sprite.getRadius() - paddle->getBounds().height / 2 - 1));
+        //Stickiness wears off, or player launches with space
+        if (!_StickyBallCount || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
-            setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+            _direction = _stuckDirection;
+            _stuckDirection = sf::Vector2f(0, 0);
+            _isStuck = false;
+        }
+        return;
     }
 
+
     // Fireball effect
-    if (_isFireBall)
+    if (_fireBallCount)
     {
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
@@ -48,7 +48,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= windowDimensions.x - 2 * _sprite.getRadius() && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -62,26 +62,45 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
-        _gameManager->loseLife();
+        //Lose life if godmode is false
+        if (_GodmodeCount)
+        {
+            _direction.y *= -1;
+        }
+        else
+        {      
+            _sprite.setPosition(0, 300);
+            _direction = { 1, 1 };
+            _livesCounter->LoseLife();
+        }
+
     }
 
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
-        _direction.y *= -1; // Bounce vertically
+        if (_StickyBallCount)
+        {
+            _isStuck = true;
+            _stuckDirection = _direction;
+            _stuckDirection.y *= -1;
+            _direction = sf::Vector2f(0, 0);
+        }
+        else
+        {
+            _direction.y *= -1; // Bounce vertically
 
-        float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+            float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+            _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
-        // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+            // Adjust position to avoid getting stuck inside the paddle
+            _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * _sprite.getRadius());
+        }
     }
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+    if (_fireBallCount) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
@@ -97,20 +116,13 @@ void Ball::render()
     _window->draw(_sprite);
 }
 
-void Ball::setVelocity(float coeff, float duration)
+void Ball::setVelocity(float coeff)
 {
-    _velocity = coeff * VELOCITY;
-    _timeWithPowerupEffect = duration;
+    _velocity*=coeff;
 }
 
-void Ball::setFireBall(float duration)
+
+void Ball::setSize(float coeff)
 {
-    if (duration) 
-    {
-        _isFireBall = true;
-        _timeWithPowerupEffect = duration;        
-        return;
-    }
-    _isFireBall = false;
-    _timeWithPowerupEffect = 0.f;    
+    _sprite.setRadius(_sprite.getRadius() * coeff);
 }

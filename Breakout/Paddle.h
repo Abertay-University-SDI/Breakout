@@ -14,7 +14,10 @@ public:
     void update(float dt);
     void render();
     sf::FloatRect getBounds() const;
-    void setWidth(float coeff, float duration);
+    void setWidth(float coeff);
+    void setSpeed(float coeff);
+
+    sf::Vector2f getPosition();
 
 private:
 
@@ -24,4 +27,5 @@ private:
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    float _paddleMoveSpeedCoeff = 1.0f;
 };

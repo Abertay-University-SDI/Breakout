@@ -9,15 +9,23 @@ P to pause.
 
 ## Powerups
 
-big/small paddle (blue)
-fast/slow ball (fancy yellow)
-fire ball (green)
+Fast Ball - Yellow
+Slow Ball - Blue
+Big paddle - Purple
+Small Paddle - Green
+Fast Paddle - Cyan
+Slow Paddle - Pink
+Fireball - Red
+Big Ball - Magenta
+Small Ball - White
+Sticky Ball - Dark yellow (gluelike)
+Godmode - Brown
 
 # Tasklist
 
 ## Suggested fixes
 
-* Fix the compiler issues in the code
+* Fix the compiler issues in the code - Done
 
 ## Suggested tasks
 
@@ -32,4 +40,13 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+10 min - Fixed circular dependency
+
+3 1/2 hrs - Refactored and overhauled powerup system, remanaged object responsibilities
+New powerups rely on composition rather then pure inheritence, makes it easier to reuse common effects like speed or size
+
+30 minutes - Added new powerups
+Paddle speed - Increase or decrease the speed of the paddle
+Sticky ball - Ball sticks to the paddle, press space to launch it
+Godmode - Ball acts as fireball + cannot lose lives
+

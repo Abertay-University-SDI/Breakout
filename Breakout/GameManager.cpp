@@ -5,7 +5,7 @@
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
-    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
+    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
@@ -17,12 +17,15 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
+    _livesCounter = new LivesCounter(3);
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
-    _ui = new UI(_window, _lives, this);
+    _ball = new Ball(_window, 400.0f, this, _livesCounter); 
+    _powerupManager = new PowerupManager(_window, _paddle, _ball, _livesCounter);
+    _ui = new UI(_window, _livesCounter->GetLives(), this);
+
+    _livesCounter->SetUI(_ui);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -30,12 +33,11 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
-    _powerupInEffect = _powerupManager->getPowerupInEffect();
-    _ui->updatePowerupText(_powerupInEffect);
+    _ui->updatePowerupText(_powerupManager->getEffects());
     _powerupInEffect.second -= dt;
     
 
-    if (_lives <= 0)
+    if (_livesCounter->GetLives() <= 0)
     {
         _masterText.setString("Game over.");
         return;
@@ -73,7 +75,8 @@ void GameManager::update(float dt)
 
     if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
     {
-        _powerupManager->spawnPowerup();
+        float initialX = rand() % _window->getSize().x * 0.9 + _window->getSize().x * 0.05;
+        _powerupManager->spawnPowerup(sf::Vector2f(initialX,5));
         _timeLastPowerupSpawned = _time;
     }
 
@@ -85,14 +88,6 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
-}
-
-void GameManager::loseLife()
-{
-    _lives--;
-    _ui->lifeLost(_lives);
-
-    // TODO screen shake.
 }
 
 void GameManager::render()
