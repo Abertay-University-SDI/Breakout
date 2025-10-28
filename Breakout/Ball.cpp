@@ -3,7 +3,7 @@
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isInfBall(false), _isPhantomBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
@@ -28,6 +28,8 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
+            setInfBall(0);
+            setPhantomBall(0);
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
         }        
     }
@@ -38,6 +40,22 @@ void Ball::update(float dt)
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+    }
+
+    // Infball effect
+    if (_isInfBall)
+    {
+        // Flickering effect
+        int flicker = rand() % 50 + 150; // Random value between 150 and 200
+        _sprite.setFillColor(sf::Color(0, flicker, 0)); // Green flickering color
+    }
+
+    // Phantomball effect
+    if (_isPhantomBall)
+    {
+        // Flickering effect
+        int flicker = rand() % 100 + 0; // Random value between 0 and 100
+        _sprite.setFillColor(sf::Color(0, 0, flicker)); // Blue flickering color
     }
 
     // Update position with a subtle floating-point error
@@ -80,8 +98,8 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction, *this);
+    //if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
@@ -113,4 +131,32 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setInfBall(float duration)
+{
+    if (duration)
+    {
+        _isInfBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+    _isInfBall = false;
+    _timeWithPowerupEffect = 0.f;
+
+
+}
+
+void Ball::setPhantomBall(float duration)
+{
+    if (duration)
+    {
+        _isPhantomBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+    _isPhantomBall = false;
+    _timeWithPowerupEffect = 0.f;
+
+
 }

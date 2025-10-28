@@ -30,8 +30,10 @@ void BrickManager::render()
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction, Ball& col)
 {
+    //if (col.isPhantomBall()) return 0;
+
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
@@ -40,21 +42,129 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         float ballY = ballPosition.y + 0.5f * ball.getGlobalBounds().height;
         sf::FloatRect brickBounds = brick.getBounds();
 
-        // default vertical bounce (collision is top/bottom)
-        collisionResponse = 2;
-        if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
+        // Skip bounce if phantom
+        if (!col.isPhantomBall())
+        {
+            // default vertical bounce (collision is top/bottom)
+            collisionResponse = 2;
+            if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
+        }
 
-        // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
-        // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
-        break;
+        // Phantom is too much like fireball but without bounce, possibly only allow it to damage blocks
+
+
+
+        //// If brick is damaged, destroy brick
+        //if (brick.isDamaged())  
+        //{
+        //    brick = _bricks.back();
+        //    _bricks.pop_back();
+        //    break;
+        //}
+
+        //// If brick is undamaged, damage brick
+        //else
+        //{
+        //    brick.setDamaged(true);
+        //}
+
+        //// If brick is undamaged and the ball isnt a fireball, damage on contact
+        //if (!brick.isDamaged() && !col.isFireBall())
+        //{
+        //    brick.setDamaged(true);
+        //}
+        //else if (col.isInfBall())
+        //{
+        //    brick.setDamaged(true);
+        //    infectNearbyBricks(brick);
+        //    break;
+        //}
+        //// If brick is damaged or the ball is on fire, destroy on contact
+        //else
+        //{
+        //    brick = _bricks.back();
+        //    _bricks.pop_back();
+        //    break;
+        //}
+
+        if (!col.isInfBall() && !col.isFireBall() && !col.isPhantomBall())
+        {
+            damageBrick(brick);
+        }
+        else if (col.isInfBall())
+        {
+            damageBrick(brick);
+            infectNearbyBricks(brick);
+        }
+        else if (col.isFireBall())
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+        }
+        else if (col.isPhantomBall())
+        {
+            phaseThroughBricks(brick);
+        }
+
     }
+
     if (_bricks.size() == 0)
     {
         _gameManager->levelComplete();
     }
     return collisionResponse;
 }
+
+void BrickManager::infectNearbyBricks(Brick& infected)
+{
+    const sf::FloatRect brickBounds = infected.getBounds();
+    const float infectionRange = brickBounds.width * 2.f;
+
+    for (auto& brick : _bricks)
+    {
+        if (&brick == &infected) continue;  // Skip infected brick
+
+        sf::FloatRect bounds = brick.getBounds();
+
+        bool getsInfected = std::abs(bounds.left - brickBounds.left) < infectionRange && std::abs(bounds.top - brickBounds.top) < brickBounds.height * 2.f;
+    
+        // If in infection range
+        if (getsInfected && !brick.isDamaged())
+        {
+            damageBrick(brick);
+        }
+    }
+
+}
+
+// Pass through bricks, damaging them
+void BrickManager::phaseThroughBricks(Brick& brick)
+{
+    if (!brick.isDamaged())
+    {
+        brick.setDamaged(true);
+    }
+
+}
+
+
+void BrickManager::damageBrick(Brick& brick)
+{
+    // If damaged or using fireball, destroy
+    if (brick.isDamaged())
+    {
+        brick = _bricks.back();
+        _bricks.pop_back();
+    }
+
+    // Damage brick
+    else if(!brick.isDamaged())
+    {
+        brick.setDamaged(true);
+    }
+
+
+}
+

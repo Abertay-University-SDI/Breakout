@@ -33,3 +33,11 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+- Bug Fix 'PowerupFireball.h' (5 minutes)
+- Added multi hit functionality to the bricks to make fireball more impactful (1 hr)
+- Removed fireball's ability to pass through objects, fireball now destroys undamaged blocks (30 minutes)
+- Added infectionball (1.45 hr)
+- Infectionball now damages surrounding objects correctly (30 minutes)
+- Fixed issue with infectionball lingering after duration faded, changed colouring and reworked collisions (1 hr)
+- Made function to help damage bricks (15 minutes)

@@ -57,27 +57,34 @@ void PowerupManager::render()
 void PowerupManager::spawnPowerup()
 {
 
-    // TODO finish this.
-    switch (rand() % 5)
+    //// TODO finish this.
+    switch (rand() % 10)
     {
     case 0:
         _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupPhantomBall(_window, _paddle, _ball));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupPhantomBall(_window, _paddle, _ball));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupPhantomBall(_window, _paddle, _ball));
         break;
     case 4:
         _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
         break;
     case 5:
-       break;
+        _powerups.push_back(new PowerupInfectedBall(_window, _paddle, _ball));
+        break;
+    
+    case 6:
+        _powerups.push_back(new PowerupPhantomBall(_window, _paddle, _ball));
+        break;
     }
+
+    //_powerups.push_back(new PowerupPhantomBall(_window, _paddle, _ball));
 
 }
 

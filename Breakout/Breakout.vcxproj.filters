@@ -63,6 +63,12 @@
     <ClCompile Include="PowerupFireBall.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
+    <ClCompile Include="PowerupInfectedBall.cpp">
+      <Filter>Powerups</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerupPhantomBall.cpp">
+      <Filter>Powerups</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h">
@@ -108,6 +114,12 @@
       <Filter>Powerups</Filter>
     </ClInclude>
     <ClInclude Include="PowerupFireBall.h">
+      <Filter>Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerupInfectedBall.h">
+      <Filter>Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerupPhantomBall.h">
       <Filter>Powerups</Filter>
     </ClInclude>
   </ItemGroup>
