@@ -33,7 +33,9 @@ void BrickManager::render()
 int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
+
     for (auto& brick : _bricks) {
+
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
         sf::Vector2f ballPosition = ball.getPosition();
