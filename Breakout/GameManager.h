@@ -2,17 +2,18 @@
 #include <SFML/Graphics.hpp>
 #include "CONSTANTS.h"
 #include "Paddle.h"
-#include "Ball.h"
+//#include "Ball.h"
 #include "BrickManager.h"
-#include "PowerupManager.h"
+//#include "PowerupManager.h"
 #include "MessagingSystem.h"
+#include <algorithm>
 #include "UI.h"
 
 
 
 class GameManager {
 public:
-    GameManager(sf::RenderWindow* window);
+    GameManager(sf::RenderWindow* window, bool cont);
     void initialize();
     void update(float dt);
     void loseLife();
@@ -26,6 +27,8 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void createSecondaryBall();
+    void deleteSecondaryBall(Ball* ball);
 
 private:
     bool _pause;
@@ -42,11 +45,24 @@ private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
+    std::vector<Ball*> _secondaryBalls;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+
+    bool controls;
+
+    int powerUpChance = 700;
+
+    bool shake = false;
+    int randShake = 0;
+    int shakeIntensity = 50;
+    float shakeTime = 0;
+    float shakeEndTime = 0.2;
+    float shakeIntervals = 0.03;
+    float lastShake = 0;
 };

@@ -1,13 +1,17 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, bool prime)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    if (primary) { _sprite.setFillColor(sf::Color::Cyan); }
+    else { _sprite.setFillColor(sf::Color::White); }
+    
     _sprite.setPosition(0, 300);
+
+    primary = prime;
 }
 
 Ball::~Ball()
@@ -28,7 +32,10 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            if (primary) 
+            {
+                _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            }
         }        
     }
 
@@ -62,10 +69,18 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
-        _gameManager->loseLife();
+        if (primary)
+        {
+            _sprite.setPosition(0, 300);
+            _direction = { 1, 1 };
+            _gameManager->loseLife();
+        }
+        else
+        {
+            _gameManager->deleteSecondaryBall(this);
+        }
     }
+    
 
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
@@ -113,4 +128,15 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+
+void Ball::shake(int dist)
+{
+    _sprite.setPosition(_sprite.getPosition().x + dist, _sprite.getPosition().y + dist);
+}
+
+void Ball::newBall()
+{
+    _gameManager->createSecondaryBall();
 }

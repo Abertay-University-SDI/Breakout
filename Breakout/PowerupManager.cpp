@@ -54,28 +54,30 @@ void PowerupManager::render()
     }
 }
 
-void PowerupManager::spawnPowerup()
+void PowerupManager::spawnPowerup(sf::Vector2f pos)
 {
-
-    // TODO finish this.
-    switch (rand() % 5)
+    // TODO finish this. [DONE?]
+    switch (rand() % 6)
     {
     case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, pos));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball, pos));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball, pos));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball, pos));
         break;
     case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
+        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, pos));
         break;
     case 5:
+        _powerups.push_back(new PowerupSecondaryBall(_window, _paddle, _ball, pos));
+        break;
+    default:
        break;
     }
 

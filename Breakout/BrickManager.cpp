@@ -46,6 +46,12 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
 
+        //spawn powerup   
+        if (std::rand() % powerUpChance == 0)
+        {
+            _gameManager->getPowerupManager()->spawnPowerup(brick.getPos());
+        }
+
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
@@ -57,4 +63,11 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         _gameManager->levelComplete();
     }
     return collisionResponse;
+}
+
+void BrickManager::shake(int dist)
+{
+    for (auto& brick : _bricks) {
+        brick.shake(dist);
+    }
 }
