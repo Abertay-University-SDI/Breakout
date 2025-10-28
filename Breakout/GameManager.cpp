@@ -5,6 +5,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "ParticleManager.h"
 
 #include <iostream>
 
@@ -118,6 +119,7 @@ void GameManager::render()
 
     _paddle->render();
     _ball->render();
+	ParticleManager::getInstance()->DrawParticles(_window);
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);

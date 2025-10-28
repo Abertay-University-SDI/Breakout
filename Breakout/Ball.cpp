@@ -143,7 +143,6 @@ void Ball::playDing() // with every hit increase pitch
 
 void Ball::render()
 {
-
     _window->draw(_sprite);
 }
 
