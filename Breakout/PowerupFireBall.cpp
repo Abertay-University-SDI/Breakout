@@ -1,8 +1,8 @@
 #include "PowerupFireBall.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, sf::RenderTexture* screen, Paddle* paddle, Ball* ball)
+    : PowerupBase(window, screen, paddle, ball)
 {
     _sprite.setFillColor(ballEffectsColour);
 }
@@ -17,12 +17,14 @@ PowerupFireBall::~PowerupFireBall()
         // use my pointer to do things.
     }
 
-
+    // NOTE: Removed memory leak
+    delete pInteger;
+    pInteger = nullptr;
     
 }
 
 std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
 {
     _ball->setFireBall(5.0f);
-    return { fireBall, 5.0f };
+    return { fireBall, POWERUP_DURATION };
 }

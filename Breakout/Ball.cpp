@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(sf::RenderWindow* window, sf::RenderTexture* screen, float velocity, GameManager* gameManager)
+    : _window(window), _screen(screen), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
@@ -48,7 +48,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x + 50 >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x - 50 <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -94,7 +94,8 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
-    _window->draw(_sprite);
+    //_window->draw(_sprite);
+    _screen->draw(_sprite);
 }
 
 void Ball::setVelocity(float coeff, float duration)

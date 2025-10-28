@@ -16,6 +16,9 @@
     <Filter Include="Powerups">
       <UniqueIdentifier>{f3758f5c-ad80-41b1-a2fb-fb910363ec2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{cd8cbbff-77c5-4536-a348-8512d50726e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -62,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="PowerupFireBall.cpp">
       <Filter>Powerups</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerupFlashBall.cpp">
+      <Filter>Powerups</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,5 +119,16 @@
     <ClInclude Include="PowerupFireBall.h">
       <Filter>Powerups</Filter>
     </ClInclude>
+    <ClInclude Include="PowerupFlashBall.h">
+      <Filter>Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="crt.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
