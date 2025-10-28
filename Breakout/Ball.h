@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include <deque>
 
 class GameManager;  // forward declaration
 
@@ -14,9 +15,12 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void increaseBallSize(float multiplier, float duration);
+    void decreaseBallSize(float divider, float duration);
 
 private:
     sf::CircleShape _sprite;
+    sf::CircleShape _trailSprite;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;
@@ -29,5 +33,10 @@ private:
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
+
+    float trailRadius = 10.0f;
+
+    std::deque<sf::Vector2f> previousBallPositions;
 };
+
 

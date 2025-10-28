@@ -8,6 +8,10 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _trailSprite.setRadius(RADIUS);
+    _trailSprite.setFillColor(sf::Color::Cyan);
+    _trailSprite.setPosition(0, 300);
 }
 
 Ball::~Ball()
@@ -25,10 +29,17 @@ void Ball::update(float dt)
     {
         if (_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
-        else
+        else if (_isFireBall)
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+        }
+
+        else
+        {
+            _sprite.setRadius(RADIUS); // set radius of sprite to normal
+            _sprite.setOrigin(sf::Vector2f(RADIUS, RADIUS));
+            trailRadius = RADIUS;
         }        
     }
 
@@ -80,7 +91,7 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction, _isFireBall);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
@@ -90,10 +101,34 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+    
+    if (previousBallPositions.size() > 200) { previousBallPositions.pop_back(); }
+
+    if (!_isFireBall)
+    {
+        previousBallPositions.push_front(_sprite.getPosition());
+    }
+
+    if (_isFireBall) { previousBallPositions.clear(); }
+  
 }
 
 void Ball::render()
 {
+    if (!_isFireBall)
+    {
+        for (int i = 0; i < previousBallPositions.size(); i++)
+        {
+            float radiusPercentage = (static_cast<float>(previousBallPositions.size()) - i) / previousBallPositions.size();
+
+            _trailSprite.setRadius(trailRadius * radiusPercentage);
+            _trailSprite.setOrigin(sf::Vector2f(trailRadius * radiusPercentage, trailRadius * radiusPercentage));
+            _trailSprite.setFillColor(sf::Color::White);
+            _trailSprite.setPosition(previousBallPositions[i]);
+            _window->draw(_trailSprite);
+        }
+    }
+
     _window->draw(_sprite);
 }
 
@@ -113,4 +148,21 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::increaseBallSize(float multiplier, float duration)
+{
+    _timeWithPowerupEffect = duration;
+    _sprite.setRadius(RADIUS * multiplier);
+    _sprite.setOrigin(sf::Vector2f(RADIUS * multiplier, RADIUS * multiplier));
+    trailRadius = RADIUS * multiplier;
+}
+
+void Ball::decreaseBallSize(float divider, float duration)
+{
+    _timeWithPowerupEffect = duration;
+    _sprite.setRadius(RADIUS / divider); 
+    _sprite.setOrigin(sf::Vector2f(RADIUS / divider, RADIUS / divider));
+
+    trailRadius = RADIUS / divider;
 }
