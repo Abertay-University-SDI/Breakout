@@ -5,6 +5,8 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
+    _defaultVelocity = velocity;
+
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
@@ -12,6 +14,17 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
 
 Ball::~Ball()
 {
+}
+
+void Ball::reset()
+{
+    _sprite.setRadius(RADIUS);
+    _sprite.setFillColor(sf::Color::Cyan);
+    _sprite.setPosition(0, 300);
+
+    _direction = sf::Vector2f(1, 1);
+    _velocity = _defaultVelocity;
+
 }
 
 void Ball::update(float dt)
@@ -62,8 +75,7 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
+        reset();
         _gameManager->loseLife();
     }
 

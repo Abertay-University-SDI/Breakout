@@ -46,6 +46,11 @@ void PowerupManager::update(float dt)
     }
 }
 
+void PowerupManager::reset()
+{
+    _powerups.clear();
+}
+
 void PowerupManager::render()
 {
     for (auto& powerup : _powerups)

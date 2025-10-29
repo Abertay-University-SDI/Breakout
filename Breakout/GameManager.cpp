@@ -3,9 +3,9 @@
 #include "PowerupManager.h"
 #include <iostream>
 
-GameManager::GameManager(sf::RenderWindow* window)
-    : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
-    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
+GameManager::GameManager(sf::RenderWindow* window, sf::View* view)
+    : _window(window),_view(view), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
+    _messagingSystem(nullptr), _ui(nullptr),_replayButton(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
@@ -23,9 +23,15 @@ void GameManager::initialize()
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
+    _replayButton = new Button(_window, &_state);
+
+    _state = STATES::GAME;
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+
+    //setup buttons
+    _replayButton->setupButton("Replay", sf::Color::Blue, 30, 5, sf::Color::Yellow,sf::Color(255,200,0,255), sf::Vector2f(400, 400), sf::Vector2f(200, 50),BUTTON_ACTIONS::REPLAY);
 }
 
 void GameManager::update(float dt)
@@ -34,20 +40,33 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    if (_state == STATES::POST_GAME)
+    {
+        _replayButton->update();
+    }
+    
+    if (_state == STATES::RESET)
+    {
+        _masterText.setString("");
+        _ball->reset();
+        _ui->reset();
+        _brickManager->reset();
+        _lives = 3;
+        _state = STATES::GAME;
+    }
 
     if (_lives <= 0)
     {
         _masterText.setString("Game over.");
-        return;
+        _state = STATES::POST_GAME;
     }
-    if (_levelComplete)
+    else if (_levelComplete)
     {
         _masterText.setString("Level completed.");
-        return;
+        _state = STATES::POST_GAME;
     }
-    // pause and pause handling
-    if (_pauseHold > 0.f) _pauseHold -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    else if (_pauseHold > 0.f) _pauseHold -= dt;
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
         if (!_pause && _pauseHold <= 0.f)
         {
@@ -62,29 +81,45 @@ void GameManager::update(float dt)
             _pauseHold = PAUSE_TIME_BUFFER;
         }
     }
-    if (_pause)
+    else if (_pause)
     {
-        return;
+
+    }
+    else
+    {
+        // timer.
+        _time += dt;
+
+
+        if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand() % 700 == 0)      // TODO parameterise
+        {
+            _powerupManager->spawnPowerup();
+            _timeLastPowerupSpawned = _time;
+        }
+
+        // move paddle
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+        // update everything 
+        _paddle->update(dt);
+        _ball->update(dt);
+        _powerupManager->update(dt);
     }
 
-    // timer.
-    _time += dt;
-
-
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_shakeTimer > 0)
     {
-        _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        _shakeTimer -= dt;
+
+        float x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 5))-2.5;
+        float y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 5))-2.5;
+
+        _view->setCenter(x + VIEW_CENTER_X, y + VIEW_CENTER_Y);
     }
-
-    // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
-
-    // update everything 
-    _paddle->update(dt);
-    _ball->update(dt);
-    _powerupManager->update(dt);
+    else if(_shakeTimer <= 0)
+    {
+        _view->setCenter(VIEW_CENTER_X, VIEW_CENTER_Y);
+    }
 }
 
 void GameManager::loseLife()
@@ -92,17 +127,23 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    _shakeTimer = _maxShakeTimer;
 }
 
 void GameManager::render()
 {
+    
+
     _paddle->render();
     _ball->render();
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
+    if (_state == STATES::POST_GAME)
+    {
+        _replayButton->render();
+    }
 }
 
 void GameManager::levelComplete()

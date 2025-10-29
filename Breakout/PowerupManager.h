@@ -20,6 +20,7 @@ public:
     ~PowerupManager();
 
     void update(float dt);
+    void reset();
     void render();
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle

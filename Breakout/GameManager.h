@@ -7,12 +7,11 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
-
+#include "Button.h"
 
 class GameManager {
 public:
-    GameManager(sf::RenderWindow* window);
+    GameManager(sf::RenderWindow* window, sf::View* view);
     void initialize();
     void update(float dt);
     void loseLife();
@@ -28,6 +27,8 @@ public:
 
 
 private:
+    STATES _state;
+
     bool _pause;
     float _pauseHold;
     float _time;
@@ -36,16 +37,23 @@ private:
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
+    float _maxShakeTimer = 0.5;
+    float _shakeTimer;
+
     sf::Font _font;
     sf::Text _masterText;
 
     sf::RenderWindow* _window;
+    sf::View* _view;
+
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    Button* _replayButton;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

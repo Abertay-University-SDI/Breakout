@@ -28,6 +28,13 @@ UI::~UI()
 {
 }
 
+void UI::reset()
+{
+	for (sf::CircleShape& life : _lives)
+	{
+		life.setFillColor(sf::Color::Red);
+	}
+}
 
 void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 {

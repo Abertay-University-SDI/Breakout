@@ -26,7 +26,10 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 void BrickManager::render()
 {
     for (auto& brick : _bricks) {
-        brick.render(*_window);
+        if (!brick.isDestroyed())
+        {
+            brick.render(*_window);
+        }
     }
 }
 
@@ -34,7 +37,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
-        if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
+        if (brick.isDestroyed() || !brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
         sf::Vector2f ballPosition = ball.getPosition();
         float ballY = ballPosition.y + 0.5f * ball.getGlobalBounds().height;
@@ -46,10 +49,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
 
-        // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
-        // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+        brick.setIsDestroyed(true);
         break;
     }
     if (_bricks.size() == 0)
@@ -57,4 +57,12 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         _gameManager->levelComplete();
     }
     return collisionResponse;
+}
+
+void BrickManager::reset()
+{
+    for (auto& brick : _bricks)
+    {
+        brick.setIsDestroyed(false);
+    }
 }

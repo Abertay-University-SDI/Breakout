@@ -10,6 +10,7 @@ class Ball {
 public:
     Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);
     ~Ball();
+    void reset();
     void update(float dt);
     void render();
     void setVelocity(float coeff, float duration);
@@ -23,6 +24,8 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+
+    float _defaultVelocity;
 
     GameManager* _gameManager;  // Reference to the GameManager
 
