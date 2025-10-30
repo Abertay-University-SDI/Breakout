@@ -16,6 +16,9 @@
     <Filter Include="Powerups">
       <UniqueIdentifier>{f3758f5c-ad80-41b1-a2fb-fb910363ec2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TrailsAndEffects">
+      <UniqueIdentifier>{399e7401-9484-4c3a-aa95-5176cb0822ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +66,15 @@
     <ClCompile Include="PowerupFireBall.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
+    <ClCompile Include="Trail.cpp">
+      <Filter>TrailsAndEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenShake.cpp">
+      <Filter>TrailsAndEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEffect.cpp">
+      <Filter>TrailsAndEffects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h">
@@ -109,6 +121,15 @@
     </ClInclude>
     <ClInclude Include="PowerupFireBall.h">
       <Filter>Powerups</Filter>
+    </ClInclude>
+    <ClInclude Include="Trail.h">
+      <Filter>TrailsAndEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenShake.h">
+      <Filter>TrailsAndEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEffect.h">
+      <Filter>TrailsAndEffects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

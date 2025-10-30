@@ -4,6 +4,8 @@ PowerupSlowBall::PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle, Ball*
     : PowerupBase(window, paddle, ball)
 {
     _sprite.setFillColor(ballEffectsColour); 
+    _trail.setFillColor(ballEffectsColour);
+
 }
 
 PowerupSlowBall::~PowerupSlowBall()

@@ -4,6 +4,7 @@ PowerupBigPaddle::PowerupBigPaddle(sf::RenderWindow* window, Paddle* paddle, Bal
     : PowerupBase(window, paddle, ball)
 {
     _sprite.setFillColor(paddleEffectsColour); // Same colour as smallPaddle
+    _trail.setFillColor(paddleEffectsColour);
 }
 
 PowerupBigPaddle::~PowerupBigPaddle()

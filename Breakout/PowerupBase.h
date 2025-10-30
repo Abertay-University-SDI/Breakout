@@ -5,8 +5,9 @@
 #include "Paddle.h"
 #include "Ball.h"
 #include <vector>
+#include "Trail.h"
 
-#include "PowerupFireBall.h"
+//#include "PowerupFireBall.h" -- Not needed as Power up fire ball depends on Power up base
 
 
 class PowerupBase
@@ -42,4 +43,5 @@ protected: // Protected so derived classes can access these members
     sf::Color _colour;
     sf::RenderWindow* _window;
 
+    Trail _trail;
 };

@@ -16,6 +16,7 @@ PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     _sprite.setPosition(initialX, 5);
     _direction = { 0.0f, FLOAT_DOWN_SPEED };
 
+    _trail = Trail(300, 20, ballEffectsColour); // fix Make it the correct colour based on the power up
 }
 
 PowerupBase::~PowerupBase()
@@ -46,11 +47,13 @@ void PowerupBase::update(float dt)
     {
         _isAlive = false;
     }
-
+    sf::Vector2f trailPosition = _sprite.getPosition() + sf::Vector2f(_sprite.getRadius(), _sprite.getRadius());
+    _trail.update(trailPosition);
 }
 
 void PowerupBase::render()
 {
+    _trail.render(*_window);
     _window->draw(_sprite);
 }
 

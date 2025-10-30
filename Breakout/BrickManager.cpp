@@ -46,9 +46,18 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
 
+
+        sf::FloatRect bounds = brick.getBounds();
+
+        sf::Vector2f startPoint(bounds.left, bounds.top);                          // Top-left corner
+        sf::Vector2f endPoint(bounds.left + bounds.width, bounds.top);            // Top-right corner
+        _gameManager->startParticleEffect(startPoint, endPoint);
+
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
+
+     
         _bricks.pop_back();
         break;
     }

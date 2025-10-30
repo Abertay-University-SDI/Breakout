@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "ParticleEffect.h"
 
 
 class GameManager {
@@ -19,6 +19,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void startParticleEffect(sf::Vector2f start, sf::Vector2f end);
+    void restartGame();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -49,4 +51,7 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    ParticleEffect particleEffect;
+    bool particleEffectActive = false;
 };

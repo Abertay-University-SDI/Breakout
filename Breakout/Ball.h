@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include "Trail.h"
+#include "ScreenShake.h"
 
 class GameManager;  // forward declaration
 
@@ -29,5 +30,8 @@ private:
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
+
+    Trail _trail;
+    ScreenShake screenShake;
 };
 

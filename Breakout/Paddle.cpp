@@ -7,6 +7,7 @@ Paddle::Paddle(sf::RenderWindow* window)
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
     _sprite.setSize(sf::Vector2f(_width, PADDLE_HEIGHT));
+
 }
 
 Paddle::~Paddle()
@@ -17,7 +18,7 @@ void Paddle::moveLeft(float dt)
 {
     float position = _sprite.getPosition().x;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && position > 0)
+    if (  sf::Keyboard::isKeyPressed(sf::Keyboard::A)  && position > 0)
     {
         _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
     }
@@ -27,7 +28,7 @@ void Paddle::moveRight(float dt)
 {
     float position = _sprite.getPosition().x;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
+    if (  sf::Keyboard::isKeyPressed(sf::Keyboard::D)  && position < _window->getSize().x - _width)
     {
         _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
     }
@@ -35,6 +36,24 @@ void Paddle::moveRight(float dt)
 
 void Paddle::update(float dt)
 {
+
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*_window);
+    float position = _sprite.getPosition().x;
+
+    //If tre left mouse is held down
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+        //Checking the mouse position minus half the width ensure that we are checking from the center of the paddle
+        if (mousePos.x - _width/2 > position && position < _window->getSize().x - _width) {
+            _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
+        }
+        else if(position > 0){
+            _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
+        }
+    }
+
+
+
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
@@ -43,6 +62,7 @@ void Paddle::update(float dt)
     {
         setWidth(1.0f, 0.0f); // Reset to default width after duration
     }
+
 }
 
 void Paddle::render()
