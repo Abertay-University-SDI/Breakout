@@ -7,10 +7,12 @@
 UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager) 
 	: _window(window), _gameManager(gameManager)
 {
+	_lifeTexture.loadFromFile("Images/Lives.png");
 	for (int i = lives; i > 0; --i)
 	{
 		sf::CircleShape newLife;
-		newLife.setFillColor(sf::Color::Red);	
+		newLife.setFillColor(sf::Color::Red);
+		newLife.setTexture(&_lifeTexture);
 		newLife.setOutlineColor(sf::Color::Cyan);
 		newLife.setOutlineThickness(4.0f);
 		newLife.setRadius(LIFE_RADIUS);

@@ -42,7 +42,7 @@ void GameManager::update(float dt)
     }
     if (_levelComplete)
     {
-        _masterText.setString("Level completed.");
+        _masterText.setString("Level completed. \n Press Enter to play again");
         return;
     }
     // pause and pause handling
@@ -71,7 +71,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%6 == 0)      // TODO parameterise
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -108,6 +108,10 @@ void GameManager::render()
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+        _levelComplete = false;
+        initialize();
+    }
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

@@ -3,7 +3,9 @@
 PowerupBigPaddle::PowerupBigPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(paddleEffectsColour); // Same colour as smallPaddle
+    //_sprite.setFillColor(paddleEffectsColour); // Same colour as smallPaddle
+    bigImage.loadFromFile("Images/Paddle increased.png");
+    _sprite.setTexture(&bigImage);
 }
 
 PowerupBigPaddle::~PowerupBigPaddle()

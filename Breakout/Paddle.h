@@ -15,6 +15,7 @@ public:
     void render();
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
+    void setVel(float coeff, float duration);
 
 private:
 
@@ -24,4 +25,6 @@ private:
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    float _speed = PADDLE_SPEED;
+    float _timeInNewSpeed = 0.0f;
 };
