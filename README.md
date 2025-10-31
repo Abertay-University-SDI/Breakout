@@ -33,3 +33,6 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+Compiler issue fixed: "undefined base class" - 1 min.
+Replaced powerup colors with icons - 10 min. 
+

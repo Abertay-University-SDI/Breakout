@@ -3,7 +3,8 @@
 PowerupFastBall::PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : PowerupBase(window, paddle, ball)
 {
-    _sprite.setFillColor(ballEffectsColour);
+    fastTexture.loadFromFile("Textures/Cheetah.jpg"); // loading and setting texture 
+    _sprite.setTexture(&fastTexture);
 }
 
 PowerupFastBall::~PowerupFastBall()

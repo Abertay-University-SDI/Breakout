@@ -21,6 +21,7 @@ private:
 
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
+    //sf::Vector2i _currentMousePos = sf::Mouse::getPosition();
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;

@@ -21,12 +21,15 @@ void Paddle::moveLeft(float dt)
     {
         _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
     }
+  
+    
+    
 }
 
 void Paddle::moveRight(float dt)
 {
     float position = _sprite.getPosition().x;
-
+    
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
     {
         _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
