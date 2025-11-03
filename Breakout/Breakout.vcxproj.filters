@@ -63,6 +63,9 @@
     <ClCompile Include="PowerupFireBall.cpp">
       <Filter>Powerups</Filter>
     </ClCompile>
+    <ClCompile Include="Eye.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h">
@@ -110,5 +113,13 @@
     <ClInclude Include="PowerupFireBall.h">
       <Filter>Powerups</Filter>
     </ClInclude>
+    <ClInclude Include="Eye.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

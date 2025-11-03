@@ -32,4 +32,20 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Fixed compiler issues 10 mins 
+
+Screen bound mouse input 20 mins
+
+Added moving eyes to paddle 25 mins
+
+Added moving eyes to bricks 20 mins
+
+Changed drawing to a texture instead of window 20 mins
+
+Added lighting shader 25 mins
+
+Made blocks ball paddle all draw to the light texture 30 mins
+
+Pulsing lights 20 mins
+
+Swapped out sprite for smooth lights 15 mins

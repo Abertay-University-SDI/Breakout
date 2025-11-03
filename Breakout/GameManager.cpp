@@ -3,25 +3,26 @@
 #include "PowerupManager.h"
 #include <iostream>
 
-GameManager::GameManager(sf::RenderWindow* window)
+GameManager::GameManager(sf::RenderWindow* window, sf::RenderTexture* renderTex, sf::RenderTexture* lightTex)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _lightTex(lightTex)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+    _renderTex = renderTex;
 }
 
 void GameManager::initialize()
 {
-    _paddle = new Paddle(_window);
-    _brickManager = new BrickManager(_window, this);
+    _ball = new Ball(_window, 400.0f, this, _renderTex, _lightTex); 
+    _paddle = new Paddle(_window, _renderTex, _ball, _lightTex);
+    _brickManager = new BrickManager(_window, this, _renderTex, _ball, _lightTex);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _powerupManager = new PowerupManager(_window, _paddle, _ball, _renderTex);
     _ui = new UI(_window, _lives, this);
 
     // Create bricks
@@ -80,11 +81,19 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (mousePosX != sf::Mouse::getPosition(*_window).x)
+    {
+        mousePosX = sf::Mouse::getPosition(*_window).x;
+        float boundValue = std::clamp(mousePosX, 0.0f, _window->getSize().x - _paddle->getBounds().width);
+        _paddle->setPos(boundValue);
+    }
+    std::cout << mousePosX << "\n";
 
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _brickManager->update(dt);
 }
 
 void GameManager::loseLife()
@@ -101,6 +110,14 @@ void GameManager::render()
     _ball->render();
     _brickManager->render();
     _powerupManager->render();
+
+
+    //_window->draw(_masterText);
+    //_ui->render();
+}
+
+void GameManager::renderUI()
+{
     _window->draw(_masterText);
     _ui->render();
 }

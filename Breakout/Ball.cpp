@@ -1,13 +1,17 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, sf::RenderTexture* renderTex, sf::RenderTexture* lightTex)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _lightTex(lightTex)
 {
+    _lightSpriteTex.loadFromFile("pointLight.png");
+    _light.setTexture(&_lightSpriteTex);
+    _light.setRadius(RADIUS * 10);
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    //_sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+    _renderTex = renderTex;
 }
 
 Ball::~Ball()
@@ -28,7 +32,7 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(sf::Color::White);  // back to normal colour.
         }        
     }
 
@@ -51,12 +55,14 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _lightHitTime = HIT_PULSE_TIME;
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _lightHitTime = HIT_PULSE_TIME;
     }
 
     // lose life bounce
@@ -77,7 +83,20 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        _lightHitTime = HIT_PULSE_TIME;
     }
+
+    _lightFlickerTime += dt * 20;
+    if (_lightHitTime > 0)
+    {
+        _lightHitTime -= dt;
+        _lightHitTime = std::clamp(_lightHitTime, 0.0f, 9999.0f);
+    }
+    float currRad = RADIUS * (10 - sin(_lightFlickerTime));//+ (_lightHitTime / HIT_PULSE_TIME) * 50;
+    _light.setFillColor(sf::Color(255, 255, 255, (255 * 0.5f) + (_lightHitTime / HIT_PULSE_TIME) * 255 * 0.5f));
+    _light.setRadius(currRad);
+    _light.setPosition(_sprite.getPosition() - sf::Vector2f(currRad - RADIUS, currRad - RADIUS));
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
@@ -85,16 +104,25 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        _lightHitTime = HIT_PULSE_TIME;
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+        _lightHitTime = HIT_PULSE_TIME;
     }
 }
 
 void Ball::render()
 {
-    _window->draw(_sprite);
+    //_window->draw(_sprite);
+    _renderTex->draw(_sprite);
+    _lightTex->draw(_light);
+}
+
+sf::Vector2f Ball::getPos()
+{
+    return _sprite.getPosition();
 }
 
 void Ball::setVelocity(float coeff, float duration)

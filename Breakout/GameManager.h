@@ -12,13 +12,14 @@
 
 class GameManager {
 public:
-    GameManager(sf::RenderWindow* window);
+    GameManager(sf::RenderWindow* window, sf::RenderTexture* renderTex, sf::RenderTexture* lightTex);
     void initialize();
     void update(float dt);
     void loseLife();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void renderUI();
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -34,12 +35,15 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    float mousePosX;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
 
+    sf::RenderTexture* _renderTex;
     sf::RenderWindow* _window;
+    sf::RenderTexture* _lightTex;
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;

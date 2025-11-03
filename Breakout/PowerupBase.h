@@ -6,13 +6,13 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+//#include "PowerupFireBall.h"
 
 
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
+    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, sf::RenderTexture* renderTex);
     virtual ~PowerupBase();
 
     void update(float dt);
@@ -41,5 +41,6 @@ protected: // Protected so derived classes can access these members
     sf::CircleShape _sprite;
     sf::Color _colour;
     sf::RenderWindow* _window;
+    sf::RenderTexture* _renderTex;
 
 };
