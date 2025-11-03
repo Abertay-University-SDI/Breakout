@@ -5,7 +5,7 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
-    _sprite.setRadius(RADIUS);
+    _sprite.setRadius(_size);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
 }
@@ -25,6 +25,12 @@ void Ball::update(float dt)
     {
         if (_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
+        
+        if (_size != RADIUS)
+        {
+            _size = RADIUS; // reset size.
+            _sprite.setRadius(_size);
+        }
         else
         {
             setFireBall(0);    // disable fireball
@@ -40,6 +46,8 @@ void Ball::update(float dt)
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
     }
 
+   
+
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
 
@@ -48,7 +56,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= windowDimensions.x - 2 * _size && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -76,7 +84,7 @@ void Ball::update(float dt)
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
         // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * _size);
     }
 
     // collision with bricks
@@ -100,6 +108,13 @@ void Ball::render()
 void Ball::setVelocity(float coeff, float duration)
 {
     _velocity = coeff * VELOCITY;
+    _timeWithPowerupEffect = duration;
+}
+
+void Ball::setSize(float n, float duration)
+{
+    _size = n * RADIUS;
+    _sprite.setRadius(_size);
     _timeWithPowerupEffect = duration;
 }
 

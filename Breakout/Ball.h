@@ -13,6 +13,7 @@ public:
     void update(float dt);
     void render();
     void setVelocity(float coeff, float duration);
+    void setSize(float n, float duration);
     void setFireBall(float duration);
 
 private:
@@ -29,5 +30,7 @@ private:
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.
+
+    float _size = RADIUS;
 };
 

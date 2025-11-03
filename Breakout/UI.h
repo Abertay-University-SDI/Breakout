@@ -24,6 +24,9 @@ private:
 	sf::Font _font;
 	sf::Text _powerupText;
 
+	sf::RectangleShape _progressBarBack;
+	sf::RectangleShape _progressBarFill;
+
 	std::vector<sf::CircleShape> _lives;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
