@@ -76,4 +76,9 @@ void Paddle::setPosition(float x)
     _sprite.setPosition(x, _sprite.getPosition().y);
 }
 
+void Paddle::setPos(float x, float y)
+{
+    _sprite.setPosition(x, y);
+}
+
 

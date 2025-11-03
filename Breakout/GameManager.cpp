@@ -83,10 +83,13 @@ void GameManager::update(float dt)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
     {
-        _paddle->setPosition(sf::Mouse::getPosition().x - 550.f);
+        _paddle->setPosition(sf::Mouse::getPosition().x/* - 850.f*/);
     }
     
-    
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+    {
+        _paddle->setPos(sf::Mouse::getPosition().x - 850.f, sf::Mouse::getPosition().y - 350);
+    }
 
     // update everything 
     _paddle->update(dt);

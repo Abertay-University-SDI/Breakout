@@ -17,6 +17,7 @@ public:
     void setWidth(float coeff, float duration);
     void setSpeed(float speed);
     void setPosition(float x);
+    void setPos(float x, float y);
 
 private:
 

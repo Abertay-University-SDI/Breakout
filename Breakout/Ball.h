@@ -20,6 +20,7 @@ private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
+    int BigBallBounds;
     float _velocity;
     bool _isAlive;
     bool _isFireBall;
