@@ -35,6 +35,23 @@ void Paddle::moveRight(float dt)
 
 void Paddle::update(float dt)
 {
+    
+    float mousePos = sf::Mouse::getPosition(*_window).x;
+    
+    if (_hitFlashTime > 0.0f)
+    {
+        _hitFlashTime -= dt;
+        if (_hitFlashTime <= 0.0f)
+        {
+            _hitFlashTime = 0.0f;
+            _sprite.setFillColor(sf::Color::Cyan);
+        }
+    }
+    if (mousePos < _window->getSize().x - _width)
+    {
+        _sprite.setPosition(sf::Vector2f(mousePos - _width/2.0f,_sprite.getPosition().y));
+    }
+    
     if (_timeInNewSize > 0)
     {
         _timeInNewSize -= dt;
@@ -64,4 +81,10 @@ void Paddle::setWidth(float coeff, float duration)
     _timeInNewSize = duration;
     float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
     _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
+void Paddle::OnHit()
+{
+    _sprite.setFillColor(sf::Color::White);
+    _hitFlashTime = 0.15f;
 }

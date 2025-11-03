@@ -70,6 +70,9 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        
+        _gameManager->getPaddle()->OnHit();
+
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
