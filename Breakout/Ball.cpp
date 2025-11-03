@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include "SoundManager.h"
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -8,10 +9,23 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+    
 }
 
 Ball::~Ball()
 {
+}
+
+
+void Ball::reset() 
+{
+    _sprite.setPosition(0, 300);
+
+    _direction = { 1.f, 1.f };
+    //_velocity = VELOCITY;
+    _timeWithPowerupEffect = 0.f;
+    _isFireBall = false;
+    _sprite.setFillColor(sf::Color::Cyan);
 }
 
 void Ball::update(float dt)
@@ -28,16 +42,23 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.       
         }        
     }
+
+    static float currentIntensity = 1.0f;  //Base line of intensity for fireball.
 
     // Fireball effect
     if (_isFireBall)
     {
         // Flickering effect
-        int flicker = rand() % 50 + 205; // Random value between 205 and 255
-        _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+        
+        float flicker = (rand() % 101)/100.0f * 1.4f; // Random value between 0.0 and 1.4
+
+        currentIntensity += (flicker - currentIntensity)*0.2;  //Smooth more real fire
+                    
+        //                                                         Red                                                Green                                    Blue
+        _sprite.setFillColor(sf::Color(static_cast<sf::Uint8>(255 * currentIntensity), static_cast<sf::Uint8>(120 * currentIntensity), static_cast<sf::Uint8>(30 * currentIntensity))); // fire flickering color
     }
 
     // Update position with a subtle floating-point error
@@ -50,12 +71,28 @@ void Ball::update(float dt)
     // bounce on walls
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
+
+        if ( _direction.x < 0 ||  _direction.x > 0)
+        {
+            if (auto* sfx = _gameManager->getSFX())   
+            {
+                sfx->bounceWall();                         //Play the bounce sound when the wall is hit
+            }
+        }
         _direction.x *= -1;
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
+        if (_direction.y < 0.f)
+        {
+            if (auto* sfx = _gameManager->getSFX())
+            {
+                sfx->bounceWall();
+            }
+        }
+
         _direction.y *= -1;
     }
 
@@ -70,6 +107,16 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        if (_direction.y > 0.f) 
+        {
+            if (auto* sfx = _gameManager->getSFX()) 
+            {
+                sfx->bouncePaddle();
+            }
+        }
+
+
+
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
@@ -77,17 +124,34 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+
     }
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+    if (_isFireBall)
+    {
+        return; // no collisisons when in fireBall mode.
+    }
+        
     if (collisionResponse == 1)
     {
+
+            if (auto* sfx = _gameManager->getSFX())
+            {
+                sfx->bounceBrick();
+            }
+        
         _direction.x *= -1; // Bounce horizontally
     }
     else if (collisionResponse == 2)
     {
+
+        if (auto* sfx = _gameManager->getSFX())
+        {
+            sfx->bounceBrick();
+        }
         _direction.y *= -1; // Bounce vertically
     }
 }
@@ -105,12 +169,41 @@ void Ball::setVelocity(float coeff, float duration)
 
 void Ball::setFireBall(float duration)
 {
-    if (duration) 
+    if (duration> 0.f) 
     {
-        _isFireBall = true;
-        _timeWithPowerupEffect = duration;        
-        return;
+        if (!_isFireBall)
+        {
+            _isFireBall = true;
+            _timeWithPowerupEffect = duration;
+
+            if (auto* sfx = _gameManager->getSFX())              //This block checks that the sound clip is not already playing to provent it overloading the voice that has 12 available slots, it only activates the sound at the start of the power up
+            {
+                sfx->fireBallStart();
+            }
+            else
+            {
+                _timeWithPowerupEffect = duration;
+            }
+            return;
+        }
+
+
+        if (_isFireBall)
+        {
+            _isFireBall = false;
+            _timeWithPowerupEffect = 0.f;
+        }
+        
+        
+        //if (auto* sfx = _gameManager->getSFX())
+        //{
+        //    sfx->fireBallEnd();
+        //}
+
+        
     }
     _isFireBall = false;
-    _timeWithPowerupEffect = 0.f;    
+    _timeWithPowerupEffect = 0.f;
+    return;
+     
 }

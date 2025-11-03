@@ -7,7 +7,10 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include <SFML/Audio.hpp>
 
+
+class SoundManager;
 
 
 class GameManager {
@@ -20,12 +23,25 @@ public:
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
 
+
+    ~GameManager();
+
+    sf::SoundBuffer _bonceBuffer;
+    sf::Sound _bounce;
+
+
+    SoundManager* getSFX() const 
+    { 
+        return _sfx.get(); //returns the value of the sound efect in the sound manager to any function that calls it.
+    } 
+
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void restartLevel();
 
 private:
     bool _pause;
@@ -49,4 +65,7 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+
+    std::unique_ptr<SoundManager> _sfx;
 };

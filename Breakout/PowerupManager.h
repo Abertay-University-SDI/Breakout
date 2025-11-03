@@ -22,9 +22,14 @@ public:
     void update(float dt);
     void render();
     void spawnPowerup(); // Method to spawn a power-up
+
+    void spawnPowerupAt(POWERUPS type, const sf::Vector2f& pos);
+
     void checkCollision(); // Check collision with paddle
     int getPowerupsSpawned();
     std::pair<POWERUPS, float> getPowerupInEffect();
+
+    void clear();
 
 private:
     sf::RenderWindow* _window;
