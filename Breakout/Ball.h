@@ -14,11 +14,13 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setSize(float size);
 
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
+    int BigBallBounds;
     float _velocity;
     bool _isAlive;
     bool _isFireBall;

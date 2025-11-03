@@ -19,7 +19,7 @@ void Paddle::moveLeft(float dt)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && position > 0)
     {
-        _sprite.move(sf::Vector2f(-dt * PADDLE_SPEED, 0));
+        _sprite.move(sf::Vector2f(-dt * _paddleSpeed, 0));
     }
 }
 
@@ -29,7 +29,7 @@ void Paddle::moveRight(float dt)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
     {
-        _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
+        _sprite.move(sf::Vector2f(dt * _paddleSpeed, 0));
     }
 }
 
@@ -65,3 +65,20 @@ void Paddle::setWidth(float coeff, float duration)
     float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
     _sprite.setPosition(newX, _sprite.getPosition().y);
 }
+
+void Paddle::setSpeed(float speed)
+{
+    _paddleSpeed = speed;
+}
+
+void Paddle::setPosition(float x)
+{
+    _sprite.setPosition(x, _sprite.getPosition().y);
+}
+
+void Paddle::setPos(float x, float y)
+{
+    _sprite.setPosition(x, y);
+}
+
+

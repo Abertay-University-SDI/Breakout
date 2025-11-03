@@ -33,3 +33,23 @@ fire ball (green)
 
 # Time Details and Changelist
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+started - 16:00 19/10/2025
+
+reviewed code and stopped - 16:20
+
+started - 16:50 20/10/2025
+
+fixed compiler issues in the code - 17:20
+stopped - 17.40
+
+started - 07:40 21/10/2025
+
+created big ball power up - 08:37
+
+created fast paddle - 09:00
+
+created mouse input for x axis - 09:49
+
+added hold down left control for mouse input - 10:00
+
+tried fixing bugs with power ups and stopped - 10:40
