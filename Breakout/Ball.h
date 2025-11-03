@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <SFML/Audio.hpp>
+#include <iostream>
+#include <deque>
 
 class GameManager;  // forward declaration
 
@@ -23,6 +25,17 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+
+    // sfx
+    sf::SoundBuffer _paddleBuffer;
+    sf::Sound _paddleSound;
+
+    sf::SoundBuffer _brickBuffer;
+    sf::Sound _brickSound;
+    float _currentPitch = 1.0f;
+
+    sf::SoundBuffer _fireBuffer;
+    sf::Sound _fireSound;
 
     GameManager* _gameManager;  // Reference to the GameManager
 

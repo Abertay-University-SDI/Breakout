@@ -32,4 +32,7 @@ private:
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    sf::RectangleShape _progressBar;
+    float _powerupTotalDuration;
+    sf::Vector2f(_maxBarSize) = { 300.0f, 20.0f };
 };

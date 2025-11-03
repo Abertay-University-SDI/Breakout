@@ -14,11 +14,12 @@ class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
     void initialize();
-    void update(float dt);
+    void update(float dt, sf::RenderWindow* window);
     void loseLife();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -46,6 +47,17 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    sf::SoundBuffer _deathSoundBuffer;
+    sf::Sound _deathSound;
+
+    sf::View _gameView;
+    sf::Vector2f _originalViewCenter;
+    float _shakeMagnitude; 
+
+    void updateShake(float dt);
+    void applyShakeToView();
+
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

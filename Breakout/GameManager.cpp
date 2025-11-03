@@ -13,6 +13,17 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    if (!_deathSoundBuffer.loadFromFile("sfx/mega_explosion.wav"))
+        std::cout << "Could not load mega explosion sfx from file!";
+    _deathSound.setBuffer(_deathSoundBuffer);
+
+    srand(time(0));
+
+    _gameView = _window->getDefaultView();
+    _originalViewCenter = _gameView.getCenter();
+    _shakeMagnitude = 0.f;
+
 }
 
 void GameManager::initialize()
@@ -28,7 +39,7 @@ void GameManager::initialize()
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
 
-void GameManager::update(float dt)
+void GameManager::update(float dt, sf::RenderWindow* window)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
@@ -66,12 +77,11 @@ void GameManager::update(float dt)
     {
         return;
     }
-
     // timer.
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
@@ -80,11 +90,14 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    _paddle->moveMouse(dt, window);
 
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+
+    updateShake(dt);
 }
 
 void GameManager::loseLife()
@@ -92,11 +105,43 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+
+    // death sfx
+    _deathSound.play();
+
+    // screen shake
+    _shakeMagnitude = 15.0f;
+}
+
+void GameManager::updateShake(float dt)
+{
+    if (_shakeMagnitude > 0.5)
+    {
+        _shakeMagnitude -= 30 * dt;
+    }
+
+    else _shakeMagnitude = 0.0f;
+}
+
+void GameManager::applyShakeToView()
+{
+    if (_shakeMagnitude > 0)
+    {
+        float randomShakeRotation = (rand() % 200 - 100) / 100.0f * _shakeMagnitude;
+        _gameView.setRotation(randomShakeRotation);
+    }
+
+    else _gameView.setRotation(0);
+
+    _gameView.setCenter(_originalViewCenter);
+
+    _window->setView(_gameView);
 }
 
 void GameManager::render()
 {
+    applyShakeToView();
+
     _paddle->render();
     _ball->render();
     _brickManager->render();

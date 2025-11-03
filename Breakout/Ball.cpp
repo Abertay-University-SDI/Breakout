@@ -8,6 +8,19 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    // SFX
+    if (!_paddleBuffer.loadFromFile("sfx/bounce.wav"))
+        std::cout << "Bounce sound file could not load";
+    _paddleSound.setBuffer(_paddleBuffer);
+
+    if (!_brickBuffer.loadFromFile("sfx/explosion.wav"))
+        std::cout << "Explosion sound file could not load";
+    _brickSound.setBuffer(_brickBuffer);
+
+    if (!_fireBuffer.loadFromFile("sfx/pew.wav"))
+        std::cout << "Pew sound file could not load";
+    _fireSound.setBuffer(_fireBuffer);
 }
 
 Ball::~Ball()
@@ -29,7 +42,7 @@ void Ball::update(float dt)
         {
             setFireBall(0);    // disable fireball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+        }
     }
 
     // Fireball effect
@@ -70,6 +83,9 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        _currentPitch = 1.0f;
+        _paddleSound.play();
+
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
@@ -81,13 +97,26 @@ void Ball::update(float dt)
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+    if (_isFireBall)
+    {
+        if (collisionResponse == 1 || collisionResponse == 2) // play sound only when fire ball hits
+            _fireSound.play();
+        return; // no collisisons when in fireBall mode.
+    }
     if (collisionResponse == 1)
     {
+        if (_currentPitch < 2.5f) //limits pitch scaling
+            _currentPitch *= 1.1f;
+        _brickSound.setPitch(_currentPitch);
+        _brickSound.play();
         _direction.x *= -1; // Bounce horizontally
     }
     else if (collisionResponse == 2)
     {
+        if (_currentPitch < 2.5f) //limits pitch scaling
+            _currentPitch *= 1.1f;
+        _brickSound.setPitch(_currentPitch);
+        _brickSound.play();
         _direction.y *= -1; // Bounce vertically
     }
 }

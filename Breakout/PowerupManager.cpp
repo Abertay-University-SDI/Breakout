@@ -4,6 +4,9 @@
 PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     : _window(window), _paddle(paddle), _ball(ball)
 {
+    _progressBar.setFillColor(sf::Color::Green);
+    _progressBar.setSize(sf::Vector2f(_maxBarSize));
+    _progressBar.setPosition(window->getSize().x - _maxBarSize.x - 10, 45);
 }
 
 PowerupManager::~PowerupManager()
@@ -24,6 +27,12 @@ void PowerupManager::update(float dt)
         if (_powerupInEffect->second <= 0)
         {
             _powerupInEffect.reset();
+            _powerupTotalDuration = 0.0f; // reset timer
+        }
+        else
+        {
+            float timeRatio = _powerupInEffect->second / _powerupTotalDuration;
+            _progressBar.setSize(sf::Vector2f(_maxBarSize.x * timeRatio, _maxBarSize.y));
         }
     }
 
@@ -52,6 +61,8 @@ void PowerupManager::render()
     {
         powerup->render();
     }
+
+    if (_powerupInEffect) _window->draw(_progressBar);
 }
 
 void PowerupManager::spawnPowerup()
@@ -89,6 +100,7 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
+            _powerupTotalDuration = _powerupInEffect->second;
             powerup->setAlive(false);
         }
     }
