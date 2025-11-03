@@ -49,4 +49,9 @@ private:
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    float _shakeTime = 0.f; //How long the shake lasts
+    float _shakeDuration = 0.f; //Total shake duration
+    float _shakeIntensity = 0.f; //How strong the shake is
+    bool _isShaking = false; //Is the screen currently shaking?
 };

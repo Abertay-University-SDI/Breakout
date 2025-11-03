@@ -34,6 +34,30 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
+    if (_isShaking)
+    {
+
+        _shakeTime += dt;
+        float progress = _shakeTime / _shakeDuration;
+
+        //Rotate left and right quickly
+        float angle = sin(progress * 50.f) * _shakeIntensity;
+
+        //Apply rotation
+        sf::View view = _window->getView();
+        view.setRotation(angle);
+        _window->setView(view);
+
+        //End shake
+        if (_shakeTime >= _shakeDuration)
+        {
+            _isShaking = false;
+            view.setRotation(0.f);
+            _window->setView(view);
+        }
+
+    }
+
 
     if (_lives <= 0)
     {
@@ -92,7 +116,10 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    _isShaking = true;
+    _shakeDuration = 0.3f; //Shake lasts 0.3 seconds
+    _shakeTime = 0.f; //Resetting amount of time shaken for
+    _shakeIntensity = 5.f; //Shake angle in degrees
 }
 
 void GameManager::render()
