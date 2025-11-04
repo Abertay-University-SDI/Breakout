@@ -19,10 +19,10 @@ public:
     PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
     ~PowerupManager();
 
-    void update(float dt);
+    void update(float dt, int* score);
     void render();
     void spawnPowerup(); // Method to spawn a power-up
-    void checkCollision(); // Check collision with paddle
+    void checkCollision(int* score); // Check collision with paddle
     int getPowerupsSpawned();
     std::pair<POWERUPS, float> getPowerupInEffect();
 

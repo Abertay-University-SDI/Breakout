@@ -15,7 +15,7 @@ PowerupManager::~PowerupManager()
     _powerups.clear();
 }
 
-void PowerupManager::update(float dt)
+void PowerupManager::update(float dt, int* score)
 {
     // tick down powerup effect time. Reset if elapsed.
     if (_powerupInEffect)
@@ -30,7 +30,7 @@ void PowerupManager::update(float dt)
 
     for (auto it = _powerups.begin(); it != _powerups.end(); )
     {
-        checkCollision();
+        checkCollision(score);
         
         // Delete powerups queued for removal
         (*it)->update(dt);
@@ -81,7 +81,7 @@ void PowerupManager::spawnPowerup()
 
 }
 
-void PowerupManager::checkCollision()
+void PowerupManager::checkCollision(int* score)
 {
     for (auto& powerup : _powerups)
     {
@@ -90,6 +90,8 @@ void PowerupManager::checkCollision()
         {
             _powerupInEffect = powerup->applyEffect();
             powerup->setAlive(false);
+            *score += POWERUP_SCORE;
+            
         }
     }
 }

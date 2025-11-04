@@ -33,11 +33,13 @@ private:
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
+    int _score;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _scoreText;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;

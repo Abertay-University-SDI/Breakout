@@ -30,7 +30,7 @@ void BrickManager::render()
     }
 }
 
-int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
+int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction, int* score)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
     for (auto& brick : _bricks) {
@@ -50,6 +50,8 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
         _bricks.pop_back();
+        // Add to the score
+        *score += BRICK_SCORE;
         break;
     }
     if (_bricks.size() == 0)

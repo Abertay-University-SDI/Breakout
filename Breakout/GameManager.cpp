@@ -13,6 +13,12 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+
+    _scoreText.setFont(_font);
+    _scoreText.setPosition(0, 200);
+    _scoreText.setCharacterSize(64);
+    _scoreText.setFillColor(sf::Color::Yellow);
+
 }
 
 void GameManager::initialize()
@@ -83,8 +89,23 @@ void GameManager::update(float dt)
 
     // update everything 
     _paddle->update(dt);
-    _ball->update(dt);
-    _powerupManager->update(dt);
+    _ball->update(dt, &_score);
+    _powerupManager->update(dt, &_score);
+
+    // make the text bigger along with the score
+    int _scoreDisplay = _score / SCORE_DISPLAY_SIZE_DIVIDER;
+    if (_scoreDisplay > SCORE_DISPLAY_SIZE_MAX) _scoreDisplay = SCORE_DISPLAY_SIZE_MAX;
+    if (_scoreDisplay < SCORE_DISPLAY_SIZE_MIN) _scoreDisplay = SCORE_DISPLAY_SIZE_MIN;
+
+    // update the score
+
+    sf::Vector2f _scorePos;
+    _scorePos.x = _window->getView().getCenter().x - _scoreText.getGlobalBounds().width / 2;
+    _scorePos.y =_window->getView().getCenter().y + _scoreText.getGlobalBounds().height / 2;
+    _scoreText.setPosition(_scorePos);
+    _scoreText.setCharacterSize(_scoreDisplay);
+    _scoreText.setString(std::to_string(_score));
+
 }
 
 void GameManager::loseLife()
@@ -99,6 +120,7 @@ void GameManager::render()
 {
     _paddle->render();
     _ball->render();
+    _window->draw(_scoreText);
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);

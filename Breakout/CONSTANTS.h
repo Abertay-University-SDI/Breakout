@@ -39,11 +39,18 @@ constexpr float POWERUP_SPEED = 150.0f;
 // UI settings
 constexpr float UI_LIFE_RADIUS = 15.0f;
 constexpr float UI_LIFE_PADDING = 20.0f;
+constexpr int SCORE_DISPLAY_SIZE_MIN = 64;
+constexpr int SCORE_DISPLAY_SIZE_MAX = 164;
+constexpr int SCORE_DISPLAY_SIZE_DIVIDER = 6;
 
 // Other game settings
 constexpr float PAUSE_TIME_BUFFER = 0.5f;
 constexpr float POWERUP_FREQUENCY = 7.5f;
 constexpr int INITIAL_LIVES = 3;
+
+// Score
+constexpr int BRICK_SCORE = 20;
+constexpr int POWERUP_SCORE = 75;
 
 // Colour Palette
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?

@@ -14,7 +14,7 @@ Ball::~Ball()
 {
 }
 
-void Ball::update(float dt)
+void Ball::update(float dt, int* score)
 {
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
@@ -80,7 +80,7 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction, score);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
