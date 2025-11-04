@@ -16,6 +16,7 @@ public:
     void initialize();
     void update(float dt);
     void loseLife();
+    int updateScore();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
@@ -25,7 +26,7 @@ public:
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
-
+    int _score;
 
 private:
     bool _pause;

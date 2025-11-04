@@ -26,6 +26,7 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _score = 0;
 }
 
 void GameManager::update(float dt)
@@ -94,6 +95,19 @@ void GameManager::loseLife()
 
     // TODO screen shake.
 }
+
+int GameManager::updateScore() {
+    if (_powerupManager->getPowerupInEffect().second != 0) {
+
+        _score += 20;
+    }
+    else {
+        _score += 10;
+    }
+
+    return _score;
+}
+
 
 void GameManager::render()
 {

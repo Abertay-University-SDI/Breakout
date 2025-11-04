@@ -20,7 +20,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
             float y = i * (brickHeight + spacing) + TOP_PADDING;
             _bricks.emplace_back(x, y, brickWidth, brickHeight);
         }
-    }
+    } 
 }
 
 void BrickManager::render()
@@ -50,6 +50,7 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
         _bricks.pop_back();
+        _gameManager->updateScore();
         break;
     }
     if (_bricks.size() == 0)

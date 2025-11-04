@@ -9,4 +9,7 @@ public:
     ~PowerupSmallPaddle();
 
     std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
+
+private:
+    Paddle* _paddleBarrier;
 };
