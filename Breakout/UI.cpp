@@ -29,42 +29,65 @@ UI::~UI()
 }
 
 
-void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
+void UI::updatePowerupText(std::vector<std::pair<POWERUPS, float>> powerup)
 {
-	std::ostringstream oss;
+	
+	_powerupText.setString("");
+	if (powerup.size() != 0) {
 
-	switch (powerup.first)
-	{
-	case bigPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("big " + oss.str());
-		_powerupText.setFillColor(paddleEffectsColour);
-		break;
-	case smallPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("small " + oss.str());
-		_powerupText.setFillColor(paddleEffectsColour);
-		break;
-	case slowBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("slow " + oss.str());
-		_powerupText.setFillColor(ballEffectsColour);
-		break;
-	case fastBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fast " + oss.str());
-		_powerupText.setFillColor(ballEffectsColour);
-		break;
-	case fireBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("fire " + oss.str());
-		_powerupText.setFillColor(extraBallEffectsColour);
-		break;
-	case none:
-		_powerupText.setString("");
+		for (int i = 0; i < powerup.size(); i++) {
+			std::ostringstream oss;
+			std::string text = "";
+
+			switch (powerup[i].first)
+			{
+			case bigPaddle:
+				oss << std::fixed << std::setprecision(2) << powerup[i].second;
+				text = "big " + oss.str() + "\n";
+				_powerupText.setString(_powerupText.getString() + text);
+				//_powerupText.setString("big " + oss.str());
+				_powerupText.setFillColor(paddleEffectsColour);
+				break;
+			case smallPaddle:
+				oss << std::fixed << std::setprecision(2) << powerup[i].second;
+				text = "small " + oss.str() + "\n";
+				_powerupText.setString(_powerupText.getString() + text);
+				//_powerupText.setString("small " + oss.str());
+				_powerupText.setFillColor(paddleEffectsColour);
+				break;
+			case slowBall:
+				oss << std::fixed << std::setprecision(2) << powerup[i].second;
+				text = "slow " + oss.str() + "\n";
+				_powerupText.setString(_powerupText.getString() + text);
+				//_powerupText.setString("slow " + oss.str());
+				_powerupText.setFillColor(ballEffectsColour);
+				break;
+			case fastBall:
+				oss << std::fixed << std::setprecision(2) << powerup[i].second;
+				text = "fast " + oss.str() + "\n";
+				_powerupText.setString(_powerupText.getString() + text);
+				//_powerupText.setString("fast " + oss.str());
+				_powerupText.setFillColor(ballEffectsColour);
+				break;
+			case fireBall:
+				oss << std::fixed << std::setprecision(2) << powerup[i].second;
+				text = "fire " + oss.str() + "\n";
+				_powerupText.setString(_powerupText.getString() + text);
+				//_powerupText.setString("fire " + oss.str());
+				_powerupText.setFillColor(extraBallEffectsColour);
+				break;
+			case none:
+				//_powerupText.setString("");
 		
-		break;
+				break;
+			}
+
+		}
+		
+		
+
 	}
+
 }
 
 void UI::lifeLost(int lives)

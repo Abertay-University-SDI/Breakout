@@ -9,6 +9,7 @@
 #include "PowerupSlowBall.h"
 #include "PowerupFastBall.h"
 #include "PowerupFireBall.h"
+#include "PowerupMulti.h"
 #include "Paddle.h"
 #include "Ball.h"
 
@@ -23,13 +24,16 @@ public:
     void render();
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle
+    bool hasPowerup(POWERUPS);
     int getPowerupsSpawned();
-    std::pair<POWERUPS, float> getPowerupInEffect();
+    std::vector<std::pair<POWERUPS, float>> getPowerupInEffect();
 
 private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
-    std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    std::vector<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+
+    int maxPowerupsAtOnce = 7;
 };

@@ -12,6 +12,21 @@ PowerupSlowBall::~PowerupSlowBall()
 
 std::pair<POWERUPS, float> PowerupSlowBall::applyEffect()
 {
-    _ball->setVelocity(0.5f, 5.0f);
+    _ball->changeVelocity(0.5f, 5.0f);
     return { slowBall, 5.0f };
+}
+
+POWERUPS PowerupSlowBall::checkEffect()
+{
+    return slowBall;
+}
+
+std::pair<POWERUPS, float> PowerupSlowBall::applyMulti(int index)
+{
+    return std::pair<POWERUPS, float>();
+}
+
+POWERUPS PowerupSlowBall::checkMulti(int index)
+{
+    return POWERUPS();
 }

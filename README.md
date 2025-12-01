@@ -32,4 +32,6 @@ fire ball (green)
 * Implement commentary with calls to an LLM such as LLama
 
 # Time Details and Changelist
+* 15 Minutes to find the compiler issue
+* 20 Minutes to implement functionality for multiple powerups to spawn at once
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
