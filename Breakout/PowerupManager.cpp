@@ -160,11 +160,13 @@ void PowerupManager::checkCollision()
 }
 
 bool PowerupManager::hasPowerup(POWERUPS powerup) {
-    for (auto& activePowerup : _powerupInEffect)
-    {
-        if (powerup == activePowerup.first) {
-            activePowerup.second = 5.f; //Reset the timer as well
-            return true;
+    if (powerup == fireBall) {
+        for (auto& activePowerup : _powerupInEffect)
+        {
+            if (powerup == activePowerup.first) {
+                activePowerup.second = 5.f; //Reset the timer as well
+                return true;
+            }
         }
     }
     return false;

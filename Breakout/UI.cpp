@@ -31,11 +31,12 @@ UI::~UI()
 
 void UI::updatePowerupText(std::vector<std::pair<POWERUPS, float>> powerup)
 {
-	std::ostringstream oss;
+	
 	_powerupText.setString("");
 	if (powerup.size() != 0) {
 
 		for (int i = 0; i < powerup.size(); i++) {
+			std::ostringstream oss;
 			std::string text = "";
 
 			switch (powerup[i].first)
