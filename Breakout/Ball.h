@@ -13,6 +13,7 @@ public:
     void update(float dt);
     void render();
     void setVelocity(float coeff, float duration);
+    void changeVelocity(float coeff, float duration);
     void setFireBall(float duration);
 
 private:

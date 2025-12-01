@@ -26,3 +26,18 @@ std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
     _ball->setFireBall(5.0f);
     return { fireBall, 5.0f };
 }
+
+POWERUPS PowerupFireBall::checkEffect()
+{
+    return fireBall;
+}
+
+std::pair<POWERUPS, float> PowerupFireBall::applyMulti(int index)
+{
+    return std::pair<POWERUPS, float>();
+}
+
+POWERUPS PowerupFireBall::checkMulti(int index)
+{
+    return POWERUPS();
+}

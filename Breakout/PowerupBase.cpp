@@ -16,6 +16,7 @@ PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     _sprite.setPosition(initialX, 5);
     _direction = { 0.0f, FLOAT_DOWN_SPEED };
 
+ 
 }
 
 PowerupBase::~PowerupBase()

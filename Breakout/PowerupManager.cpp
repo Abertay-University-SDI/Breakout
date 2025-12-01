@@ -18,13 +18,20 @@ PowerupManager::~PowerupManager()
 void PowerupManager::update(float dt)
 {
     // tick down powerup effect time. Reset if elapsed.
-    if (_powerupInEffect)
+    if (_powerupInEffect.size() > 0)
     {
-        _powerupInEffect->second -= dt;
-        if (_powerupInEffect->second <= 0)
-        {
-            _powerupInEffect.reset();
+        for (int i = 0; i < _powerupInEffect.size(); i++) { //Make all active powerups tick down
+            _powerupInEffect[i].second -= dt;
         }
+
+        _powerupInEffect.erase( //Erase all ending powerups
+            std::remove_if(
+                _powerupInEffect.begin(),
+                _powerupInEffect.end(),
+                [](std::pair<POWERUPS, float> const& p) { return p.second <= 0; }
+            ),
+            _powerupInEffect.end()
+        );
     }
 
 
@@ -56,42 +63,76 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
-    //Adele Addition: Powerups now have a chance to give two powerups at once
 
 
     // TODO finish this.
+    
+    //Adele Addition: Powerups now have a chance to give multiple powerups at once
+    
     //Temp variable to count current amount of powerups in the same one
     int powerupsToAssign = 1;
 
     int powerupsTotal = 1;
+    bool hasMulti = false;
+    std::vector<POWERUPS> multiPowers;
 
     while (powerupsToAssign > 0) {
 
-        switch (rand() % 5 + maxPowerupsAtOnce - powerupsTotal)
-        {
+        switch (rand() % 5 + maxPowerupsAtOnce - powerupsTotal) //The higher maxPowerupsAtOnce is, the higher chance of adding an extra powerup 
+        { 
         case 0:
-            _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
+            if (!hasMulti) {
+                _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball));
+            }
+            else {
+                multiPowers.push_back(bigPaddle);
+            }
             break;
         case 1:
-            _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+            if (!hasMulti) {
+                _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball));
+            }
+            else {
+                multiPowers.push_back(slowBall);
+            }
             break;
         case 2:
-            _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+            if (!hasMulti) {
+                _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball));
+            }
+            else {
+                multiPowers.push_back(fastBall);
+            }
             break;
         case 3:
-            _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+            if (!hasMulti) {
+                _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball));
+            }
+            else {
+                multiPowers.push_back(smallPaddle);
+            }
             break;
         case 4:
-            _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
+            if (!hasMulti) {
+                _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball));
+            }
+            else {
+                multiPowers.push_back(fireBall);
+            }
             break;
-        default:
+        default: //powerupsTotal will increase and lead to extra powerups no longer occuring
             powerupsTotal += 1;
             //Increase by 2 to counter the reduction by 1, effectively increasing the number by 1
             powerupsToAssign += 2;
+            hasMulti = true;
            break;
         }
 
         powerupsToAssign--;
+    }
+
+    if (hasMulti) {
+        _powerups.push_back(new PowerupMulti(_window, _paddle, _ball, multiPowers));
     }
 }
 
@@ -102,10 +143,31 @@ void PowerupManager::checkCollision()
 
         if (powerup->checkCollisionWithPaddle())
         {
-            _powerupInEffect = powerup->applyEffect();
+            if (powerup->isMulti) {
+                for (int i = 0; i < powerup->powers.size(); i++) {
+                    if (!hasPowerup(powerup->checkMulti(i))) {
+                        _powerupInEffect.push_back(powerup->applyMulti(i));
+                    }
+                }
+            } else {
+                if (!hasPowerup(powerup->checkEffect())) {
+                    _powerupInEffect.push_back(powerup->applyEffect());
+                }
+            }
             powerup->setAlive(false);
         }
     }
+}
+
+bool PowerupManager::hasPowerup(POWERUPS powerup) {
+    for (auto& activePowerup : _powerupInEffect)
+    {
+        if (powerup == activePowerup.first) {
+            activePowerup.second = 5.f; //Reset the timer as well
+            return true;
+        }
+    }
+    return false;
 }
 
 int PowerupManager::getPowerupsSpawned()
@@ -113,8 +175,8 @@ int PowerupManager::getPowerupsSpawned()
     return _powerups.size();
 }
 
-std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()
+std::vector<std::pair<POWERUPS, float>> PowerupManager::getPowerupInEffect()
 {
-    if (!_powerupInEffect) return { none, 0.f };
-    return *_powerupInEffect;
+    //if (_powerupInEffect.size() == 0) return { none, 0.f };
+    return _powerupInEffect; //Maybe bad to remove the *_powerupInEffect here
 }

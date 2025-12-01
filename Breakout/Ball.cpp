@@ -103,6 +103,12 @@ void Ball::setVelocity(float coeff, float duration)
     _timeWithPowerupEffect = duration;
 }
 
+void Ball::changeVelocity(float coeff, float duration)
+{
+    _velocity = coeff * _velocity;
+    _timeWithPowerupEffect = duration;
+}
+
 void Ball::setFireBall(float duration)
 {
     if (duration) 

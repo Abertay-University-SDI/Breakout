@@ -12,6 +12,20 @@ PowerupBigPaddle::~PowerupBigPaddle()
 
 std::pair<POWERUPS,float> PowerupBigPaddle::applyEffect()
 {
-    _paddle->setWidth(1.5f, 5.0f);
+    _paddle->changeWidth(1.5f, 5.0f);
     return { bigPaddle, 5.0f };
+}
+
+POWERUPS PowerupBigPaddle::checkEffect() {
+    return bigPaddle;
+}
+
+std::pair<POWERUPS, float> PowerupBigPaddle::applyMulti(int index)
+{
+    return std::pair<POWERUPS, float>();
+}
+
+POWERUPS PowerupBigPaddle::checkMulti(int index)
+{
+    return POWERUPS();
 }

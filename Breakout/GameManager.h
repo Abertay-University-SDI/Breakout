@@ -34,7 +34,7 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
-    std::pair<POWERUPS, float> _powerupInEffect;
+    std::vector<std::pair<POWERUPS, float>> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;

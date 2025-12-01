@@ -19,10 +19,17 @@ public:
     void render();
 
     virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
+    virtual POWERUPS checkEffect() = 0;
     bool checkCollisionWithPaddle();
 
     void setAlive(bool alive);
     bool isAlive();
+
+    //Adele Addition: Multi powerup variables and functions
+    bool isMulti = false;
+    virtual std::pair<POWERUPS, float> applyMulti(int index) = 0;
+    virtual POWERUPS checkMulti(int index) = 0;
+    std::vector<POWERUPS> powers;
 
 protected: // Protected so derived classes can access these members
     // Constants
@@ -41,5 +48,7 @@ protected: // Protected so derived classes can access these members
     sf::CircleShape _sprite;
     sf::Color _colour;
     sf::RenderWindow* _window;
+
+
 
 };
