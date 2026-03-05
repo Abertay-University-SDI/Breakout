@@ -24,6 +24,22 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
+	if (!backgroundMusic.openFromFile("audio/background_music.wav"))
+	{
+		std::cerr << "Failed to load background music!" << std::endl;
+	}
+	if (!IntenseMusic.openFromFile("audio/intense_music.wav"))
+	{
+		std::cerr << "Failed to load intense music!" << std::endl;
+	}
+	else
+	{
+		backgroundMusic.setLoop(true);
+		backgroundMusic.play();
+		IntenseMusic.setLoop(true);
+		_intenseMusicPlaying = false;  
+	}
+
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
 }
@@ -33,7 +49,12 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
+    _bricksRemaining = _brickManager->getBrickCount();
     
+	if (_bricksRemaining <= (_brickManager->totalBricks / 2))
+	{
+		_musicmanager->updateMusicIntensity(0.5f);  // Example: Increase intensity when half the bricks are destroyed
+	}
 
     if (_lives <= 0)
     {
@@ -80,6 +101,22 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+
+    // move paddle with mouse input
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*_window);
+    float newPos = static_cast<float>(mousePos.x) - _paddle->getWidth() / 2;
+
+    // stop the paddle from leaving the screen
+    if (newPos < 0)
+    {
+        newPos = 0;
+    }
+    if (newPos + _paddle->getWidth() > _window->getSize().x)
+    {
+        newPos = _window->getSize().x - _paddle->getWidth();
+    }
+
+    _paddle->setPosition(newPos, _paddle->getY());
 
     // update everything 
     _paddle->update(dt);

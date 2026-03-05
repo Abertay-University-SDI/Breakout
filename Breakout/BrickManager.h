@@ -12,6 +12,9 @@ public:
     void render();
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
+	int getBrickCount() const { return _bricks.size(); }
+    int totalBricks;
+
 private:
     std::vector<Brick> _bricks;
     sf::RenderWindow* _window;

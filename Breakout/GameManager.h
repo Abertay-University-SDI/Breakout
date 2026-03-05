@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "CONSTANTS.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -7,6 +8,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "MusicManager.h"
 
 
 
@@ -25,6 +27,8 @@ public:
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+	sf::Music backgroundMusic;
+	sf::Music IntenseMusic;
 
 
 private:
@@ -35,6 +39,9 @@ private:
     int _lives;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
+	int _bricksRemaining;
+	bool _intenseMusicPlaying = false;
+    float _musicIntensity;
 
     sf::Font _font;
     sf::Text _masterText;
@@ -46,6 +53,7 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+	MusicManager* _musicmanager;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
