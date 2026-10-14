@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
+PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
     : _time(0.0f) // Initialize the time variable
 {
     _window = window;
@@ -12,7 +12,7 @@ PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
     _ball = ball;
 
     // Initial position and direction with some variability
-    float initialX = rand() % window->getSize().x * 0.9 + window->getSize().x * 0.05;
+    float initialX = spawnX;
     _sprite.setPosition(initialX, 5);
     _direction = { 0.0f, FLOAT_DOWN_SPEED };
 

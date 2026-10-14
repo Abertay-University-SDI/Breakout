@@ -1,7 +1,7 @@
 #include "PowerupBigPaddle.h"
 
-PowerupBigPaddle::PowerupBigPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : PowerupBase(window, paddle, ball)
+PowerupBigPaddle::PowerupBigPaddle(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos)
+    : PowerupBase(window, paddle, ball, x_pos)
 {
     _sprite.setFillColor(paddleEffectsColour); // Same colour as smallPaddle
 }

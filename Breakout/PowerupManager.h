@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <optional>
+#include <random>
 #include "PowerupBase.h"
 #include "PowerupBigPaddle.h"
 #include "PowerupSmallPaddle.h"
@@ -32,4 +33,5 @@ private:
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    std::mt19937 _rng; // mersenne twister
 };
