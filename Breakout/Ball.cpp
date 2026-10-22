@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(sf::RenderWindow* window, GameManager* gameManager)
+    : _window(window), _baseVelocity(BASE_VELOCITY), _currentVelocity(BASE_VELOCITY), _velocityMultiplier(1.f), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
@@ -16,6 +16,12 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+    if (_hitstop > 0)
+    {
+        _hitstop -= dt;
+        return;
+    }
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -23,8 +29,11 @@ void Ball::update(float dt)
     }
     else
     {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+        if (_currentVelocity != _baseVelocity)
+        {
+            _velocityMultiplier = 1.f;
+            _currentVelocity = _baseVelocity;   // reset speed.
+        }
         else
         {
             setFireBall(0);    // disable fireball
@@ -41,7 +50,7 @@ void Ball::update(float dt)
     }
 
     // Update position with a subtle floating-point error
-    _sprite.move(_direction * _velocity * dt);
+    _sprite.move(_direction * _currentVelocity * dt);
 
     // check bounds and bounce
     sf::Vector2f position = _sprite.getPosition();
@@ -62,25 +71,51 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
-        _gameManager->loseLife();
+        resetBall();
     }
 
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
-        _direction.y *= -1; // Bounce vertically
+        if (_gameManager->getPaddle()->canParry())
+        {
+            _direction.y *= -1; // Bounce vertically
 
-        float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+            float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+            _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
-        // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+            // Adjust position to avoid getting stuck inside the paddle
+            _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+            // increase speed step
+            if (_baseVelocity < MAX_VELOCITY)
+            {
+                _baseVelocity += VELOCITY_STEP;
+                _currentVelocity = _baseVelocity * _velocityMultiplier;
+            }
+
+            _gameManager->getAudio()->PlaySound(AudioManager::SoundID::Parry, 1.f + (_gameManager->getComboCount() * 0.02f));
+
+            _hitstop = 0.05f + (_gameManager->getComboCount() * 0.025f);
+            _gameManager->getPaddle()->setHitstop(_hitstop);
+            _gameManager->getPaddle()->setHitflash(sf::Color::White);
+        }
+        else
+        {
+            resetBall();
+        }
     }
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+
+    if (collisionResponse != 0)
+    {
+        float pitch = 0.9f + (((double)rand() / (RAND_MAX)) * 0.2);
+        _gameManager->getAudio()->PlaySound(AudioManager::SoundID::BlockBreak, pitch);
+        _gameManager->incrementCombo();
+    }
+
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
@@ -97,10 +132,12 @@ void Ball::render()
     _window->draw(_sprite);
 }
 
-void Ball::setVelocity(float coeff, float duration)
+void Ball::setVelocityMultiplier(float coeff, float duration)
 {
-    _velocity = coeff * VELOCITY;
+    _velocityMultiplier = coeff;
     _timeWithPowerupEffect = duration;
+
+    _currentVelocity = _baseVelocity * _velocityMultiplier;
 }
 
 void Ball::setFireBall(float duration)
@@ -113,4 +150,14 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::resetBall()
+{
+    _sprite.setPosition(0, 300);
+    _direction = { 1, 1 };
+    _gameManager->loseLife();
+    _baseVelocity = BASE_VELOCITY;
+    _currentVelocity = _baseVelocity * _velocityMultiplier;
+    _gameManager->resetCombo();
 }

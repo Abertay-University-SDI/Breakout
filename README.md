@@ -34,6 +34,18 @@ You are to spend between three and eight hours improving this simple Breakout im
 _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+[20 minutes] Added Paddle State Machine.
+[10 minutes] Added parry mechanic, state colour coding.
+[10 minutes] Added dash mechanic.
+[15 minutes] Added ball incremental speed up, speed cap, reduced fastball multiplier.
+[5 minutes] Added combo display.
+[25 minutes] Added Audio Manager, parry sound effect.
+[10 minutes] Added parry hitstop and hitflash, scaled parry pitch with combo count.
+[15 minutes] Added restart option after loss.
+[5 minutes] Added next level option with scaling brick count
+[5 minutes] Added block break sound effect.
+[5 minutes] Fixed width power ups not affecting from centre of paddle.
+[90 minutes] Level data/progression save/loading.
 
 ---
 

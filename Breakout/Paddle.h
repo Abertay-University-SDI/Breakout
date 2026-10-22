@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "CONSTANTS.h"
+#include "PaddleState.h"
 
 class Paddle
 {
@@ -9,19 +10,29 @@ public:
     Paddle(sf::RenderWindow* window);
     ~Paddle();
 
-    void moveLeft(float dt);
-    void moveRight(float dt);
+    void moveLeft(float speed, float dt);
+    void moveRight(float speed, float dt);
     void update(float dt);
     void render();
     sf::FloatRect getBounds() const;
     void setWidth(float coeff, float duration);
 
+    void setState(PaddleState* newState);
+    void forceStageBounds();
+    void setCanParry(bool canParry);
+    bool canParry();
+    void setColour(sf::Color colour);
+    void setHitstop(float hitstop);
+    void setHitflash(sf::Color colour);
 private:
-
+    PaddleState* _state;
+    bool _canParry;
 
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
     float _width = PADDLE_WIDTH;
     bool _isAlive;
     float _timeInNewSize = 0.0f;
+    float _hitstop;
+    sf::Color _hitflashPrevColour;
 };
