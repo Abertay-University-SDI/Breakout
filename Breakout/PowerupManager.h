@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include <optional>
 #include <random>
 #include "PowerupBase.h"
@@ -18,7 +19,6 @@ class PowerupManager
 {
 public:
     PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
-    ~PowerupManager();
 
     void update(float dt);
     void render();
@@ -31,7 +31,7 @@ private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
-    std::vector<PowerupBase*> _powerups;            // used to manage deletion.
+    std::vector<std::unique_ptr<PowerupBase>> _powerups;
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
     std::mt19937 _rng; // mersenne twister
 };

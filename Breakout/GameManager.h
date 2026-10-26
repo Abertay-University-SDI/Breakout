@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "CONSTANTS.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -40,12 +41,12 @@ private:
     sf::Text _masterText;
 
     sf::RenderWindow* _window;
-    Paddle* _paddle;
-    Ball* _ball;
-    BrickManager* _brickManager;
-    PowerupManager* _powerupManager;
-    MessagingSystem* _messagingSystem;
-    UI* _ui;
+    std::unique_ptr<Paddle> _paddle;
+    std::unique_ptr<Ball> _ball;
+    std::unique_ptr<BrickManager> _brickManager;
+    std::unique_ptr<PowerupManager> _powerupManager;
+    std::unique_ptr<MessagingSystem> _messagingSystem;
+    std::unique_ptr<UI> _ui;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
