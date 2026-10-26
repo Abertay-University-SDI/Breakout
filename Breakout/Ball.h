@@ -8,7 +8,7 @@ class GameManager;  // forward declaration
 
 class Ball {
 public:
-    Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);
+    Ball(sf::RenderWindow* window, GameManager* gameManager);
     ~Ball();
     void update(float dt);
     void render();

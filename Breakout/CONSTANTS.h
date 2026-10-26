@@ -27,7 +27,7 @@ constexpr float PADDLE_SPEED = 300.0f;
 
 // Ball settings
 constexpr float BALL_RADIUS = 10.0f;
-constexpr float BALL_SPEED = 350.0f;
+constexpr float BALL_SPEED = 400.0f;
 
 // Brick settings
 constexpr float BRICK_WIDTH = 80.0f;

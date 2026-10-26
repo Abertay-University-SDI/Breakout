@@ -19,7 +19,7 @@ void GameManager::initialize()
     _paddle = std::make_unique<Paddle>(_window);
     _brickManager = std::make_unique<BrickManager>(_window, this);
     _messagingSystem = std::make_unique<MessagingSystem>(_window);
-    _ball = std::make_unique<Ball>(_window, 400.0f, this);
+    _ball = std::make_unique<Ball>(_window, this);
     _powerupManager = std::make_unique<PowerupManager>(_window, _paddle.get(), _ball.get());
     _ui = std::make_unique<UI>(_window, _lives, this);
 

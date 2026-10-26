@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(sf::RenderWindow* window, GameManager* gameManager)
+    : _window(window), _velocity(BALL_SPEED), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(BALL_RADIUS);
