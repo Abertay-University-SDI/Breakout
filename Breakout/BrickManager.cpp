@@ -17,7 +17,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
-            float y = i * (brickHeight + spacing) + TOP_PADDING;
+            float y = i * (brickHeight + spacing) + BRICK_TOP_PADDING;
             _bricks.emplace_back(x, y, brickWidth, brickHeight);
         }
     }

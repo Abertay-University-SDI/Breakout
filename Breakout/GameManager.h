@@ -47,7 +47,4 @@ private:
     std::unique_ptr<PowerupManager> _powerupManager;
     std::unique_ptr<MessagingSystem> _messagingSystem;
     std::unique_ptr<UI> _ui;
-
-    static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
 };

@@ -5,7 +5,7 @@
 int main()
 {
 
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
     GameManager gameManager(&window);
     gameManager.initialize();
 

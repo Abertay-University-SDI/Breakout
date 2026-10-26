@@ -13,14 +13,14 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 		newLife.setFillColor(sf::Color::Red);	
 		newLife.setOutlineColor(sf::Color::Cyan);
 		newLife.setOutlineThickness(4.0f);
-		newLife.setRadius(LIFE_RADIUS);
-		newLife.setPosition((LIFE_RADIUS*2 + LIFE_PADDING) * i, LIFE_PADDING);
+		newLife.setRadius(UI_LIFE_RADIUS);
+		newLife.setPosition((UI_LIFE_RADIUS*2 + UI_LIFE_PADDING) * i, UI_LIFE_PADDING);
 		_lives.push_back(newLife);
 	}
 	_powerupText.setCharacterSize(30);
 	_powerupText.setPosition(800, 10);
 	_powerupText.setFillColor(sf::Color::Cyan);
-	_font.loadFromFile("font/montS.ttf");
+	_font.loadFromFile(FONT_PATH);
 	_powerupText.setFont(_font);
 }
 

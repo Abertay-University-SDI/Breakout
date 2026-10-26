@@ -17,5 +17,4 @@ private:
     sf::RenderWindow* _window;
 
     GameManager* _gameManager;
-    static constexpr float TOP_PADDING = 100.0f;
 };

@@ -4,10 +4,10 @@
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
-    : _window(window), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
+    : _window(window), _pause(false), _time(0.f), _lives(INITIAL_LIVES), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
-    _font.loadFromFile("font/montS.ttf");
+    _font.loadFromFile(FONT_PATH);
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
@@ -24,7 +24,7 @@ void GameManager::initialize()
     _ui = std::make_unique<UI>(_window, _lives, this);
 
     // Create bricks
-    _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
+    _brickManager->createBricks(BRICK_ROWS, BRICK_COLUMNS, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING);
 }
 
 void GameManager::update(float dt)
@@ -70,7 +70,7 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand() % POWERUP_SPAWN_ODDS == 0)
     {
         _powerupManager->spawnPowerup();
         _timeLastPowerupSpawned = _time;
