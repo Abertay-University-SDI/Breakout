@@ -24,6 +24,7 @@ public:
     void render();
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle
+    void clear();          // remove all falling powerups and any effect in progress
     int getPowerupsSpawned();
     std::pair<POWERUPS, float> getPowerupInEffect();
 

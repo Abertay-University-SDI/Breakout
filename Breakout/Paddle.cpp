@@ -1,4 +1,5 @@
 #include "Paddle.h"
+#include "Raymarch.h"
 #include <iostream>
 
 Paddle::Paddle(sf::RenderWindow* window)
@@ -47,7 +48,7 @@ void Paddle::update(float dt)
 
 void Paddle::render()
 {
-    _window->draw(_sprite);
+    Raymarch::add(_sprite);
 }
 
 sf::FloatRect Paddle::getBounds() const

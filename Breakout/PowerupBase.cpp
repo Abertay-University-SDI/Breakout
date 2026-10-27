@@ -1,4 +1,5 @@
 #include "PowerupBase.h"
+#include "Raymarch.h"
 #include <cmath>
 #include <iostream>
 
@@ -51,7 +52,7 @@ void PowerupBase::update(float dt)
 
 void PowerupBase::render()
 {
-    _window->draw(_sprite);
+    Raymarch::add(_sprite);
 }
 
 bool PowerupBase::checkCollisionWithPaddle()

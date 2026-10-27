@@ -15,14 +15,17 @@ public:
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
+	void resetLives(int lives);
+	void updateScore(int score, int level);
 	void render();
 
 private:
 	GameManager* _gameManager;
-	
+
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+	sf::Text _scoreText;
 
 	std::vector<sf::CircleShape> _lives;
 

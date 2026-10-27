@@ -1,12 +1,14 @@
 #include "Ball.h"
+#include "Raymarch.h"
 #include "GameManager.h" // avoid cicular dependencies
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}),
+    _baseVelocity(VELOCITY), _isLaunched(false)
 {
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    _sprite.setFillColor(ballColour);
     _sprite.setPosition(0, 300);
 }
 
@@ -16,6 +18,14 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+    // waiting to be served: ride on top of the paddle
+    if (!_isLaunched)
+    {
+        sf::FloatRect paddle = _gameManager->getPaddle()->getBounds();
+        _sprite.setPosition(paddle.left + paddle.width / 2 - RADIUS, paddle.top - 2 * RADIUS);
+        return;
+    }
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -23,12 +33,12 @@ void Ball::update(float dt)
     }
     else
     {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+        if (_velocity != _baseVelocity)
+            _velocity = _baseVelocity;   // reset speed.
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(ballColour);  // back to normal colour.
         }        
     }
 
@@ -62,9 +72,9 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
+        reset();
         _gameManager->loseLife();
+        return;
     }
 
     // collision with paddle
@@ -77,6 +87,10 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        // splash where the ball met the paddle
+        _gameManager->getParticles()->splash(
+            { _sprite.getPosition().x + RADIUS, _gameManager->getPaddle()->getBounds().top }, _sprite.getFillColor(), 8);
     }
 
     // collision with bricks
@@ -94,13 +108,37 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
-    _window->draw(_sprite);
+    Raymarch::add(_sprite);
 }
 
 void Ball::setVelocity(float coeff, float duration)
 {
-    _velocity = coeff * VELOCITY;
+    _velocity = coeff * _baseVelocity;
     _timeWithPowerupEffect = duration;
+}
+
+void Ball::setSpeedScale(float scale)
+{
+    _baseVelocity = scale * VELOCITY;
+}
+
+void Ball::reset()
+{
+    _isLaunched = false;
+    setFireBall(0);
+    _velocity = _baseVelocity;
+    _sprite.setFillColor(ballColour);
+}
+
+void Ball::launch()
+{
+    _isLaunched = true;
+    _direction = { (rand() % 2) ? 0.5f : -0.5f, -1.f };   // up, slightly to one side
+}
+
+bool Ball::isLaunched() const
+{
+    return _isLaunched;
 }
 
 void Ball::setFireBall(float duration)
