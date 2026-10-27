@@ -108,3 +108,13 @@ std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()
     if (!_powerupInEffect) return { none, 0.f };
     return *_powerupInEffect;
 }
+
+void PowerupManager::clear()
+{
+    for (auto powerup : _powerups)
+    {
+        delete powerup;
+    }
+    _powerups.clear();
+    _powerupInEffect.reset();
+}

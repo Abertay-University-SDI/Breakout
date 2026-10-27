@@ -18,4 +18,5 @@ private:
 
     GameManager* _gameManager;
     static constexpr float TOP_PADDING = 100.0f;
+    static constexpr int POINTS_PER_BRICK = 10;     // GameManager multiplies this by the level
 };

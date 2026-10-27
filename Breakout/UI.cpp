@@ -22,6 +22,11 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_scoreText.setCharacterSize(30);
+	_scoreText.setPosition(380, 10);
+	_scoreText.setFillColor(sf::Color::White);
+	_scoreText.setFont(_font);
 }
 
 UI::~UI()
@@ -72,9 +77,21 @@ void UI::lifeLost(int lives)
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
 }
 
+void UI::resetLives(int lives)
+{
+	for (size_t i = 0; i < _lives.size(); ++i)
+		_lives[i].setFillColor(i < static_cast<size_t>(lives) ? sf::Color::Red : sf::Color::Transparent);
+}
+
+void UI::updateScore(int score, int level)
+{
+	_scoreText.setString("Score " + std::to_string(score) + "   Level " + std::to_string(level));
+}
+
 void UI::render()
 {
 	_window->draw(_powerupText);
+	_window->draw(_scoreText);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

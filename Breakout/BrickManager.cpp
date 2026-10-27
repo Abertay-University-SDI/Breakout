@@ -8,6 +8,8 @@ BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
 
 void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
 {
+    _bricks.clear();    // replaces any bricks left from the previous level
+
     float leftEdge;
     if (cols % 2 == 0) 
         leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
@@ -45,6 +47,12 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
+
+        // burst into liquid
+        _gameManager->getParticles()->splash(
+            { brickBounds.left + brickBounds.width / 2, brickBounds.top + brickBounds.height / 2 }, brick.getColour(), 12);
+        _gameManager->shake(4.f, 0.15f);
+        _gameManager->addScore(POINTS_PER_BRICK);
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
