@@ -34,6 +34,10 @@ You are to spend between three and eight hours improving this simple Breakout im
 _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+1 hour <added a progress bar that shrinks as blocks are destroyed>//it should not have taken me this long I spent far to much time trying to update the 	progress bar directly from the brick manager
+30 minutes <made paddle follow the mouses x coords>
+30 minutes <added sound effects that increase in pitch with each broken block>
+1.5 hours <added multiball>
 
 ---
 

@@ -5,6 +5,7 @@
 #include "CONSTANTS.h"
 #include "PowerupManager.h"
 
+
 class GameManager;
 
 class UI
@@ -15,16 +16,20 @@ public:
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
+	void blockBroke(int remainingBricks);
 	void render();
 
 private:
 	GameManager* _gameManager;
+	
 	
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
 
 	std::vector<sf::CircleShape> _lives;
+	sf::RectangleShape* progressBar;
+
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
