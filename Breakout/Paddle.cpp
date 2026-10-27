@@ -1,4 +1,5 @@
 #include "Paddle.h"
+#include <algorithm>
 #include <iostream>
 
 Paddle::Paddle(sf::RenderWindow* window)
@@ -59,9 +60,10 @@ sf::FloatRect Paddle::getBounds() const
 // ensure centre remains consistent.
 void Paddle::setWidth(float coeff, float duration)
 {
+    float oldWidth = _width;
     _width = coeff * PADDLE_WIDTH;
     _sprite.setSize(sf::Vector2f(_width, _sprite.getSize().y));
     _timeInNewSize = duration;
-    float newX = _sprite.getPosition().x + (_width - PADDLE_WIDTH) / 2;
+    float newX = std::clamp(_sprite.getPosition().x - (_width - oldWidth) / 2, 0.0f, _window->getSize().x - _width);
     _sprite.setPosition(newX, _sprite.getPosition().y);
 }
