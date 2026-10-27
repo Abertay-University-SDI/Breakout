@@ -79,6 +79,8 @@ void GameManager::update(float dt)
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    if (_window->hasFocus() && sf::Mouse::isButtonPressed(PADDLE_MOUSE_BUTTON))
+        _paddle->setCentre(_window->mapPixelToCoords(sf::Mouse::getPosition(*_window)).x);
 
     // update everything 
     _paddle->update(dt);

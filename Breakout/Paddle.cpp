@@ -34,6 +34,12 @@ void Paddle::moveRight(float dt)
     }
 }
 
+void Paddle::setCentre(float x)
+{
+    float newX = std::clamp(x - _width / 2, 0.0f, _window->getSize().x - _width);
+    _sprite.setPosition(newX, _sprite.getPosition().y);
+}
+
 void Paddle::update(float dt)
 {
     if (_timeInNewSize > 0)
