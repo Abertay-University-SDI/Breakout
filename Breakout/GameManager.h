@@ -11,6 +11,14 @@
 
 
 
+enum class GameState
+{
+    Playing,
+    Paused,
+    LevelComplete,
+    GameOver
+};
+
 class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
@@ -29,12 +37,14 @@ public:
 
 
 private:
-    bool _pause;
-    float _pauseHold;
+    void startLevel();
+    void restart();
+
+    GameState _state;
+    int _level;
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
-    bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;

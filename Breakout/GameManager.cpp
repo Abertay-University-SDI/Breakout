@@ -1,10 +1,11 @@
 #include "GameManager.h"
 #include "Ball.h"
 #include "PowerupManager.h"
+#include <algorithm>
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
-    : _window(window), _pause(false), _time(0.f), _lives(INITIAL_LIVES), _pauseHold(0.f), _levelComplete(false),
+    : _window(window), _state(GameState::Playing), _level(1), _time(0.f), _lives(INITIAL_LIVES),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile(FONT_PATH);
@@ -16,52 +17,76 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
+    _messagingSystem = std::make_unique<MessagingSystem>(_window);
+    _ui = std::make_unique<UI>(_window, _lives, this);
+    startLevel();
+}
+
+void GameManager::startLevel()
+{
     _paddle = std::make_unique<Paddle>(_window);
     _brickManager = std::make_unique<BrickManager>(_window, this);
-    _messagingSystem = std::make_unique<MessagingSystem>(_window);
     _ball = std::make_unique<Ball>(_window, this);
     _powerupManager = std::make_unique<PowerupManager>(_window, _paddle.get(), _ball.get());
-    _ui = std::make_unique<UI>(_window, _lives, this);
 
-    // Create bricks
-    _brickManager->createBricks(BRICK_ROWS, BRICK_COLUMNS, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING);
+    int rows = std::min(BRICK_ROWS + _level - 1, BRICK_MAX_ROWS);
+    _brickManager->createBricks(rows, BRICK_COLUMNS, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING);
+
+    _time = 0.f;
+    _timeLastPowerupSpawned = 0.f;
+    _masterText.setString("");
+    _state = GameState::Playing;
+}
+
+void GameManager::restart()
+{
+    _lives = INITIAL_LIVES;
+    _level = 1;
+    _ui = std::make_unique<UI>(_window, _lives, this);
+    startLevel();
 }
 
 void GameManager::update(float dt)
 {
+    static bool pWasDown = false;
+    static bool rWasDown = false;
+    static bool enterWasDown = false;
+    bool pDown = sf::Keyboard::isKeyPressed(sf::Keyboard::P);
+    bool rDown = sf::Keyboard::isKeyPressed(sf::Keyboard::R);
+    bool enterDown = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+    bool pPressed = pDown && !pWasDown;
+    bool rPressed = rDown && !rWasDown;
+    bool enterPressed = enterDown && !enterWasDown;
+    pWasDown = pDown;
+    rWasDown = rDown;
+    enterWasDown = enterDown;
+
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
-    
 
-    if (_lives <= 0)
+    if (_state == GameState::GameOver)
     {
-        _masterText.setString("Game over.");
+        _masterText.setString("Game over.\nPress R to restart.");
+        if (rPressed) restart();
         return;
     }
-    if (_levelComplete)
+    if (_state == GameState::LevelComplete)
     {
-        _masterText.setString("Level completed.");
+        _masterText.setString("Level " + std::to_string(_level) + " completed.\nPress Enter to continue.");
+        if (enterPressed)
+        {
+            _level++;
+            startLevel();
+        }
         return;
     }
-    // pause and pause handling
-    if (_pauseHold > 0.f) _pauseHold -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    if (pPressed)
     {
-        if (!_pause && _pauseHold <= 0.f)
-        {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-        if (_pause && _pauseHold <= 0.f)
-        {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
+        _state = _state == GameState::Paused ? GameState::Playing : GameState::Paused;
+        _masterText.setString(_state == GameState::Paused ? "paused." : "");
     }
-    if (_pause)
+    if (_state == GameState::Paused)
     {
         return;
     }
@@ -92,6 +117,8 @@ void GameManager::loseLife()
 {
     _lives--;
     _ui->lifeLost(_lives);
+    if (_lives <= 0)
+        _state = GameState::GameOver;
 
     // TODO screen shake.
 }
@@ -108,7 +135,7 @@ void GameManager::render()
 
 void GameManager::levelComplete()
 {
-    _levelComplete = true;
+    _state = GameState::LevelComplete;
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
