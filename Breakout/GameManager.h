@@ -7,12 +7,13 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "CameraShake.h"
 
 
 
 class GameManager {
 public:
-    GameManager(sf::RenderWindow* window);
+    GameManager(sf::RenderWindow* window, sf::RenderWindow& windRef);
     void initialize();
     void update(float dt);
     void loseLife();
@@ -40,12 +41,15 @@ private:
     sf::Text _masterText;
 
     sf::RenderWindow* _window;
+    sf::RenderWindow& _windRef;
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    CameraShake* _camera;
+
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

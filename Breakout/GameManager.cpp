@@ -3,10 +3,10 @@
 #include "PowerupManager.h"
 #include <iostream>
 
-GameManager::GameManager(sf::RenderWindow* window)
+GameManager::GameManager(sf::RenderWindow* window, sf::RenderWindow& windRef)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _windRef(windRef), _camera(nullptr)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -23,6 +23,7 @@ void GameManager::initialize()
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
+    _camera = new CameraShake(_window);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -78,13 +79,19 @@ void GameManager::update(float dt)
     }
 
     // move paddle
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    
+    //Mouse
+    _paddle->moveMouse(_windRef);
+
+    //Keyboard
+    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
+    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
 
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _camera->Update(dt);
 }
 
 void GameManager::loseLife()
@@ -93,6 +100,8 @@ void GameManager::loseLife()
     _ui->lifeLost(_lives);
 
     // TODO screen shake.
+
+    _camera->startScreenShake(0.3f, 18.f);
 }
 
 void GameManager::render()

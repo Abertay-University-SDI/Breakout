@@ -33,6 +33,12 @@ void Paddle::moveRight(float dt)
     }
 }
 
+void Paddle::moveMouse(sf::RenderWindow& windRef)
+{
+    float x = sf::Mouse::getPosition(windRef).x - (_width / 2);
+    _sprite.setPosition(std::clamp(x, 0.f, _window->getSize().x - _width), _window->getSize().y - 50.0f);
+}
+
 void Paddle::update(float dt)
 {
     if (_timeInNewSize > 0)
