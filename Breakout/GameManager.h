@@ -7,6 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "audioManager.h"
 
 
 
@@ -19,6 +20,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+
+    void brokeBlock(int i);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -46,6 +49,7 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    AudioManager* _audioManager;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

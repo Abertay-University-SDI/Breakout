@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include<iostream>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -8,6 +9,15 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    
+
+    for (int i = 0; i < 2; i++){
+        _multiballs[i].setRadius(RADIUS);
+        _multiballs[i].setFillColor(sf::Color::Green);
+        _multiballs[i].setPosition(50, 300);
+        _directionMulti[i] = { 0,0};
+    }
 }
 
 Ball::~Ball()
@@ -17,6 +27,7 @@ Ball::~Ball()
 void Ball::update(float dt)
 {
     // check for powerup, tick down or correct
+
     if (_timeWithPowerupEffect > 0.f)
     {
         _timeWithPowerupEffect -= dt;
@@ -90,11 +101,71 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+    if (_isMultiBall) {
+
+      //  std::cout << "ball 1 x = " << _multiballs[0].getPosition().x << "ball 1 y = " << _multiballs[0].getPosition().y << "ball 2 x = " << _multiballs[1].getPosition().x << "ball 2 y = " << _multiballs[1].getPosition().y << "ball 0 x = " << _sprite.getPosition().x << "ball 2 y = " << _sprite.getPosition().y << " \n";
+        for (int i = 0; i < 2; i++) {
+            _multiballs[i].move(_directionMulti[i] * _velocity * dt);
+
+            sf::Vector2f position = _multiballs[i].getPosition();
+            //sf::Vector2u windowDimensions = _window->getSize();
+
+            // bounce on walls
+            if ((position.x >= windowDimensions.x - 2 * RADIUS && _directionMulti[i].x > 0) || (position.x <= 0 && _directionMulti[i].x < 0))
+            {
+                _directionMulti[i].x *= -1;
+            }
+
+            // bounce on ceiling
+            if (position.y <= 0 && _directionMulti[i].y < 0)
+            {
+                _directionMulti[i].y *= -1;
+            }
+
+            // lose life bounce
+            if (position.y > windowDimensions.y)
+            {
+                _multiballs[i].setPosition(-50, 300);
+                _directionMulti[i] = {0, 0};
+              //  _gameManager->loseLife();
+            }
+
+            // collision with paddle
+            if (_multiballs[i].getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
+            {
+                _directionMulti[i].y *= -1; // Bounce vertically
+
+                float paddlePositionProportion = (_multiballs[i].getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
+                _directionMulti[i].x = paddlePositionProportion * 2.0f - 1.0f;
+
+                // Adjust position to avoid getting stuck inside the paddle
+                _multiballs[i].setPosition(_multiballs[i].getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+            }
+
+            // collision with bricks
+            int collisionResponse = _gameManager->getBrickManager()->checkCollision(_multiballs[i], _directionMulti[i]);
+            //if (_isFireBall) return; // no collisisons when in fireBall mode.
+            if (collisionResponse == 1)
+            {
+                _directionMulti[i].x *= -1; // Bounce horizontally
+            }
+            else if (collisionResponse == 2)
+            {
+                _directionMulti[i].y *= -1; // Bounce vertically
+            }
+            //_multiballs[i].setPosition(_sprite.getPosition());
+        }
+    }
 }
 
 void Ball::render()
 {
     _window->draw(_sprite);
+    if (_isMultiBall) {
+        for (int i = 0; i<2; i++) {
+            _window->draw(_multiballs[i]);
+        }
+    }
 }
 
 void Ball::setVelocity(float coeff, float duration)
@@ -113,4 +184,25 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setMultiBall(float duration)
+{
+    for (int i = 0; i < 2; i++) {
+        _multiballs[i].setPosition(sf::Mouse::getPosition(*_window).x, 800);
+        if (i == 0) {
+            _directionMulti[i] = { 1,-1 };
+        }
+        else {
+            _directionMulti[i] = { -1,-1 };
+        }
+    }
+    if (duration)
+    {
+        _isMultiBall = true;
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+    _isMultiBall = false;
+    _timeWithPowerupEffect = 0.f;
 }

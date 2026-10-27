@@ -1,8 +1,8 @@
 #include "BrickManager.h"
 #include "GameManager.h"
 
-BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
-    : _window(window), _gameManager(gameManager)
+BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager,UI* UI)
+    : _window(window), _gameManager(gameManager), _UI(UI)
 {
 }
 
@@ -50,6 +50,8 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
         brick = _bricks.back();
         _bricks.pop_back();
+      //  _UI->blockBroke(_bricks.size());
+        _gameManager->brokeBlock(_bricks.size());
         break;
     }
     if (_bricks.size() == 0)

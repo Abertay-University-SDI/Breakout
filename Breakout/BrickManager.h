@@ -2,12 +2,13 @@
 #include <vector>
 #include "Brick.h"
 #include <SFML/Graphics.hpp>
+#include "UI.h"
 
 class GameManager;
 
 class BrickManager {
 public:
-    BrickManager(sf::RenderWindow* window, GameManager* gameManager);
+    BrickManager(sf::RenderWindow* window, GameManager* gameManager,UI* UI);
     void createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing);
     void render();
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
@@ -17,5 +18,6 @@ private:
     sf::RenderWindow* _window;
 
     GameManager* _gameManager;
+    UI* _UI;
     static constexpr float TOP_PADDING = 100.0f;
 };
