@@ -5,7 +5,6 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 ## Controls
 
 A/D to move the paddle right and left.
-SPACE to launch the ball, continue to the next level, or restart after game over.
 P to pause.
 
 ## Powerups
@@ -44,7 +43,7 @@ Reused my previous approach of ray marching in a fragment shader to make the gam
 * Optimisations: rays skip the empty space in front of the scene, and normals use the 4-sample tetrahedral method.
 
 ### Hour 2 – Hit feedback: screen shake and liquid particles
-* Screen shake (replacing the `TODO screen shake`): a strong shake on losing a life and a light shake on breaking a brick. It fades out over its duration, and a weaker shake never interrupts a stronger one.
+* Screen shake a strong shake on losing a life and a light shake on breaking a brick. It fades out over its duration, and a weaker shake never interrupts a stronger one.
 * New `Particles` system: breaking a brick bursts it into liquid drops in the brick's colour. Drops have gravity, drag, cohesion and separation forces, bounce off the walls, and land on and slide off the paddle.
 * In the shader, drops are blended with a polynomial smooth min so nearby drops merge into one liquid surface and melt into the bricks and paddle they touch. Where drops meet, their colours mix, and the liquid has its own glossier material.
 * A bounding-box early-out skips the per-particle work for rays far from any liquid.
@@ -63,8 +62,6 @@ Reused my previous approach of ray marching in a fragment shader to make the gam
 * Tuned liquid cohesion, separation and blend size so splashes read as liquid without clumping into one point.
 * Fixed shader artefacts: clipped blobs where merged drops swelled past the front of the scene, and visible seams at the edges of the liquid bounding box.
 * Made the ball larger (radius 10 → 15) and changed its colour to hot pink so it stands out from the cyan paddle.
-
----
 
 ### Change log
 * 2025 - Naman made it harder
