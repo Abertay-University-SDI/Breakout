@@ -70,9 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\w520796\OneDrive - Abertay University\Documents\24-25\CMP424\codeTest\SFML-2.6.1\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -142,6 +139,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Leaderboard.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)/SFML/include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -162,6 +160,7 @@
     <ClInclude Include="BrickManager.h" />
     <ClInclude Include="CONSTANTS.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="MessagingSystem.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="PowerupBase.h" />

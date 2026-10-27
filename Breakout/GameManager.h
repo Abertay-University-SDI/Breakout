@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "CONSTANTS.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -7,8 +8,17 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "Leaderboard.h"
 
 
+
+enum class GameState
+{
+    Playing,
+    Paused,
+    LevelComplete,
+    GameOver
+};
 
 class GameManager {
 public:
@@ -28,25 +38,29 @@ public:
 
 
 private:
-    bool _pause;
-    float _pauseHold;
+    void startLevel();
+    void restart();
+    std::string bestString() const;
+
+    GameState _state;
+    int _level;
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
-    bool _levelComplete;
+    Leaderboard _leaderboard;
+    int _levelBlockCount;
+    float _lastSecondsPerBlock;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _leaderboardText;
 
     sf::RenderWindow* _window;
-    Paddle* _paddle;
-    Ball* _ball;
-    BrickManager* _brickManager;
-    PowerupManager* _powerupManager;
-    MessagingSystem* _messagingSystem;
-    UI* _ui;
-
-    static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    std::unique_ptr<Paddle> _paddle;
+    std::unique_ptr<Ball> _ball;
+    std::unique_ptr<BrickManager> _brickManager;
+    std::unique_ptr<PowerupManager> _powerupManager;
+    std::unique_ptr<MessagingSystem> _messagingSystem;
+    std::unique_ptr<UI> _ui;
 };

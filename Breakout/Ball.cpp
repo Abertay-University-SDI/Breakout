@@ -1,11 +1,11 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(sf::RenderWindow* window, GameManager* gameManager)
+    : _window(window), _velocity(BALL_SPEED), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
-    _sprite.setRadius(RADIUS);
+    _sprite.setRadius(BALL_RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
 }
@@ -23,8 +23,8 @@ void Ball::update(float dt)
     }
     else
     {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+        if (_velocity != BALL_SPEED)
+            _velocity = BALL_SPEED;   // reset speed.
         else
         {
             setFireBall(0);    // disable fireball
@@ -48,7 +48,7 @@ void Ball::update(float dt)
     sf::Vector2u windowDimensions = _window->getSize();
 
     // bounce on walls
-    if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
+    if ((position.x >= windowDimensions.x - 2 * BALL_RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
     }
@@ -76,7 +76,7 @@ void Ball::update(float dt)
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
 
         // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * BALL_RADIUS);
     }
 
     // collision with bricks
@@ -99,7 +99,7 @@ void Ball::render()
 
 void Ball::setVelocity(float coeff, float duration)
 {
-    _velocity = coeff * VELOCITY;
+    _velocity = coeff * BALL_SPEED;
     _timeWithPowerupEffect = duration;
 }
 

@@ -1,5 +1,6 @@
 #include "BrickManager.h"
 #include "GameManager.h"
+#include <algorithm>
 
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
@@ -17,7 +18,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
-            float y = i * (brickHeight + spacing) + TOP_PADDING;
+            float y = i * (brickHeight + spacing) + BRICK_TOP_PADDING;
             _bricks.emplace_back(x, y, brickWidth, brickHeight);
         }
     }
@@ -33,25 +34,28 @@ void BrickManager::render()
 int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
-    for (auto& brick : _bricks) {
-        if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
+    float radius = ball.getRadius();
+    sf::Vector2f ballCentre = ball.getPosition() + sf::Vector2f(radius, radius);
 
-        sf::Vector2f ballPosition = ball.getPosition();
-        float ballY = ballPosition.y + 0.5f * ball.getGlobalBounds().height;
-        sf::FloatRect brickBounds = brick.getBounds();
+    auto isHit = [&](const Brick& brick) {
+        sf::FloatRect bounds = brick.getBounds();
+        float nearestX = std::clamp(ballCentre.x, bounds.left, bounds.left + bounds.width);
+        float nearestY = std::clamp(ballCentre.y, bounds.top, bounds.top + bounds.height);
+        float dx = ballCentre.x - nearestX;
+        float dy = ballCentre.y - nearestY;
+        if (dx * dx + dy * dy > radius * radius) return false;
 
-        // default vertical bounce (collision is top/bottom)
-        collisionResponse = 2;
-        if (ballY > brickBounds.top && ballY < brickBounds.top + brickBounds.height)
-            // unless it's horizontal (collision from side)
-            collisionResponse = 1;
+        if (collisionResponse == 0)
+        {
+            collisionResponse = 2;
+            if (ballCentre.y > bounds.top && ballCentre.y < bounds.top + bounds.height)
+                collisionResponse = 1;
+        }
+        return true;
+    };
 
-        // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
-        // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
-        break;
-    }
+    _bricks.erase(std::remove_if(_bricks.begin(), _bricks.end(), isHit), _bricks.end());
+
     if (_bricks.size() == 0)
     {
         _gameManager->levelComplete();

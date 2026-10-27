@@ -5,7 +5,10 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 ## Controls
 
 A/D to move the paddle right and left.
+Hold LMB to move the paddle to the mouse.
 P to pause.
+R to restart after game over.
+Enter to start the next level.
 
 ## Powerups
 
@@ -31,9 +34,20 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
+26 Oct 2026 - 2.5 hrs
+27 Oct 2026 - 3 hrs
+Overall: 5.5 hrs
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Changelog:
+* Fixed issues with original project files
+* Changed manual memory management to use smart pointers
+* Organised all constants
+* Fixed a bug with ball speed
+* Small fix of paddle sizing
+* Changed ball-brick collision to rect-circle and removing every brick the ball hits
+* Mouse position controlling wired
+* Implemented a game loop
+* Implemented the leaderboard
 
 ---
 
