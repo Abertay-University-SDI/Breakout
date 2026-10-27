@@ -1,7 +1,6 @@
 #include "Brick.h"
 
 Brick::Brick(float x, float y, float width, float height)
-    : _isDestroyed(false)
 {
     _shape.setPosition(x, y);
     _shape.setSize(sf::Vector2f(width, height));
@@ -10,9 +9,7 @@ Brick::Brick(float x, float y, float width, float height)
 
 void Brick::render(sf::RenderWindow& window)
 {
-    if (!_isDestroyed) {
-        window.draw(_shape);
-    }
+    window.draw(_shape);
 }
 
 sf::FloatRect Brick::getBounds() const

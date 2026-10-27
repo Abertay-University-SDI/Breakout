@@ -9,5 +9,4 @@ public:
 
 private:
     sf::RectangleShape _shape;
-    bool _isDestroyed;
 };
