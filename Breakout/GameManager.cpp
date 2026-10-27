@@ -17,6 +17,24 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
+    _imageManager.loadTexture("Images/teehee.jpg");
+    _imageManager.loadTexture("Images/glup.png");
+    _imageManager.loadTexture("Images/Hi.png");
+    _imageManager.loadTexture("Images/ImHere.png");
+    _imageManager.loadTexture("Images/Iphone.png");
+    _imageManager.loadTexture("Images/Jump.png");
+    _imageManager.loadTexture("Images/Toofpick.png");
+    _imageManager.loadTexture("Images/Trent.png");
+    _imageManager.loadTexture("Images/VideoGamesCalling.png");
+    _imageManager.loadTexture("Images/WhitePeople.png");
+    _imageManager.loadTexture("Images/Whoops.png");
+
+    if (!hitBuffer.loadFromFile("Audio/StupidThud.mp3"))
+    {
+        std::cerr << "Failed to load StupidThud.mp3\n";
+    }
+    hitSound.setBuffer(hitBuffer);
+
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
@@ -33,7 +51,8 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
-    
+    _flash.update(dt);
+
 
     if (_lives <= 0)
     {
@@ -103,6 +122,7 @@ void GameManager::render()
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
+    _flash.draw(*_window);
 }
 
 void GameManager::levelComplete()
@@ -112,6 +132,18 @@ void GameManager::levelComplete()
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
+
+void GameManager::triggerFlash()
+{
+    if (_imageManager.count() == 0)
+    {
+        return;
+    }
+
+    _flash.showImage(_imageManager.getRandomTexture(), { 800.f, 600.f }, { _window->getSize().x / 2.f, _window->getSize().y / 2.f });
+    hitSound.play();
+}
+
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }

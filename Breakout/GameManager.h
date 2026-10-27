@@ -7,8 +7,9 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
-
+#include "ImageManager.h"
+#include "FlashEffect.h"
+#include "SFML/Audio.hpp"
 
 class GameManager {
 public:
@@ -20,6 +21,8 @@ public:
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
 
+    void triggerFlash();
+    
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
@@ -46,6 +49,11 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    ImageManager _imageManager;
+    FlashEffect _flash;
+
+    sf::SoundBuffer hitBuffer;
+    sf::Sound hitSound;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

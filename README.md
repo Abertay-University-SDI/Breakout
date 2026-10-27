@@ -31,10 +31,11 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
-
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+Took 3 hours to add image manager and flash effect class used for flashing images on brick hit, also added a sound effect.
+*Image Manager Class
+*Flash Effect Class
+*Random image flashes on brick hit
+*Sound effect plays on brick hit
 ---
 
 ### Change log
