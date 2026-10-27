@@ -17,11 +17,19 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 		newLife.setPosition((LIFE_RADIUS*2 + LIFE_PADDING) * i, LIFE_PADDING);
 		_lives.push_back(newLife);
 	}
+	sf::Vector2u windowDimensions = _window->getSize();
+
 	_powerupText.setCharacterSize(30);
-	_powerupText.setPosition(800, 10);
+	_powerupText.setPosition(windowDimensions.x / 2 - 15, 10);
 	_powerupText.setFillColor(sf::Color::Cyan);
+
+	_scoreText.setString("0");
+	_scoreText.setCharacterSize(30);
+	_scoreText.setPosition(windowDimensions.x - 50, 10);
+	_scoreText.setFillColor(sf::Color::Green);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+	_scoreText.setFont(_font);
 }
 
 UI::~UI()
@@ -67,6 +75,9 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
+void UI::updateScoreText(int score) {
+	_scoreText.setString(std::to_string(score));
+}
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
@@ -79,4 +90,5 @@ void UI::render()
 	{
 		_window->draw(life);
 	}
+	_window->draw(_scoreText);
 }

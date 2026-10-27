@@ -4,8 +4,6 @@
 
 class GameManager;  // forward declaration
 
-
-
 class Ball {
 public:
     Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);

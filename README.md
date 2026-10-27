@@ -2,6 +2,7 @@
 
 W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 
+A Lim Autumn 2026 (last maintained Oct 27) 
 ## Controls
 
 A/D to move the paddle right and left.
@@ -31,15 +32,18 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
-
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+* Approx. 4 hours were spend on this, over the course of two days
 ---
 
 ### Change log
-* 2025 - Naman made it harder
-* 2026 - William made it easier again
+
+* Added scoring system
+* Bricks have different health and score values
+* Bricks change colour based on health
+* Bricks no longer have a chance to double collide with the ball per frame
+* Powerup text moved to centre of screen
+* Added button component with mouse input
+* Added restart button for game loss and game end
 
 ---
 

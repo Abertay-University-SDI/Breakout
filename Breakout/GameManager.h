@@ -2,20 +2,22 @@
 #include <SFML/Graphics.hpp>
 #include "CONSTANTS.h"
 #include "Paddle.h"
+#include "ScoreManager.h"
 #include "Ball.h"
 #include "BrickManager.h"
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
-
+#include "Button.h"
 
 class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
+    void restartGame();
     void initialize();
     void update(float dt);
     void loseLife();
+    void handleInput();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
@@ -23,6 +25,7 @@ public:
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
+    ScoreManager* getScoreManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
@@ -44,9 +47,10 @@ private:
     Ball* _ball;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
+    ScoreManager* _scoreManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
-
+    Button* _button;
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
 };
