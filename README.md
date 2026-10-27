@@ -31,15 +31,22 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
-
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+2 hours implementing leaderboard
+1 hour 30 mins implementing CMake functionality, and getting the game working on Linux
+30 mins upgrading SFML from 2.6.x to 3.1.0
+15 mins adding mouse button inputs to pad
+30 mins adding powerup progress bar
 ---
 
 ### Change log
 * 2025 - Naman made it harder
 * 2026 - William made it easier again
+
+* Implemented local leaderboard that saves scores to file
+* Can build with CMake, and can run on Linux
+* SFML framework now uses 3.1.0
+* Can use either mouse button inputs or keyboard inputs
+* Powerups now have a bar indicating when they will run out
 
 ---
 

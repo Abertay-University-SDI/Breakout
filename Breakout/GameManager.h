@@ -7,6 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "Leaderboard.h"
 
 
 
@@ -19,13 +20,14 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void handleEvent(sf::Event event);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
-
+    void addScore(float scoreToAdd);
 
 private:
     bool _pause;
@@ -34,7 +36,10 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
+    bool _nameEntered = false;
+    std::string _name = "";
     std::pair<POWERUPS, float> _powerupInEffect;
+    float _score = 0;
 
     sf::Font _font;
     sf::Text _masterText;
@@ -46,7 +51,10 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    Leaderboard* _leaderboard;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+
+    void handleEnterName();
 };

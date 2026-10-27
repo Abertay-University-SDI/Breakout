@@ -1,11 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
-#include <iostream>
 
 int main()
 {
 
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
+    sf::RenderWindow window(sf::VideoMode({1000, 800}), "Breakout");
     GameManager gameManager(&window);
     gameManager.initialize();
 
@@ -14,11 +13,14 @@ int main()
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        while (const std::optional event = window.pollEvent())
         {
-            if (event.type == sf::Event::Closed)
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
+            else {
+                gameManager.handleEvent(event.value());
+            }
         }
 
         deltaTime = clock.restart().asSeconds();

@@ -5,11 +5,6 @@
 #include <optional>
 #include <random>
 #include "PowerupBase.h"
-#include "PowerupBigPaddle.h"
-#include "PowerupSmallPaddle.h"
-#include "PowerupSlowBall.h"
-#include "PowerupFastBall.h"
-#include "PowerupFireBall.h"
 #include "Paddle.h"
 #include "Ball.h"
 
@@ -26,6 +21,8 @@ public:
     void checkCollision(); // Check collision with paddle
     int getPowerupsSpawned();
     std::pair<POWERUPS, float> getPowerupInEffect();
+
+    float powerup_initial_time = 0;
 
 private:
     sf::RenderWindow* _window;
