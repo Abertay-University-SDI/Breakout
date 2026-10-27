@@ -8,6 +8,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "Leaderboard.h"
 
 
 
@@ -39,16 +40,21 @@ public:
 private:
     void startLevel();
     void restart();
+    std::string bestString() const;
 
     GameState _state;
     int _level;
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
+    Leaderboard _leaderboard;
+    int _levelBlockCount;
+    float _lastSecondsPerBlock;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _leaderboardText;
 
     sf::RenderWindow* _window;
     std::unique_ptr<Paddle> _paddle;

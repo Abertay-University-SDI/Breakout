@@ -2,17 +2,42 @@
 #include "Ball.h"
 #include "PowerupManager.h"
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+
+static std::string resultString(const std::string& label, int session, int level, float secondsPerBlock)
+{
+    std::ostringstream oss;
+    oss
+    << label
+    << ": sessionID "
+    << std::setfill('0')
+    << std::setw(6)
+    << session
+    << ", level "
+    << level
+    << ", "
+    << std::fixed
+    << std::setprecision(2)
+    << secondsPerBlock
+    << " s/block";
+    return oss.str();
+}
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _state(GameState::Playing), _level(1), _time(0.f), _lives(INITIAL_LIVES),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _levelBlockCount(0), _lastSecondsPerBlock(0.f), _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile(FONT_PATH);
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+    _leaderboardText.setFont(_font);
+    _leaderboardText.setPosition(50, 540);
+    _leaderboardText.setCharacterSize(24);
+    _leaderboardText.setFillColor(sf::Color::White);
 }
 
 void GameManager::initialize()
@@ -32,9 +57,11 @@ void GameManager::startLevel()
     int rows = std::min(BRICK_ROWS + _level - 1, BRICK_MAX_ROWS);
     _brickManager->createBricks(rows, BRICK_COLUMNS, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING);
 
+    _levelBlockCount = rows * BRICK_COLUMNS;
     _time = 0.f;
     _timeLastPowerupSpawned = 0.f;
     _masterText.setString("");
+    _leaderboardText.setString("");
     _state = GameState::Playing;
 }
 
@@ -68,12 +95,18 @@ void GameManager::update(float dt)
     if (_state == GameState::GameOver)
     {
         _masterText.setString("Game over.\nPress R to restart.");
+        _leaderboardText.setString(bestString());
         if (rPressed) restart();
         return;
     }
     if (_state == GameState::LevelComplete)
     {
         _masterText.setString("Level " + std::to_string(_level) + " completed.\nPress Enter to continue.");
+        _leaderboardText.setString( 
+            resultString("This run", _leaderboard.getSessionId(), _level, _lastSecondsPerBlock) 
+            + "\n\n" 
+            + bestString()
+        );
         if (enterPressed)
         {
             _level++;
@@ -130,12 +163,25 @@ void GameManager::render()
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
+    _window->draw(_leaderboardText);
     _ui->render();
 }
 
 void GameManager::levelComplete()
 {
     _state = GameState::LevelComplete;
+    _lastSecondsPerBlock = _time / _levelBlockCount;
+    _leaderboard.add(_level, _lastSecondsPerBlock);
+}
+
+std::string GameManager::bestString() const
+{
+    const std::vector<LeaderboardEntry>& entries = _leaderboard.getEntries();
+    if (entries.empty())
+        return "No levels cleared yet.";
+
+    const LeaderboardEntry& best = entries.front();
+    return resultString("Best", best.session, best.level, best.secondsPerBlock);
 }
 
 sf::RenderWindow* GameManager::getWindow() const { return _window; }

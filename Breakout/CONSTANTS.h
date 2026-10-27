@@ -19,6 +19,11 @@ constexpr const char* WINDOW_TITLE = "Breakout";
 
 // Assets
 constexpr const char* FONT_PATH = "font/montS.ttf";
+constexpr const char* LEADERBOARD_PATH = "leaderboard.txt";
+
+// Leaderboard settings
+constexpr size_t LEADERBOARD_SIZE = 5;
+constexpr int SESSION_ID_MAX = 999999;
 
 // Paddle settings
 constexpr float PADDLE_WIDTH = 150.0f;
