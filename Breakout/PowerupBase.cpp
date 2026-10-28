@@ -1,9 +1,10 @@
 #include "PowerupBase.h"
 #include <cmath>
 #include <iostream>
+#include "GameManager.h"
 
 PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
-    : _time(0.0f) // Initialize the time variable
+    : _time(0.0f)// Initialize the time variable
 {
     _window = window;
     _paddle = paddle;
@@ -56,12 +57,25 @@ void PowerupBase::render()
 
 bool PowerupBase::checkCollisionWithPaddle()
 {
-    if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()))
+     if (_ball->getGameManager() != nullptr && _ball->getGameManager()->DoubleP == true)
     {
-        _isAlive = false;
-        return true;
+        if ((_sprite.getGlobalBounds().intersects(_paddle->getBounds())) || (_sprite.getGlobalBounds().intersects(_paddle->getBounds1())))
+        {
+            _isAlive = false;
+            return true;
+        }
+        return false;
     }
-    return false;
+    else
+    {
+        if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()))
+        {
+            _isAlive = false;
+            return true;
+        }
+        return false;
+    }
+    
 }
 
 void PowerupBase::setAlive(bool alive)

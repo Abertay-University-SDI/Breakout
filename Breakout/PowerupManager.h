@@ -10,9 +10,11 @@
 #include "PowerupSlowBall.h"
 #include "PowerupFastBall.h"
 #include "PowerupFireBall.h"
+#include "DoublePaddle.h"
 #include "Paddle.h"
 #include "Ball.h"
 
+class GameManager;
 
 class PowerupManager
 {
@@ -27,11 +29,14 @@ public:
     int getPowerupsSpawned();
     std::pair<POWERUPS, float> getPowerupInEffect();
 
+    GameManager* _gameManager;
+
 private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
+    /*GameManager* _gameManager;*/
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
-    std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for _gameManager to get reference.
     std::mt19937 _rng; // mersenne twister
 };

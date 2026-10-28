@@ -25,6 +25,7 @@ public:
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+    bool DoubleP = false;
 
 
 private:

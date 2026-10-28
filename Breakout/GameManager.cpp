@@ -17,7 +17,7 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
-    _paddle = new Paddle(_window);
+    _paddle = new Paddle(_window, this);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
@@ -33,6 +33,7 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
+
     
 
     if (_lives <= 0)

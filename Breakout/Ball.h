@@ -15,8 +15,10 @@ public:
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
 
+    GameManager* getGameManager() { return _gameManager; }
 private:
     sf::CircleShape _sprite;
+    sf::CircleShape _sprite1;
     sf::Vector2f _direction;
     sf::RenderWindow* _window;
     float _velocity;

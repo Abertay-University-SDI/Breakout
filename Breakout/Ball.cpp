@@ -78,6 +78,21 @@ void Ball::update(float dt)
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
     }
+    if (_gameManager->DoubleP == true)
+    {
+        //collision with padel 2
+        if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds1()))
+        {
+            _direction.y *= -1; // Bounce vertically
+
+            float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds1().left) / _gameManager->getPaddle()->getBounds1().width;
+            _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+
+            // Adjust position to avoid getting stuck inside the paddle
+            _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds1().top - 2 * RADIUS);
+        }
+    }
+
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);

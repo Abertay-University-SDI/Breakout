@@ -6,6 +6,8 @@
 #include "Ball.h"
 #include <vector>
 
+class GameManager;
+
 class PowerupBase
 {
 public:
