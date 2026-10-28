@@ -18,7 +18,6 @@ public:
 
 private:
 
-
     sf::RenderWindow* _window;
     sf::RectangleShape _sprite;
     float _width = PADDLE_WIDTH;

@@ -1,13 +1,21 @@
 #include "Ball.h"
-#include "GameManager.h" // avoid cicular dependencies
+#include "GameManager.h" // avoid circular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+Ball::Ball(sf::RenderWindow* window, float velocity, bool isExtraBall, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _isExtraBall(isExtraBall), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    if (_isExtraBall)
+    {
+        _sprite.setRadius(EXTRA_RADIUS);
+        _sprite.setFillColor(ballEffectsColour);
+        _sprite.setPosition(400, 100);
+        _timer = _lifespan;
+    }
 }
 
 Ball::~Ball()
@@ -17,19 +25,32 @@ Ball::~Ball()
 void Ball::update(float dt)
 {
     // check for powerup, tick down or correct
-    if (_timeWithPowerupEffect > 0.f)
+    if (!_isExtraBall)
     {
-        _timeWithPowerupEffect -= dt;
-    }
-    else
-    {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+        if (_timeWithPowerupEffect > 0.f)
+        {
+            _timeWithPowerupEffect -= dt;
+        }
         else
         {
-            setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
+            if (_velocity != VELOCITY)
+                _velocity = VELOCITY;   // reset speed.
+            else
+            {
+                setFireBall(0);    // disable fireball
+                _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            }
+        }
+    }
+
+    if (_isExtraBall && _timer > 0.f)
+    {
+        _timer -= dt;
+
+        if (_timer <= 0.f)
+        {
+            // delete extraball on timer end
+        }
     }
 
     // Fireball effect
@@ -60,7 +81,7 @@ void Ball::update(float dt)
     }
 
     // lose life bounce
-    if (position.y > windowDimensions.y)
+    if (!_isExtraBall && position.y > windowDimensions.y)
     {
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
@@ -113,4 +134,21 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::gainLife()
+{
+    _gameManager->gainLife();
+}
+
+void Ball::spawnMultiBalls(float duration)
+{
+    if (duration)
+    {
+        _gameManager->multiBall(true);
+        _timeWithPowerupEffect = duration;
+        return;
+    }
+    _gameManager->multiBall(false);
+    _timeWithPowerupEffect = 0.f;
 }
