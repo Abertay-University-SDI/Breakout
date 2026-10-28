@@ -35,6 +35,27 @@ _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
 
+<27/10/2026, 4 hours>
+-Looked over existing code
+-Began creating a multiball powerup
+-Added multiball to PowerupManager
+-Added multiball functionlity to ball class
+-Added spawning of multiball in GameManager class (WIP)
+-Changed spawning mechanic of multiball to spawn in GM initialise
+-Changed spawning back to original method
+-Created separate multiball class inheriting from ball class
+-Changed multiball to include psuedo-invincibility
+
+<28/10/2026, 1 hour 30 minutes>
+-Re-read code added on previous day
+-Removed and deleted separate multiball class from project
+-Changed spawning of multiball to spawn in GM initialise
+-Added functions in ball class to be called for multiball
+   -setDirection
+   -setMultiColor
+   -setMultiPosition
+   -setMultiVelocity
+
 ---
 
 ### Change log
