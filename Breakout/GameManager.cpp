@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "Ball.h"
+#include "Bullet.h"
 #include "PowerupManager.h"
 #include <iostream>
 
@@ -20,7 +21,7 @@ void GameManager::initialize()
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this);
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
@@ -85,6 +86,7 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+	_brickManager->update(dt);
 }
 
 void GameManager::loseLife()
@@ -103,6 +105,7 @@ void GameManager::render()
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
+
 }
 
 void GameManager::levelComplete()
