@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "ParralaxBG.h"
 
 
 class GameManager {
@@ -18,8 +18,9 @@ public:
     void loseLife();
     void render();
     void levelComplete();
+	void nextLevel();
     void powerupEffect(POWERUPS pu, float t);
-
+	void addExtraBall();
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
@@ -32,8 +33,11 @@ private:
     float _pauseHold;
     float _time;
     float _timeLastPowerupSpawned;
+    float _countdown;
     int _lives;
     bool _levelComplete;
+	int _score;
+    int _level  = 1;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
@@ -45,8 +49,11 @@ private:
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
+	ParralaxBG* _parralaxBG;
     UI* _ui;
 
+	std::list<Ball*> _extraBalls; 
+
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    static constexpr float POWERUP_FREQUENCY = 1.0f;    // time between minimum powerup spawn
 };

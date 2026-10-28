@@ -1,17 +1,26 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
-
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+#include "AudioMananger.h"
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager,sf::Color colour)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _color(colour)
 {
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    _sprite.setFillColor(_color);
     _sprite.setPosition(0, 300);
 }
 
 Ball::~Ball()
 {
+}
+
+void Ball::reset()
+{
+    _sprite.setPosition(0, 300);
+    _direction = { 1, 1 };
+    _velocity = VELOCITY;
+    _isFireBall = false;
+    _timeWithPowerupEffect = 0.f;
 }
 
 void Ball::update(float dt)
@@ -28,7 +37,7 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(_color);  // back to normal colour.
         }        
     }
 
@@ -60,7 +69,7 @@ void Ball::update(float dt)
     }
 
     // lose life bounce
-    if (position.y > windowDimensions.y)
+    if (position.y > windowDimensions.y && isPrimary)
     {
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
@@ -84,10 +93,12 @@ void Ball::update(float dt)
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
+       
         _direction.x *= -1; // Bounce horizontally
     }
     else if (collisionResponse == 2)
     {
+        
         _direction.y *= -1; // Bounce vertically
     }
 }

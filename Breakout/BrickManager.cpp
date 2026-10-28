@@ -1,12 +1,12 @@
 #include "BrickManager.h"
 #include "GameManager.h"
-
+#include "AudioMananger.h" 
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
 {
 }
 
-void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
+void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing, int hitPoints)
 {
     float leftEdge;
     if (cols % 2 == 0) 
@@ -18,7 +18,7 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
         for (int j = 0; j < cols; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, hitPoints);
         }
     }
 }
@@ -26,6 +26,21 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 void BrickManager::render()
 {
     for (auto& brick : _bricks) {
+        switch(brick.getHitPoints())
+        {
+            case 1:
+                brick.setColor(sf::Color::Red);
+                break;
+            case 2:
+                brick.setColor(sf::Color::Yellow);
+                break;
+            case 3:
+                brick.setColor(sf::Color::Green);
+                break;
+            default:
+                brick.setColor(sf::Color::White);
+                break;
+		}
         brick.render(*_window);
     }
 }
@@ -48,8 +63,16 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+		brick.hit();
+        AudioMananger::getInstance().playSound("hurt.wav");
+        if (brick.getHitPoints() <= 0)
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+            AudioMananger::getInstance().playSound("coin_4.wav");
+        }
+       
+        
         break;
     }
     if (_bricks.size() == 0)

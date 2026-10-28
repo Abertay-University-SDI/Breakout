@@ -54,7 +54,10 @@ sf::FloatRect Paddle::getBounds() const
 {
     return _sprite.getGlobalBounds();
 }
-
+sf::Vector2f Paddle::getPosition() const
+{
+    return _sprite.getPosition();
+}
 // update width by SF of coeff. 
 // ensure centre remains consistent.
 void Paddle::setWidth(float coeff, float duration)
