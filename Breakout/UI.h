@@ -17,13 +17,18 @@ public:
 	void lifeLost(int lives);
 	void render();
 
+
 private:
 	GameManager* _gameManager;
 	
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
-
+	float PBmaxWidth;
+	int PBmaxVal;
+	sf::RectangleShape PBself;
+	sf::RectangleShape PBslef;
+	POWERUPS activePU = none;
 	std::vector<sf::CircleShape> _lives;
 
 	static constexpr float LIFE_RADIUS = 15.0f;

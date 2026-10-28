@@ -1,5 +1,8 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
+#include <cmath>
+#include <algorithm>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -8,6 +11,12 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    if (!patBuff.loadFromFile("audio/pat.wav")) {
+        std::cerr << "Failed to load pat.wav";
+    }
+
+    patS.setBuffer(patBuff);
 }
 
 Ball::~Ball()
@@ -51,12 +60,14 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        playPat();
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        playPat();
     }
 
     // lose life bounce
@@ -70,6 +81,8 @@ void Ball::update(float dt)
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        patC = 0;
+        playPat();
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
@@ -81,6 +94,9 @@ void Ball::update(float dt)
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    if (collisionResponse != 0) {
+        playPat();
+    }
     if (_isFireBall) return; // no collisisons when in fireBall mode.
     if (collisionResponse == 1)
     {
@@ -113,4 +129,12 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::playPat()
+{
+    int steps = std::min(patC, 12);
+    patS.setPitch(std::pow(2.f, steps / 12.f));
+    patS.play();
+    patC++;
 }

@@ -1,9 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <SFML/Audio.hpp>
+#include <deque>
+#include <cstdint>
 
 class GameManager;  // forward declaration
 
+struct Trail
+{
+    sf::Vector2f pos;
+    float age;
+    sf::Color col;
+};
 
 
 class Ball {
@@ -23,6 +31,11 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+
+    sf::SoundBuffer patBuff;
+    sf::Sound patS;
+    int patC = 0;
+    void playPat();
 
     GameManager* _gameManager;  // Reference to the GameManager
 

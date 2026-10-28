@@ -4,7 +4,7 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 
 ## Controls
 
-A/D to move the paddle right and left.
+A/D or Arrow Left/Arrow Right to move the paddle right and left.
 P to pause.
 
 ## Powerups
@@ -34,7 +34,10 @@ You are to spend between three and eight hours improving this simple Breakout im
 _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+I have implemented the following features in 3 hours:
+* Sounds with increasing tone between bounces (1 hour)
+* Better UI (progress bar rather than timer for countdown) (1.5 hour)
+* Implement Arrow Key input for pad (0.5 hour)
 ---
 
 ### Change log
