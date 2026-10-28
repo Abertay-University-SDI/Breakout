@@ -1,8 +1,8 @@
 #include "PowerupManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball), _rng(std::random_device{}())
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Paddle* paddle2, Ball* ball)
+    : _window(window), _paddle(paddle), _paddle2(paddle2), _ball(ball), _rng(std::random_device{}())
 {
 }
 
@@ -67,19 +67,19 @@ void PowerupManager::spawnPowerup()
     switch (rand() % 5)
     {
     case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _paddle2, _ball, spawnX));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _paddle2, _ball, spawnX));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFastBall(_window, _paddle, _paddle2, _ball, spawnX));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _paddle2, _ball, spawnX));
         break;
     case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFireBall(_window, _paddle, _paddle2, _ball, spawnX));
         break;
     }
 

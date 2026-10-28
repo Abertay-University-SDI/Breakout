@@ -6,11 +6,14 @@
 class Paddle
 {
 public:
-    Paddle(sf::RenderWindow* window);
+    Paddle(sf::RenderWindow* window, sf::Color colour);
     ~Paddle();
 
     void moveLeft(float dt);
     void moveRight(float dt);
+	void lowerPaddle();
+	void returnToNormalHeight();
+
     void update(float dt);
     void render();
     sf::FloatRect getBounds() const;

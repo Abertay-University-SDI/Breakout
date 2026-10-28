@@ -2,11 +2,12 @@
 #include <cmath>
 #include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
+PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Paddle* paddle2, Ball* ball, float spawnX)
     : _time(0.0f) // Initialize the time variable
 {
     _window = window;
     _paddle = paddle;
+    _paddle2 = paddle2;
     _sprite.setRadius(RADIUS);
     _isAlive = true;
     _ball = ball;
@@ -56,7 +57,7 @@ void PowerupBase::render()
 
 bool PowerupBase::checkCollisionWithPaddle()
 {
-    if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()))
+    if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()) || _sprite.getGlobalBounds().intersects(_paddle2->getBounds()))
     {
         _isAlive = false;
         return true;

@@ -14,6 +14,7 @@ public:
 	~UI();
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
+	void updateScoreText(int player1Score, int player2Score);
 	void lifeLost(int lives);
 	void render();
 
@@ -23,6 +24,9 @@ private:
 	sf::RenderWindow* _window;
 	sf::Font _font;
 	sf::Text _powerupText;
+
+	sf::Text _player1ScoreText;
+	sf::Text _player2ScoreText;
 
 	std::vector<sf::CircleShape> _lives;
 

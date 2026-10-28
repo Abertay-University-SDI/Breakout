@@ -22,6 +22,16 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Cyan);
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_player1ScoreText.setCharacterSize(30);
+	_player1ScoreText.setPosition(50, 50);
+	_player1ScoreText.setFillColor(sf::Color::Cyan);
+	_player1ScoreText.setFont(_font);
+
+	_player2ScoreText.setCharacterSize(30);
+	_player2ScoreText.setPosition(700, 50);
+	_player2ScoreText.setFillColor(sf::Color::Red);
+	_player2ScoreText.setFont(_font);
 }
 
 UI::~UI()
@@ -67,6 +77,16 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
+void UI::updateScoreText(int player1Score, int player2Score)
+{
+	std::ostringstream oss1;
+	oss1 << "Player 1: " << player1Score;
+	_player1ScoreText.setString(oss1.str());
+	std::ostringstream oss2;
+	oss2 << "Player 2: " << player2Score;
+	_player2ScoreText.setString(oss2.str());
+}
+
 void UI::lifeLost(int lives)
 {
 	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
@@ -75,8 +95,10 @@ void UI::lifeLost(int lives)
 void UI::render()
 {
 	_window->draw(_powerupText);
-	for (sf::CircleShape life : _lives)
-	{
-		_window->draw(life);
-	}
+	_window->draw(_player1ScoreText);
+	_window->draw(_player2ScoreText);
+	//for (sf::CircleShape life : _lives)
+	//{
+	//	_window->draw(life);
+	//}
 }

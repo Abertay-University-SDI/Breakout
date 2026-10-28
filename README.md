@@ -33,7 +33,17 @@ You are to spend between three and eight hours improving this simple Breakout im
 # Time Details and Changelist
 _TO DO_
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Time spent: 4 hours
+
+Added:
+Local multiplayer,
+Score System,
+Cases for winning for each player and a tie,
+Made Ball change colour based on who last hit it
+
+Removed:
+Power ups from spawning,
+Lives and losing state
 
 ---
 

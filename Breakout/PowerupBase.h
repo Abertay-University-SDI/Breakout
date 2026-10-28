@@ -9,7 +9,7 @@
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX);
+    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Paddle* paddle2, Ball* ball, float spawnX);
     virtual ~PowerupBase();
 
     void update(float dt);
@@ -31,6 +31,7 @@ protected: // Protected so derived classes can access these members
     float _time;
     bool _isAlive;
     Paddle* _paddle;
+    Paddle* _paddle2;
     Ball* _ball;
     sf::Vector2f _direction;
 

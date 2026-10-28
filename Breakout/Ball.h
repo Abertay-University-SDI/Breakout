@@ -14,6 +14,8 @@ public:
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+	int getPaddle1Score() { return _paddle1Score; }
+	int getPaddle2Score() { return _paddle2Score; }
 
 private:
     sf::CircleShape _sprite;
@@ -23,6 +25,9 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+	int _paddle1Score;
+	int _paddle2Score;
+	bool _lastTouchedPaddle1;  
 
     GameManager* _gameManager;  // Reference to the GameManager
 

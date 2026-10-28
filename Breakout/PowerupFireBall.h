@@ -3,7 +3,7 @@
 class PowerupFireBall : public PowerupBase
 {
 public:
-    PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos);
+    PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Paddle* paddle2, Ball* ball, float x_pos);
     ~PowerupFireBall();
 
     std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
