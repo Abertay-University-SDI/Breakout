@@ -14,6 +14,10 @@ Ball::~Ball()
 {
 }
 
+void Ball::resetSpeed()
+{
+    _velocity = VELOCITY;
+}
 void Ball::update(float dt)
 {
     // check for powerup, tick down or correct
@@ -24,7 +28,7 @@ void Ball::update(float dt)
     else
     {
         if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+            resetSpeed();   // reset speed.
         else
         {
             setFireBall(0);    // disable fireball

@@ -5,8 +5,8 @@
 class PowerupSlowBall : public PowerupBase
 {
 public:
-    PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos);
+    PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos, std::string powerupEffect, EffectableSystem* effectableSystem);
     ~PowerupSlowBall();
 
-    std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
+    //std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
 };

@@ -4,18 +4,23 @@
 #include "CONSTANTS.h"
 #include "Paddle.h"
 #include "Ball.h"
+#include "EffectBase.h"
+#include "EffectableSystem.h"
 #include <vector>
 
+/*
+* The other half of the powerups - now this is just the ball that is in the world - when collided, it will add a string to the effect queue...
+*/
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX);
+    PowerupBase(sf::RenderWindow* window, Paddle* paddle, float spawnX, std::string powerupEffect, EffectableSystem* effectableSystem);
     virtual ~PowerupBase();
 
     void update(float dt);
     void render();
 
-    virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
+    void applyEffect(); // Pure virtual method for applying the power-up effect
     bool checkCollisionWithPaddle();
 
     void setAlive(bool alive);
@@ -31,12 +36,18 @@ protected: // Protected so derived classes can access these members
     float _time;
     bool _isAlive;
     Paddle* _paddle;
-    Ball* _ball;
+    //Ball* _ball;
+
+    /*ptr to the system we add our "effect" to...*/
+    EffectableSystem* _effectableSystem;
+
+
+    //The string "tag" that the powerup causes
+    std::string _powerupEffect;
     sf::Vector2f _direction;
 
     // Render
     sf::CircleShape _sprite;
     sf::Color _colour;
     sf::RenderWindow* _window;
-
 };

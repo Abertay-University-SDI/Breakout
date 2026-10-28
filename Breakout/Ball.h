@@ -15,6 +15,8 @@ public:
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
 
+    /*public functions for ending actions early...*/
+    void resetSpeed();
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;

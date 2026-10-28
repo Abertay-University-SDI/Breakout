@@ -1,7 +1,7 @@
 #pragma once
 
 // implemented powerups
-enum POWERUPS
+enum POWERUPS //modified with our new stuff
 {
     bigPaddle,
     smallPaddle,

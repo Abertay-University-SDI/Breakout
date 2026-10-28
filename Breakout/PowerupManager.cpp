@@ -1,8 +1,8 @@
 #include "PowerupManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball), _rng(std::random_device{}())
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball, EffectableSystem* effectableSystem)
+    : _window(window), _paddle(paddle), _ball(ball), _rng(std::random_device{}()), _effectableSystem(effectableSystem)
 {
 }
 
@@ -64,25 +64,25 @@ void PowerupManager::spawnPowerup()
 
     float spawnX = xDist(_rng);
 
+    //These seperate objects now just dictate the colours of the balls - we could also add behaviour for how they fall differently if we so wished
     switch (rand() % 5)
     {
     case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, spawnX, "BIG_PADDLE", _effectableSystem));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball, spawnX, "SLOW_BALL", _effectableSystem));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball, spawnX, "FAST_BALL", _effectableSystem));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball, spawnX, "SMALL_PADDLE", _effectableSystem));
         break;
     case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, spawnX, "FIRE_BALL", _effectableSystem));
         break;
     }
-
 }
 
 void PowerupManager::checkCollision()
@@ -92,8 +92,7 @@ void PowerupManager::checkCollision()
 
         if (powerup->checkCollisionWithPaddle())
         {
-            _powerupInEffect = powerup->applyEffect();
-            powerup->setAlive(false);
+            powerup->setAlive(false); //depreceated
         }
     }
 }
