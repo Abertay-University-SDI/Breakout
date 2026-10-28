@@ -23,6 +23,7 @@ void GameManager::initialize()
     _ball = new Ball(_window, 400.0f, this); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
+    _extraLivesManager = new ExtraLivesManager(_window, _paddle, _ball, this);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -85,6 +86,8 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _extraLivesManager->update(dt);
+    _ui->render();
 }
 
 void GameManager::loseLife()
@@ -95,12 +98,19 @@ void GameManager::loseLife()
     // TODO screen shake.
 }
 
+void GameManager::addLife()
+{
+    _lives++;
+    _ui->lifeGained(_lives);
+}
+
 void GameManager::render()
 {
     _paddle->render();
     _ball->render();
     _brickManager->render();
     _powerupManager->render();
+    _extraLivesManager->render();
     _window->draw(_masterText);
     _ui->render();
 }
@@ -115,3 +125,4 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+ExtraLivesManager* GameManager::getExtraLivesManager() const { return _extraLivesManager; }

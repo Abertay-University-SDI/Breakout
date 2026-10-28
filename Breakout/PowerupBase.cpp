@@ -54,6 +54,7 @@ void PowerupBase::render()
     _window->draw(_sprite);
 }
 
+
 bool PowerupBase::checkCollisionWithPaddle()
 {
     if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()))

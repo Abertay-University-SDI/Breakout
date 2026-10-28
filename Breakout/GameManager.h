@@ -7,8 +7,9 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "ExtraLivesManager.h"
 
-
+//class ExtraLivesManager;  // forward declaration
 
 class GameManager {
 public:
@@ -16,6 +17,7 @@ public:
     void initialize();
     void update(float dt);
     void loseLife();
+    void addLife();
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
@@ -23,6 +25,7 @@ public:
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
+    ExtraLivesManager* getExtraLivesManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
@@ -44,6 +47,7 @@ private:
     Ball* _ball;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
+    ExtraLivesManager* _extraLivesManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
 

@@ -16,9 +16,15 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
+            //1/100 chance for brick to have extra life
+            float chance = rand() % 100;
+
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            if(chance <= 10)
+                _bricks.emplace_back(x, y, brickWidth, brickHeight, true);
+            else
+                _bricks.emplace_back(x, y, brickWidth, brickHeight, false);
         }
     }
 }
@@ -48,6 +54,12 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
+        if (brick.getIsExtraLife())
+        {
+            //Spawn extra life
+            sf::Vector2f x = brick.getBounds().getPosition();
+            _gameManager->getExtraLivesManager()->spawnExtraLife(x);
+        }
         brick = _bricks.back();
         _bricks.pop_back();
         break;

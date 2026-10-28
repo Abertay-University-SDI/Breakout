@@ -3,6 +3,7 @@
 #include "UI.h"
 #include "GameManager.h"
 #include <iomanip>
+#include <iostream>
 
 UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager) 
 	: _window(window), _gameManager(gameManager)
@@ -69,7 +70,29 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 
 void UI::lifeLost(int lives)
 {
-	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+	//Want at least 3 lives UI on screen
+	if (lives < 3)
+		_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+	else
+		_lives.pop_back();	//Remove a life from stack 
+}
+
+void UI::lifeGained(int lives)
+{
+	if (lives <= 3)
+	{
+		_lives[_lives.size() - lives].setFillColor(sf::Color::Red);
+	}
+	else
+	{
+		sf::CircleShape newLife;
+		newLife.setFillColor(sf::Color::Red);
+		newLife.setOutlineColor(sf::Color::Cyan);
+		newLife.setOutlineThickness(4.0f);
+		newLife.setRadius(LIFE_RADIUS);
+		newLife.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * (_lives.size() + 1), LIFE_PADDING);
+		_lives.push_back(newLife);
+	}
 }
 
 void UI::render()
