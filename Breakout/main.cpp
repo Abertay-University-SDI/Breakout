@@ -1,34 +1,103 @@
+#include <filesystem>
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
-#include <iostream>
+#include <print>
+
+#include "LlamaManager.h"
+#include "base64/base64.hpp"
 
 int main()
 {
+	LlamaManager llamaManager;
+	llamaManager.cacheDeps();
+	llamaManager.launchServer();
 
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
-    GameManager gameManager(&window);
-    gameManager.initialize();
+	sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
+	window.setFramerateLimit(60);
 
-    sf::Clock clock;
-    float deltaTime;
+	GameManager gameManager(&window);
+	gameManager.initialize();
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+	sf::Clock clock;
+	float deltaTime;
 
-        deltaTime = clock.restart().asSeconds();
+	constexpr float fixedStepDeltaTime = 1.0f / 15.0f;
 
-        gameManager.update(deltaTime);
+	bool warnedServerInactive = false;
 
-        window.clear();
-        gameManager.render();
-        window.display();
-    }
+	sf::Texture screenshotTexture;
+	screenshotTexture.create(window.getSize().x, window.getSize().y);
 
-    return 0;
+	std::string prevScreenshotBase64;
+	std::vector<sf::Uint8> screenshotMemoryBuffer;
+
+	std::string prevAction{"none"};
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		deltaTime = clock.restart().asSeconds();
+		// std::println("dt: {} sec", deltaTime);
+
+		auto action = PaddleAction::None;
+
+		if (llamaManager.isServerActive() && gameManager.getLives() > 0)
+		{
+			if (warnedServerInactive) warnedServerInactive = false;
+
+			screenshotTexture.update(window);
+			sf::Image screenshotImage = screenshotTexture.copyToImage();
+
+			std::string screenshotFormat = "jpeg";
+
+			screenshotMemoryBuffer.clear();
+			if (!screenshotImage.saveToMemory(screenshotMemoryBuffer, screenshotFormat))
+			{
+				throw std::runtime_error("failed to save screenshot image to memory!");
+			}
+
+			auto screenshotBase64 = base64::encode_into<std::string>(screenshotMemoryBuffer.begin(), screenshotMemoryBuffer.end());
+
+			DecisionState state{
+				.screenshotFormat = screenshotFormat,
+				.prevScreenshotBase64 = prevScreenshotBase64,
+				.screenshotBase64 = screenshotBase64,
+				.previousAction = prevAction,
+				.ballVelocity = gameManager.getBall()->getVelocity(),
+			};
+
+			action = llamaManager.requestDecision(state);
+			std::string actionStr = action == PaddleAction::Left ? "left" : action == PaddleAction::Right ? "right" : "none";
+			std::println("Got action {}", actionStr);
+
+			prevAction = actionStr;
+			prevScreenshotBase64 = screenshotBase64;
+		}
+		else
+		{
+			if (!warnedServerInactive)
+			{
+				std::println("Llama server not active? Can't poll decision!");
+				warnedServerInactive = true;
+			}
+
+			// keyboard override
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) action = PaddleAction::Left;
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) action = PaddleAction::Right;
+		}
+
+		gameManager.update(fixedStepDeltaTime, action);
+
+		window.clear();
+		gameManager.render();
+		window.display();
+	}
+
+	return 0;
 }
