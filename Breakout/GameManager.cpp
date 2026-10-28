@@ -13,6 +13,7 @@ GameManager::GameManager(sf::RenderWindow* window)
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
     _masterText.setFillColor(sf::Color::Yellow);
+	sf::Mouse::setPosition(sf::Vector2i(_window->getSize().x / 2, _window->getSize().y / 2), *_window);
 }
 
 void GameManager::initialize()
@@ -79,12 +80,22 @@ void GameManager::update(float dt)
 
     // move paddle
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) _paddle->moveRight(dt);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) _paddle->moveLeft(dt);
+    else _paddle->moveWithMouse(dt);
 
+    _particleSystem.update(dt);
     // update everything 
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+}
+
+void GameManager::handleEvent(const sf::Event& event)
+{
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+	{
+		_ball->launchFromPaddle();
+	}
 }
 
 void GameManager::loseLife()
@@ -96,10 +107,13 @@ void GameManager::loseLife()
 }
 
 void GameManager::render()
-{
+{;
+    _brickManager->render();
+
+    _particleSystem.draw(*_window);
     _paddle->render();
     _ball->render();
-    _brickManager->render();
+    
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
