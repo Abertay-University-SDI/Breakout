@@ -33,14 +33,27 @@ You are to spend between three and eight hours improving this simple Breakout im
 # Time Details and Changelist
 _TO DO_
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Feature Planning 30 mins
+   - Plan how split ball will work and plan the ball manager
 
+Split-Ball Powerup: 2hr 30 m 
+   - When Ball collides with anything, the ball will split. Up to five splits are allowed and a split happens on the main ball. Split balls are a different colour from the main ball and also move slower
+   
+Changes:
+ - Added Ball Manager class for management of Balls. Balls are stored in a ordered map sorted by a unique ID generated when a ball is created.
+ - Ball Manager can create, mark a ball for death, removed marked balls and is also responsible for updating and rendering the balls.
+ - Added SplitBall powerup to the powerup manager.
+ - Added several Getter and Setter methods into the ball class for extra utility in getting a balls direction, position etc.
+ - Ball colour can be changed rather than it being hardcoded to cyan.
+ - A ball can now be marked as the or A main ball. Main ball will involve the loss of a life if it hits the bottom. can be used to make the split off balls also main balls (might make it a bit hard to play though).
+ - Removed Fast Ball as it is horrible.
 ---
 
 ### Change log
 * 2025 - Naman made it harder
 * 2026 - William made it easier again
+* 2026 - Liam Added Cool Powerup. Also Removed Fast-Ball
 
 ---
 
-Curse you, fast ball!
+Curse you, fast ball! (its gone now...)

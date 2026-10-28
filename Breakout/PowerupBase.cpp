@@ -47,6 +47,9 @@ void PowerupBase::update(float dt)
         _isAlive = false;
     }
 
+
+
+
 }
 
 void PowerupBase::render()
@@ -64,7 +67,8 @@ bool PowerupBase::checkCollisionWithPaddle()
     return false;
 }
 
-void PowerupBase::setAlive(bool alive)
+
+void PowerupBase::setAlive(bool alive) 
 {
     _isAlive = alive;
 }

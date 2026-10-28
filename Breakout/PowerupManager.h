@@ -4,14 +4,12 @@
 #include <vector>
 #include <optional>
 #include <random>
-#include "PowerupBase.h"
-#include "PowerupBigPaddle.h"
-#include "PowerupSmallPaddle.h"
-#include "PowerupSlowBall.h"
-#include "PowerupFastBall.h"
-#include "PowerupFireBall.h"
-#include "Paddle.h"
-#include "Ball.h"
+
+enum POWERUPS;
+class PowerupBase;
+class Paddle;
+class Ball;
+
 
 
 class PowerupManager

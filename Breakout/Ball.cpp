@@ -1,13 +1,16 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
-
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
+#include <random>
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager , sf::Color _colour)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), colour(_colour)
 {
+
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    _sprite.setFillColor(_colour);
     _sprite.setPosition(0, 300);
+    colour = _colour;
+    id = 1 + rand() % 20;
 }
 
 Ball::~Ball()
@@ -23,12 +26,22 @@ void Ball::update(float dt)
     }
     else
     {
-        if (_velocity != VELOCITY)
+        if (_split) 
+        {
+            _split = false;
+            _gameManager->setSplits(0);
+        }
+        if ( isMainBall &&_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
-        else
+        else if (!isMainBall && _velocity != SPLIT_BALL_SPEED) {
+            _velocity = SPLIT_BALL_SPEED;
+       
+        }
+
+        if(_isFireBall)
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(colour);  // back to normal colour.
         }        
     }
 
@@ -39,6 +52,9 @@ void Ball::update(float dt)
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
     }
+
+
+
 
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
@@ -60,7 +76,7 @@ void Ball::update(float dt)
     }
 
     // lose life bounce
-    if (position.y > windowDimensions.y)
+    if (isMainBall && position.y > windowDimensions.y)
     {
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
@@ -82,9 +98,17 @@ void Ball::update(float dt)
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
+    
+    if (_split && collisionResponse != 0) 
+    {
+        _gameManager->performSplit();
+    }
+
+    
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        
     }
     else if (collisionResponse == 2)
     {
@@ -113,4 +137,58 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+auto Ball::setAllowSplit(bool split, float duration) -> void
+{
+    _split = split;
+    _timeWithPowerupEffect = duration;
+}
+
+auto Ball::GetID() -> int
+{
+    return id;
+}
+auto Ball::getPosition() -> sf::Vector2f
+{
+    return _sprite.getPosition();
+}
+
+auto Ball::setPosition(sf::Vector2f position) -> void
+{
+    _sprite.setPosition(position);
+}
+
+auto Ball::setDirection(sf::Vector2f direction) -> void
+{
+    _direction = _direction;
+}
+
+auto Ball::getDirection() -> sf::Vector2f
+{
+    return _direction;
+}
+
+auto Ball::setColour(sf::Color& _colour) -> void
+{
+    colour = _colour;
+}
+
+auto Ball::getColour() -> sf::Color&
+{
+    return colour;
+}
+
+auto Ball::setIsMainBall(bool _mainBall) -> void
+{
+    isMainBall = _mainBall;
+}
+
+auto Ball::setAlive(bool alive) -> void
+{
+    _isAlive = alive;
+}
+auto Ball::getAlive() -> bool 
+{
+    return _isAlive;
 }

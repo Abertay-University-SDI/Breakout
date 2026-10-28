@@ -8,6 +8,7 @@ enum POWERUPS
     fastBall,
     slowBall,
     fireBall,
+    splitBall,
     none
 };
 
@@ -24,6 +25,7 @@ constexpr float PADDLE_SPEED = 300.0f;
 // Ball settings
 constexpr float BALL_RADIUS = 10.0f;
 constexpr float BALL_SPEED = 400.0f;
+constexpr float SPLIT_BALL_SPEED = 50.0f;
 
 // Brick settings
 constexpr float BRICK_WIDTH = 75.0f;
@@ -49,5 +51,8 @@ constexpr int INITIAL_LIVES = 3;
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
+const sf::Color splitBallPowerupColour = sf::Color(255, 0, 0); // red.
 
+const sf::Color splitBallColour = sf::Color(0, 255, 0); // green.
+const sf::Color MainBallColourInSplitBall = sf::Color(128, 0, 128); // green.
 

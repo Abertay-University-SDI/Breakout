@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
 #include <iostream>
-
+#include <random>
 int main()
 {
-
+    srand(time(0));
     sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
     GameManager gameManager(&window);
     gameManager.initialize();

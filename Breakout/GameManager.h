@@ -7,7 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
-
+#include "BallManager.h"
 
 
 class GameManager {
@@ -20,6 +20,10 @@ public:
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
 
+    auto setSplits(int splits) -> void;
+    auto setMaxSplits(int splits) -> void;
+    auto performSplit() -> void;
+    
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
@@ -33,7 +37,11 @@ private:
     float _time;
     float _timeLastPowerupSpawned;
     int _lives;
+    int _splits;
+    int _maxSplits;
     bool _levelComplete;
+
+
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
@@ -43,6 +51,7 @@ private:
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;
+    BallManager* _ballManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
