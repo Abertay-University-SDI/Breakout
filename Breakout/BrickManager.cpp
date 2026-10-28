@@ -1,5 +1,6 @@
 #include "BrickManager.h"
 #include "GameManager.h"
+#include <iostream>
 
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
@@ -28,11 +29,13 @@ void BrickManager::render()
     for (auto& brick : _bricks) {
         brick.render(*_window);
     }
+    _explosion.render(*_window);
 }
 
 int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
+    bool explosionMade = false;
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
@@ -46,15 +49,79 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
             // unless it's horizontal (collision from side)
             collisionResponse = 1;
 
+        if (!explosionMade)
+        {
+            _explosion.setExplosion(ball.getPosition().x, ball.getPosition().y, 100.f);
+            explosionMade = true;
+        }
+        
+        checkExplosionRadius(_explosion);
+
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
+        /*brick = _bricks.back();
+        _bricks.pop_back();*/
         break;
     }
+    _explosion.hide();
+    explosionMade = false;
     if (_bricks.size() == 0)
     {
         _gameManager->levelComplete();
     }
     return collisionResponse;
+}
+
+float BrickManager::checkExplosionRadius(Explosion explosion)
+{
+    float radius = explosion.getRadius();
+    float damage = 0.f;
+    for (auto& brick : _bricks) {
+       
+        if (!explosion.getShape().getGlobalBounds().intersects(brick.getBounds())) continue;    // no collision, skip.
+        
+        //if theres a collision calculate the distance from the centre 
+        sf::Vector2f brickPos = brick.getBounds().getPosition() + brick.getOrigin();
+        //pythagoras
+        float dist = (explosion.getCentre().x - brickPos.x) * (explosion.getCentre().x - brickPos.x) + (explosion.getCentre().y - brickPos.y) * (explosion.getCentre().y - brickPos.y);
+        
+        dist = std::pow(dist, 0.5);
+        std::cout << "Distance: " << dist << std::endl;
+        if (dist > radius * 0.5)
+        {
+            damage = 10;
+        }
+        else if (dist > radius * 0.25)
+        {
+            damage = 20;
+        }
+        else
+        {
+            damage = 50;
+        }
+        
+        brick.damage(damage);
+        
+    }
+    if (_bricks.size() == 0)
+    {
+        _gameManager->levelComplete();
+    }
+    return 0;
+}
+
+void BrickManager::destroyBricks()
+{
+    for (auto& brick : _bricks) {
+        if (brick.isDestroyed())
+        {
+          brick = _bricks.back();
+            _bricks.pop_back();
+        }
+    }
+}
+
+void BrickManager::update()
+{
+    destroyBricks();
 }
