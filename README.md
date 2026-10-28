@@ -33,8 +33,11 @@ You are to spend between three and eight hours improving this simple Breakout im
 # Time Details and Changelist
 _TO DO_
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+4 hours
+* Added AudioManager class to handle playback of sound effects
+* Implemented sound effects for the ball hitting every surface
+* Added functionality to AudioManager to add random pitch variation to sound effects if desired
+* Implemented audio slow down and speed up depending on the current powerup
 ---
 
 ### Change log

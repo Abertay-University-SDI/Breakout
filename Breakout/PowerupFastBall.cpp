@@ -12,6 +12,7 @@ PowerupFastBall::~PowerupFastBall()
 
 std::pair<POWERUPS, float> PowerupFastBall::applyEffect()
 {
+	_ball->setPitchMultiplier(1.5f); 
     _ball->setVelocity(2.f, 5.0f);
     return { fastBall, 5.0f };
 }

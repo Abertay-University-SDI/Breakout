@@ -1,9 +1,10 @@
 #include "Ball.h"
+#include "AudioManager.h"
 #include "GameManager.h" // avoid cicular dependencies
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _brickBouncePitch(1.0f), _pitchMultiplier(1.0f)
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
@@ -23,6 +24,7 @@ void Ball::update(float dt)
     }
     else
     {
+		setPitchMultiplier(1.0f); // reset pitch multiplier
         if (_velocity != VELOCITY)
             _velocity = VELOCITY;   // reset speed.
         else
@@ -50,12 +52,14 @@ void Ball::update(float dt)
     // bounce on walls
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
+        _gameManager->getAudioManager()->playRandomizedSound(0.9f * _pitchMultiplier, 1.1f * _pitchMultiplier, "audio/sfx/ball_hit_wall.ogg");
         _direction.x *= -1;
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
+        _gameManager->getAudioManager()->playRandomizedSound(0.9f * _pitchMultiplier, 1.1f * _pitchMultiplier, "audio/sfx/ball_hit_wall.ogg");
         _direction.y *= -1;
     }
 
@@ -65,11 +69,14 @@ void Ball::update(float dt)
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
         _gameManager->loseLife();
+		_brickBouncePitch = 1.0f;
     }
 
     // collision with paddle
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
+        _gameManager->getAudioManager()->playRandomizedSound(0.9f * _pitchMultiplier, 1.1f * _pitchMultiplier, "audio/sfx/ball_hit_paddle.ogg");
+		_brickBouncePitch = 1.0f; // reset pitch for next bounce
         _direction.y *= -1; // Bounce vertically
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
@@ -82,6 +89,12 @@ void Ball::update(float dt)
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
+
+    if (collisionResponse != 0) // play brick bounce sfx on collision, increase pitch for next bounce
+    {
+        _gameManager->getAudioManager()->playRandomizedSound((_brickBouncePitch - 0.1f) * _pitchMultiplier, (_brickBouncePitch + 0.1f) * _pitchMultiplier, "audio/sfx/ball_hit_brick.ogg");
+		_brickBouncePitch += 0.1f;
+    }
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally

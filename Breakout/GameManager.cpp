@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Ball.h"
 #include "PowerupManager.h"
+#include "AudioManager.h"
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
@@ -20,9 +21,10 @@ void GameManager::initialize()
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this);
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
+    _audioManager = new AudioManager();
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -115,3 +117,4 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+AudioManager* GameManager::getAudioManager() const { return _audioManager; }
