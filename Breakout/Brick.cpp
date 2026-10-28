@@ -19,3 +19,6 @@ sf::FloatRect Brick::getBounds() const
 {
     return _shape.getGlobalBounds();
 }
+
+void Brick::setPosition(float x, float y){ _shape.setPosition(x, y); }
+sf::Vector2f Brick::getPosition() { return _shape.getPosition(); }
