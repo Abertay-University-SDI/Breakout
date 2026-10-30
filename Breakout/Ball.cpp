@@ -28,16 +28,34 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
+            _sprite.setRadius(RADIUS); //resets radius
+			setBombBall(0);    // disable bombball
             _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
         }        
     }
 
-    // Fireball effect
+    // Fireball effect visual 
     if (_isFireBall)
     {
         // Flickering effect
         int flicker = rand() % 50 + 205; // Random value between 205 and 255
         _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+    }
+
+    if (_isBombBall) {
+
+        //change ball colour
+        int flicker = rand() % 50 + 205; // Random value between 205 and 255
+        _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+
+		//gets the ball centre position
+        _centre = sf::Vector2f(_sprite.getPosition() + sf::Vector2f(_sprite.getRadius(), _sprite.getRadius()));
+
+        //change balls radius
+        _sprite.setRadius(RADIUS * 10.f);
+        
+		//keeps the ball centred on the same position
+		_sprite.setPosition(_centre - sf::Vector2f(_sprite.getRadius(), _sprite.getRadius()));
     }
 
     // Update position with a subtle floating-point error
@@ -51,12 +69,16 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+
+		_gameManager->startShake(0.1f, 8.f, sf::Vector2f(_direction.x, 0.f)); // Shake effect on wall collision
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+
+		_gameManager->startShake(0.1f, 8.f, sf::Vector2f(0.f, _direction.y)); // Shake effect on ceiling collision
     }
 
     // lose life bounce
@@ -81,14 +103,16 @@ void Ball::update(float dt)
 
     // collision with bricks
     int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
-    if (_isFireBall) return; // no collisisons when in fireBall mode.
+    if (_isFireBall || _isBombBall) return; // no collisisons when in fireBall or bombBall mode.
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        _gameManager->startShake(.1f, 4.f, sf::Vector2(0.0f, 0.f));//shake when brik breaks 
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+        _gameManager->startShake(.1f, 4.f, sf::Vector2(0.0f, 0.f));//shake when brik breaks 
     }
 }
 
@@ -113,4 +137,22 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setBombBall(float duration)
+{
+
+
+    if (duration) 
+    {
+        _isBombBall = true;
+		_timeWithPowerupEffect = duration;
+
+		_gameManager->startShake(duration, 20.f, sf::Vector2f(0.f, 0.f)); // Shake effect on bomb ball activation
+        return;
+    }
+
+    _isBombBall = false;
+	_timeWithPowerupEffect = 0.f;   
+
 }
