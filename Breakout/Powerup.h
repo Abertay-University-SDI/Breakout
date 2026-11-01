@@ -1,5 +1,11 @@
 #pragma once
 #include <string>
+#include <functional>
+#include <optional>
+
+
+class Ball;
+using PowerupCondition = std::function<bool(const Ball&)>;
 
 
 class PaddleModifier
@@ -45,6 +51,7 @@ class Powerup {
 
 	PaddleModifier _paddleModifier;
 	BallModifier _ballModifier;
+	PowerupCondition _condition;
 	std::string _name;
 	float _duration;
 
@@ -57,18 +64,20 @@ public:
 	/// <param name="name">The name of the power-up.</param>
 	/// <param name="paddleModifier">The modifier to apply to the paddle.</param>
 	/// <param name="ballModifier">The modifier to apply to the ball.</param>
-	Powerup(float duration, std::string name, PaddleModifier paddleModifier, BallModifier ballModifier)
-		: _paddleModifier(paddleModifier), _ballModifier(ballModifier), _duration(duration), _name(name) {
+	/// <param name="condition">The condition under which the power-up is active.</param>
+	Powerup(float duration, std::string name, PaddleModifier paddleModifier, BallModifier ballModifier, std::optional<PowerupCondition> condition = std::nullopt)
+		: _paddleModifier(paddleModifier), _ballModifier(ballModifier), _duration(duration), _name(name), _condition(condition.value_or([](const Ball&) { return true; })) {
 	}
-	Powerup() : _duration(0.f), _name("Untitled") {}
+	Powerup() : _duration(0.f), _name("Untitled"), _condition([](const Ball&) { return true; }) {}
 	/// <summary>
 	/// Initializes a Powerup with a duration, display name, and gameplay modifiers.
 	/// </summary>
 	/// <param name="duration">The length of time, in seconds, that the power-up effect lasts.</param>
 	/// <param name="name">The name of the power-up.</param>
 	/// <param name="paddleModifier">The modifier to apply to the paddle.</param>
-	Powerup(float duration, std::string name, PaddleModifier paddleModifier)
-		: _paddleModifier(paddleModifier), _duration(duration), _name(name) {
+	/// <param name="condition">The condition under which the power-up is active.</param>
+	Powerup(float duration, std::string name, PaddleModifier paddleModifier, std::optional<PowerupCondition> condition = std::nullopt)
+		: _paddleModifier(paddleModifier), _duration(duration), _name(name), _condition(condition.value_or([](const Ball&) { return true; })) {
 	}
 
 	/// <summary>
@@ -77,13 +86,15 @@ public:
 	/// <param name="duration">The length of time, in seconds, that the power-up effect lasts.</param>
 	/// <param name="name">The name of the power-up.</param>
 	/// <param name="ballModifier">The modifier to apply to the ball.</param>
-	Powerup(float duration, std::string name, BallModifier ballModifier)
-		: _ballModifier(ballModifier), _duration(duration), _name(name) {
+	/// <param name="condition">The condition under which the power-up is active.</param>
+	Powerup(float duration, std::string name, BallModifier ballModifier, std::optional<PowerupCondition> condition = std::nullopt)
+		: _ballModifier(ballModifier), _duration(duration), _name(name), _condition(condition.value_or([](const Ball&) { return true; })) {
 	}
 
 	float getDuration() const { return _duration; }
 	PaddleModifier getPaddleModifier() const { return _paddleModifier; }
 	BallModifier getBallModifier() const { return _ballModifier; }
 	std::string getName() const { return _name; }
+	PowerupCondition getCondition() const { return _condition; }
 
 };

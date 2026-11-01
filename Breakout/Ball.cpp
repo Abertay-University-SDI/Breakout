@@ -29,12 +29,14 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * BALL_RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+		_bounces++; // Increment the bounce count
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+		_bounces++; // Increment the bounce count
     }
 
     // lose life bounce
@@ -49,6 +51,7 @@ void Ball::update(float dt)
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
         _direction.y *= -1; // Bounce vertically
+		_bounces = 0; // Reset the bounce count when hitting the paddle
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;

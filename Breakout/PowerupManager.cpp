@@ -38,6 +38,10 @@ void PowerupManager::update(float dt)
 
 	for (const auto& powerup : _activePowerups)
 	{
+		if (!powerup.powerup->getCondition()(*_ball))
+		{
+			continue; // Skip this power-up if its condition is not met
+		}
 		accumulatedPaddleModifier = accumulatedPaddleModifier + powerup.powerup->getPaddleModifier();
 		accumulatedBallModifier = accumulatedBallModifier + powerup.powerup->getBallModifier();
 	}

@@ -16,6 +16,8 @@ public:
     void setVelocity(float coeff);
 	void setPower(float value);
 
+	int getBounces() const { return _bounces; }  // Getter for the number of bounces
+
 private:
     sf::CircleShape _sprite;
     sf::Vector2f _direction;
@@ -24,6 +26,7 @@ private:
     bool _isAlive;
     float _power = BALL_DEFAULT_DAMAGE;
     float _timeWithPowerupEffect;
+	int _bounces = 0;  // Number of bounces since the last power-up effect
 
     GameManager* _gameManager;  // Reference to the GameManager
 };
