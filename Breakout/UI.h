@@ -28,5 +28,7 @@ private:
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
+
+	int _lives_lost = 0;
 };
 

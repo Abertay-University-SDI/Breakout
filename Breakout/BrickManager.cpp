@@ -14,11 +14,12 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     else
         leftEdge = _window->getSize().x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
 
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    for (int i = 0; i < rows ; ++i) {
+        for (int j = 0; j < cols ; ++j) {
             float x = j * (brickWidth + spacing) + leftEdge;
             float y = i * (brickHeight + spacing) + TOP_PADDING;
-            _bricks.emplace_back(x, y, brickWidth, brickHeight);
+            int health = (std::rand() % 3) + 1;
+            _bricks.emplace_back(x, y, brickWidth, brickHeight, health);
         }
     }
 }
@@ -48,9 +49,15 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
-        brick = _bricks.back();
-        _bricks.pop_back();
-        break;
+        brick.setHealth();
+        
+        if(brick.getHealth() == 0)
+        {
+            brick = _bricks.back();
+            _bricks.pop_back();
+            _gameManager->addScore();
+            break;
+        }
     }
     if (_bricks.size() == 0)
     {

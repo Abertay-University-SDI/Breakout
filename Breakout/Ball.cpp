@@ -8,6 +8,18 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _topRec.setSize(sf::Vector2f(_window->getSize().x, _window->getSize().y / 30.f));
+    _topRec.setFillColor(sf::Color::Black);
+    _topRec.setPosition(0.f, -20.f);
+
+    _leftRec.setSize(sf::Vector2f(_window->getSize().x / 30.f, _window->getSize().y));
+    _leftRec.setFillColor(sf::Color::Black);
+    _leftRec.setPosition(-25.f, 0.f);
+
+    _rightRec.setSize(sf::Vector2f(_window->getSize().x / 30.f, _window->getSize().y));
+    _rightRec.setFillColor(sf::Color::Black);
+    _rightRec.setPosition(990.f, 0.f);
 }
 
 Ball::~Ball()
@@ -23,8 +35,8 @@ void Ball::update(float dt)
     }
     else
     {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
+        if (_velocity != VELOCITY + _acceleration)
+            _velocity = VELOCITY + _acceleration;   // reset speed.
         else
         {
             setFireBall(0);    // disable fireball
@@ -51,12 +63,16 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _sidetColourTimer = 0.1f;
+        _acceleration += 5.f;
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _topColourTimer = 0.1f;
+        _acceleration += 5.f;
     }
 
     // lose life bounce
@@ -65,6 +81,7 @@ void Ball::update(float dt)
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
         _gameManager->loseLife();
+        _acceleration = 0;
     }
 
     // collision with paddle
@@ -77,6 +94,9 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        _gameManager->getPaddle()->setTimer();
+        _acceleration += 5.f;
     }
 
     // collision with bricks
@@ -90,16 +110,68 @@ void Ball::update(float dt)
     {
         _direction.y *= -1; // Bounce vertically
     }
+
+    Trail trail;
+    trail._position = sf::Vector2(_sprite.getPosition().x + RADIUS, _sprite.getPosition().y + RADIUS);
+    trail._colour = sf::Color::Cyan;
+    trail._lifetime = 0.5f;
+    _trailVector.push_back(trail);
+
+    for (auto &_tv : _trailVector) 
+    {
+        _tv._lifetime -= dt;
+        if (_tv._lifetime > 0) {
+            float alpha = (_tv._lifetime / 0.5f) * 255;
+            _tv._colour.a = alpha;
+        }
+    }
+
+    _trailVector.erase(
+        std::remove_if(_trailVector.begin(), _trailVector.end(),
+            [](const Trail& p) { return p._lifetime <= 0; }),
+        _trailVector.end()
+    );
+
+    if (_topColourTimer > 0.f)
+    {
+        _topColourTimer -= dt;
+        _topRec.setFillColor(sf::Color::Green);
+    }
+    else
+    {
+        _topRec.setFillColor(sf::Color::Black);
+    }
+
+    if (_sidetColourTimer > 0.f)
+    {
+        _sidetColourTimer -= dt;
+        _leftRec.setFillColor(sf::Color::Green);
+        _rightRec.setFillColor(sf::Color::Green);
+    }
+    else
+    {
+        _leftRec.setFillColor(sf::Color::Black);
+        _rightRec.setFillColor(sf::Color::Black);
+    }
 }
 
 void Ball::render()
 {
+    sf::VertexArray lines(sf::LinesStrip, _trailVector.size());
+    for (int i = 0; i < _trailVector.size(); ++i) {
+        lines[i].position = _trailVector[i]._position;
+        lines[i].color = _trailVector[i]._colour;
+    }
+    _window->draw(lines);
     _window->draw(_sprite);
+    _window->draw(_topRec);
+    _window->draw(_rightRec);
+    _window->draw(_leftRec);
 }
 
 void Ball::setVelocity(float coeff, float duration)
 {
-    _velocity = coeff * VELOCITY;
+    _velocity = coeff * (VELOCITY + _acceleration);
     _timeWithPowerupEffect = duration;
 }
 

@@ -26,6 +26,8 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    void addScore();
+
 
 private:
     bool _pause;
@@ -36,8 +38,15 @@ private:
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
+    sf::RectangleShape _solidBar;
+    sf::RectangleShape _progressBar;
+    float _maxPowerTime = 5.0f;
+    float _powerTimePerc = 0.0f;
+
     sf::Font _font;
     sf::Text _masterText;
+    sf::Text _scoreText;
+    int _score = 0;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -46,6 +55,14 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    sf::RectangleShape _bottomRec;
+    sf::View _view;
+    sf::Vector2f _originalCentre;
+    float _shakeDuration = 0.0f;
+    float _shakeStrength = 6.0f;
+
+    float _restartCounter = 0.0f;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

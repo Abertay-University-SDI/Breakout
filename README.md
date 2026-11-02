@@ -1,3 +1,6 @@
+Matthew Henderson
+2301614
+
 # Breakout
 
 W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
@@ -35,11 +38,36 @@ _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
 
+35 Mins
+Trail affect
+
+1 hour
+Screen Shake
+
+1 hour 30 mins
+Added different health values and colours to the bricks
+
+2 hour
+Walls now change colour when they bounce
+
+2 hour 20 mins
+Windows now has rainbow effect when a power up is collected
+
+3 hour
+Made game loop when completing and failing a level
+
+3 hour 30 mins
+Added score to game, made paddle turn green when hit
+
+4 hours
+Made ball accelerate every time it bounces on a wall or paddle. Added progress bar to powerups.
+
 ---
 
 ### Change log
 * 2025 - Naman made it harder
 * 2026 - William made it easier again
+* 2026 - Matthew made the game feel better
 
 ---
 
