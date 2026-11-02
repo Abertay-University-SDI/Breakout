@@ -7,6 +7,8 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 A/D to move the paddle right and left.
 P to pause.
 
+Hold Left Mouse Button to move paddle towards cursor screen position
+
 ## Powerups
 
 big/small paddle (blue)
@@ -34,6 +36,15 @@ You are to spend between three and eight hours improving this simple Breakout im
 _TO DO_
 
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+Time Taken | Feature / Task
+* 40 Minutes - UI Powerup Progress Bar
+* 33 Minutes - Mouse Controlled Paddle
+* 12 Minutes - Score, displayed on UI, incremented for each brick destroyed
+* 9 Minutes - Levels regenerate after completion with small wait time
+* 10 Minutes - Levels Procedurally Generate number of columns and rows 
+* 50 Minutes - Binary Serialized Leaderboard, score saves to file and highest score achieved by a player is displayed (Name Input TODO)
+* 27 Minutes - Leaderboard Name Text Input
 
 ---
 

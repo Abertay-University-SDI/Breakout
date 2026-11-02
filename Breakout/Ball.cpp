@@ -8,6 +8,23 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Cyan);
     _sprite.setPosition(0, 300);
+
+    _spriteTrail.resize(NUM_TRAIL_ELEMENTS);
+    for (int i = 0; i < NUM_TRAIL_ELEMENTS; i++)
+    {
+        _spriteTrail[i].setPosition(_sprite.getPosition());
+
+        float trailPositionFactor = (static_cast<float>(i) / static_cast<float>(NUM_TRAIL_ELEMENTS - 1));
+
+        float scaleDifference = 1.0f - TRAIL_END_SCALE;
+        _spriteTrail[i].setRadius(RADIUS * (1.0f - (trailPositionFactor * scaleDifference)));
+
+        sf::Color colour;
+        colour.r = ((TRAIL_END_COLOUR.r - _sprite.getFillColor().r) * trailPositionFactor) + _sprite.getFillColor().r;
+        colour.g = ((TRAIL_END_COLOUR.g - _sprite.getFillColor().g) * trailPositionFactor) + _sprite.getFillColor().g;
+        colour.b = ((TRAIL_END_COLOUR.b - _sprite.getFillColor().b) * trailPositionFactor) + _sprite.getFillColor().b;
+        _spriteTrail[i].setFillColor(colour);
+    }
 }
 
 Ball::~Ball()
@@ -16,6 +33,19 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+    float distance = std::hypot(
+        _sprite.getPosition().x - _spriteTrail[0].getPosition().x,
+        _sprite.getPosition().y - _spriteTrail[1].getPosition().y
+    );
+    if (distance > TRAIL_SPACING)
+    {
+        for (int i = NUM_TRAIL_ELEMENTS - 1; i > 0; i--)
+        {
+            _spriteTrail[i].setPosition(_spriteTrail[i - 1].getPosition());
+        }
+        _spriteTrail[0].setPosition(_sprite.getPosition());
+    }
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -94,6 +124,10 @@ void Ball::update(float dt)
 
 void Ball::render()
 {
+    for (int i = NUM_TRAIL_ELEMENTS - 1; i >= 0; i--)
+    {
+        _window->draw(_spriteTrail[i]);
+    }
     _window->draw(_sprite);
 }
 

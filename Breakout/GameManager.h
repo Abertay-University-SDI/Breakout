@@ -19,21 +19,33 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void handleEvent(sf::Event event);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+    void incrementScore(int scoreToAdd);
+    int getScore();
 
+private:
+    void _serializeLeaderboard();
+    void _deserializeLeaderboard();
 
 private:
     bool _pause;
     float _pauseHold;
     float _time;
     float _timeLastPowerupSpawned;
+    float _levelCurrentWaitTimeSeconds;
+    int _score;
     int _lives;
     bool _levelComplete;
+    bool _gameover;
+    bool _awaitingNameInput;
+    bool _backspaceKeyHeld; // Should have an inputManager which tracks for individual keys, this is a temporay solution
+    std::string _inputString;
     std::pair<POWERUPS, float> _powerupInEffect;
 
     sf::Font _font;
@@ -46,6 +58,11 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    std::vector<std::pair<std::string, int>> leaderboard; // TODO: There is likely a better data structure for leaderboards that can be used instead. Something that orders by score.
+
+    std::mt19937 _levelRandomNumberGenerator; // Primarily for use with generating a level with a fixed seed so players will have the same sequence of levels, however other game events like powerups can stay random between sessions.
+    const int _levelRandomNumberGeneratorSeed = 0; // Can change this if the level generation sequence isn't suitable (e.g. first/second level is too difficult or easy).
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
