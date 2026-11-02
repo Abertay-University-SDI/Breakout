@@ -61,12 +61,11 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
 	case multiBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("multi " + oss.str());
+		_powerupText.setString("multiball");
 		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
 	case none:
 		_powerupText.setString("");
-		
 		break;
 	}
 }

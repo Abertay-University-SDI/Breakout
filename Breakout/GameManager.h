@@ -28,7 +28,7 @@ public:
 
     const std::vector<Ball*>& getBallsVector() const;
     void destroyBall(Ball*);
-    void setUsedMulti();
+    void activateMultiball();
 
 private:
     bool _pause;
@@ -46,7 +46,6 @@ private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
-    Ball* _ball2; //test
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;

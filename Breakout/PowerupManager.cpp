@@ -1,8 +1,8 @@
 #include "PowerupManager.h"
+#include "GameManager.h"
 
-
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, std::vector<Ball*>& balls)
-    : _window(window), _paddle(paddle), _balls(balls), _rng(std::random_device{}())
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, std::vector<Ball*>& balls, GameManager* gameManager)
+    : _window(window), _paddle(paddle), _balls(balls), _gameManager(gameManager), _rng(std::random_device{}())
 {
 }
 
@@ -96,6 +96,11 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
+            if (_powerupInEffect->first == multiBall)
+            {
+                _gameManager->activateMultiball();
+            }
+
             powerup->setAlive(false);
         }
     }

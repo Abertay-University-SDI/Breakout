@@ -21,12 +21,11 @@ void GameManager::initialize()
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ballsVector);
+    _powerupManager = new PowerupManager(_window, _paddle, _ballsVector, this);
     _ui = new UI(_window, _lives, this);
-
-    _ball2 = new Ball(_window, 500.0f, this); //test
+    
+    // Add original ball to vector
     _ballsVector.push_back(_ball);
-    _ballsVector.push_back(_ball2);
 
 
     // Create bricks
@@ -39,10 +38,6 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
-    if (_powerupInEffect.first == multiBall )
-    {
-
-    }
 
     if (_lives <= 0)
     {
@@ -116,9 +111,9 @@ void GameManager::destroyBall(Ball* ball)
     }
 }
 
-void GameManager::setUsedMulti()
+void GameManager::activateMultiball()
 {
-    _usedMulti = true;
+    _ballsVector.push_back(new Ball(_window, 400.f, this));
 }
 
 void GameManager::render()
