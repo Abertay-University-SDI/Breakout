@@ -14,11 +14,11 @@ enum POWERUPS
 // Window settings
 constexpr unsigned int WINDOW_WIDTH = 800;
 constexpr unsigned int WINDOW_HEIGHT = 600;
-constexpr const char* WINDOW_TITLE = "Game";
+constexpr const char* WINDOW_TITLE = "Breakout Game";
 
 // Paddle settings
 constexpr float PADDLE_WIDTH = 150.0f;
-constexpr float PADDLE_HEIGHT = 20.0f;
+constexpr float PADDLE_HEIGHT = 50.0f;
 constexpr float PADDLE_SPEED = 300.0f;
 
 // Ball settings

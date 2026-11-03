@@ -4,8 +4,10 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 
 ## Controls
 
-A/D to move the paddle right and left.
+A/D & Left/Right to move the paddle right and left.
 P to pause.
+Space when ball is on parry line to parry.
+R to restart when gameover.
 
 ## Powerups
 
@@ -30,10 +32,17 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Sounds with increasing tone between bounces.
 * Implement commentary with calls to an LLM such as Ollama
 
-# Time Details and Changelist
-_TO DO_
+## Time Details and Changelist
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+* Multiple Spawn Positions - ~ 40 Minutes (only took this long as I was still reading through the code)
+* Arrow Key Controls - ~ 10 Minutes
+* Camera + Screen Shake - ~ 30 Minutes
+* Levels - ~ 30 Mins
+* Paddle "Sprint" - ~ 5 Minutes
+* Parry - ~ 50 Minutes
+* Sprites ~ 1Hour 30 Minutes
+
+* Total - ~ 4HR 5Mins
 
 ---
 

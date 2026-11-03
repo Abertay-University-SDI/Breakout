@@ -4,10 +4,16 @@
 BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
 {
+    _brickTexture.loadFromFile("textures/brick.png");
+
+    _popBuffer.loadFromFile("sfx/popsound.mp3");
+    _popSound = new sf::Sound(_popBuffer);
+    _popSound->setVolume(40);
 }
 
-void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing)
+void BrickManager::createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing, int level)
 {
+  
     float leftEdge;
     if (cols % 2 == 0) 
         leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
@@ -33,6 +39,8 @@ void BrickManager::render()
 int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 {
     int collisionResponse = 0;  // set to 1 for horizontal collision and 2 for vertical.
+    _randPitch = 0.75 + (static_cast <float>(rand() / (static_cast <float> (RAND_MAX / 0.75 - 1.25)))); //0.75 + (random num between range)
+
     for (auto& brick : _bricks) {
         if (!brick.getBounds().intersects(ball.getGlobalBounds())) continue;    // no collision, skip.
 
@@ -48,6 +56,8 @@ int BrickManager::checkCollision(sf::CircleShape& ball, sf::Vector2f& direction)
 
         // Mark the brick as destroyed (for simplicity, let's just remove it from rendering)
         // In a complete implementation, you would set an _isDestroyed flag or remove it from the vector
+        _popSound->setPitch(_randPitch);
+        _popSound->play();
         brick = _bricks.back();
         _bricks.pop_back();
         break;

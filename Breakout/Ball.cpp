@@ -5,9 +5,19 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
+    _ballTexture.loadFromFile("textures/ball.png");
+
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
-    _sprite.setPosition(0, 300);
+    _sprite.setTexture(&_ballTexture);
+    _sprite.setFillColor(sf::Color::White);
+    
+    randomSpawn(_sprite); //sets up spawn values that we want to be random
+    _window->setKeyRepeatEnabled(false);
+
+    _impactBuffer.loadFromFile("sfx/impact.mp3");
+    _impactSound = new sf::Sound(_impactBuffer);
+    _impactSound->setVolume(30);
+
 }
 
 Ball::~Ball()
@@ -16,6 +26,12 @@ Ball::~Ball()
 
 void Ball::update(float dt)
 {
+ 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        // timer for parry window.
+        _timeHeld += dt;
+    }
+
     // check for powerup, tick down or correct
     if (_timeWithPowerupEffect > 0.f)
     {
@@ -28,7 +44,7 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(sf::Color::White);  // back to normal colour.
         }        
     }
 
@@ -62,9 +78,12 @@ void Ball::update(float dt)
     // lose life bounce
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
+        _sprite.setPosition(500, 300);
+        _direction = { 0, 1 };
         _gameManager->loseLife();
+        _parrymult = 1;
+        _parryhits = 0;
+        setVelocity(_parrymult, 3);
     }
 
     // collision with paddle
@@ -77,6 +96,49 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+    }
+
+    if (_justParried) {
+        _parryTimer += dt;
+        if (_parryTimer > 3) {
+            _justParried = false;
+            _parrymult = 1;
+            _parryhits = 0;
+        }
+    }
+
+    // collision with parry window
+    if (_sprite.getGlobalBounds().intersects(_gameManager->getParry()->getBounds())) 
+    {   
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            _justParried = true;
+            _parrymult += 1;
+            _parryTimer = 0;
+            _parryhits += 1;
+            if (_timeHeld > 0.1) {
+                
+            }
+            else {
+                //parry box collision
+                _randPitch = 0.75 + (static_cast <float>(rand() / (static_cast <float> (RAND_MAX / 0.75 - 1.25)))); //0.75 + (random num between range)
+                _impactSound->setPitch(_randPitch);
+                _impactSound->play();
+
+                (_direction.y *= -1); // Bounce vertically
+                _sprite.setPosition(_sprite.getPosition().x, _gameManager->getParry()->getBounds().top - 2 * RADIUS);
+                setVelocity(_parrymult, 3);
+                if (_parryhits > 3) {
+                    setFireBall(5);
+                }
+            }
+        }
+    }
+
+    // reset parry window if space is not being pressed
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    {
+        _timeHeld = 0;
     }
 
     // collision with bricks
@@ -113,4 +175,31 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::randomSpawn(sf::CircleShape &_sprite) {
+
+    //a vector of pairs that contains ball spawn details (x pos, direction)
+    std::vector<std::pair<float, float>> spawnVec = {
+        {100, 1}, //left
+        {490, 0}, //middle
+        {880, -1} //right
+    };
+
+    srand(time(0)); //setting seed value to get random vals each time game is run
+    int randSpawn = (rand() % 3); //getting a random value between 0 and 3
+
+    //setting position and direction of the ball based off of random spawnVec values
+    _sprite.setPosition(spawnVec[randSpawn].first, 300);
+    _direction.x = { spawnVec[randSpawn].second };
+    
+    //debuggin
+    std::cout << "X Coord: " << spawnVec[randSpawn].first << "\n";
+    std::cout << "X Dir: " << spawnVec[randSpawn].second << "\n";
+    std::cout << "Random Number: " << randSpawn << "\n";
+}
+
+sf::FloatRect Ball::getBounds() const
+{
+    return _sprite.getGlobalBounds();
 }
