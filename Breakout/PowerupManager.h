@@ -12,12 +12,13 @@
 #include "PowerupFireBall.h"
 #include "Paddle.h"
 #include "Ball.h"
+#include "Camera.h"
 
 
 class PowerupManager
 {
 public:
-    PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
+    PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball, Camera* camera);
     ~PowerupManager();
 
     void update(float dt);
@@ -31,6 +32,7 @@ private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
+    Camera* _camera;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
     std::mt19937 _rng; // mersenne twister

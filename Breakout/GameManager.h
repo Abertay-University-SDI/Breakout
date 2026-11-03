@@ -7,6 +7,7 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "Camera.h"
 
 
 
@@ -19,6 +20,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void gainLife();
+    void comboUpdate(std::string comboNum, int size);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -36,6 +39,8 @@ private:
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
+    float tempShake;
+
     sf::Font _font;
     sf::Text _masterText;
 
@@ -46,6 +51,7 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+    Camera* _camera;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

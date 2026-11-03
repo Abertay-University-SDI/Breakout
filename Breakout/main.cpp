@@ -25,7 +25,7 @@ int main()
 
         gameManager.update(deltaTime);
 
-        window.clear();
+        window.clear(sf::Color(189, 224, 254));
         gameManager.render();
         window.display();
     }

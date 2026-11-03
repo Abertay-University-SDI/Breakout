@@ -1,8 +1,8 @@
 #include "PowerupManager.h"
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball), _rng(std::random_device{}())
+PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball, Camera* camera)
+    : _window(window), _paddle(paddle), _ball(ball), _camera(camera), _rng(std::random_device{}())
 {
 }
 
@@ -82,7 +82,6 @@ void PowerupManager::spawnPowerup()
         _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, spawnX));
         break;
     }
-
 }
 
 void PowerupManager::checkCollision()
@@ -94,6 +93,7 @@ void PowerupManager::checkCollision()
         {
             _powerupInEffect = powerup->applyEffect();
             powerup->setAlive(false);
+            _camera->shake();
         }
     }
 }
