@@ -7,6 +7,8 @@
 #include "PowerupManager.h"
 #include "MessagingSystem.h"
 #include "UI.h"
+#include "VFX.h"
+#include "SoundManager.h"
 
 
 
@@ -14,6 +16,7 @@ class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
     void initialize();
+    void reset();
     void update(float dt);
     void loseLife();
     void render();
@@ -22,6 +25,7 @@ public:
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
+	SoundManager* getSoundManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
@@ -41,12 +45,20 @@ private:
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
-    Ball* _ball;
+	std::vector<Ball*> _balls;
     BrickManager* _brickManager;
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
+    SoundManager* _soundManager;
     UI* _ui;
+	VFX* _vfx;
+
+    sf::View _camera;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn
+    float _powerupFrequency = 7.5f;
+    int _powerupSpawnChance = 100;
+
+    int _selectedSetting = 0;
+    float _settingsHold = 0.0f;
 };

@@ -4,8 +4,9 @@ W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 
 ## Controls
 
-A/D to move the paddle right and left.
+Mouse to move the paddle right and left.
 P to pause.
+R to reset.
 
 ## Powerups
 
@@ -31,10 +32,14 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
-
+* 27/10/2026 - added screenshake on loss of life (30 mins)
+* 27/10/2026 - added mouse control to paddle (10 mins)
+* 27/10/2026 - added settings on pause for powerup modification (20 mins)
+* 27/10/2026 - BallSplitting powerup (2 hours)
+* 27/10/2026 - Play sound on block hit (20 mins)
+* 28/10/2026 - Add trail on ball (50 mins)
+* 28/10/2026 - Reset game on r when death or win (10 mins)
 ---
 
 ### Change log
