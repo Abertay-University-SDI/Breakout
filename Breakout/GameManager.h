@@ -14,6 +14,8 @@
 #include <ctime>
 #include <iostream>
 
+#include <SFML/Audio/Music.hpp>
+
 
 class GameManager {
 public:
@@ -58,6 +60,7 @@ private:
     sf::Text _levelText;
     sf::RectangleShape _background;
     sf::Texture _bgTexture;
+    sf::Image _windowIcon;
 
     sf::RenderWindow* _window;
     Paddle* _paddle;
@@ -68,6 +71,9 @@ private:
     UI* _ui;
     Camera* _cam;
     Parry* _parry;
+
+    //audio
+    sf::Music _bgMusic;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

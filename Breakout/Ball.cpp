@@ -13,6 +13,11 @@ Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     
     randomSpawn(_sprite); //sets up spawn values that we want to be random
     _window->setKeyRepeatEnabled(false);
+
+    _impactBuffer.loadFromFile("sfx/impact.mp3");
+    _impactSound = new sf::Sound(_impactBuffer);
+    _impactSound->setVolume(30);
+
 }
 
 Ball::~Ball()
@@ -105,6 +110,7 @@ void Ball::update(float dt)
     // collision with parry window
     if (_sprite.getGlobalBounds().intersects(_gameManager->getParry()->getBounds())) 
     {   
+        
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             _justParried = true;
             _parrymult += 1;
@@ -114,6 +120,11 @@ void Ball::update(float dt)
                 
             }
             else {
+                //parry box collision
+                _randPitch = 0.75 + (static_cast <float>(rand() / (static_cast <float> (RAND_MAX / 0.75 - 1.25)))); //0.75 + (random num between range)
+                _impactSound->setPitch(_randPitch);
+                _impactSound->play();
+
                 (_direction.y *= -1); // Bounce vertically
                 _sprite.setPosition(_sprite.getPosition().x, _gameManager->getParry()->getBounds().top - 2 * RADIUS);
                 setVelocity(_parrymult, 3);

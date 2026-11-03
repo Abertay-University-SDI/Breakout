@@ -4,6 +4,9 @@
 #include <ctime>
 #include <iostream>
 
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
+
 class GameManager;  // forward declaration
 
 class Ball {
@@ -35,6 +38,10 @@ private:
 
     GameManager* _gameManager;  // Reference to the GameManager
 
+    //sound additions
+    sf::SoundBuffer _impactBuffer;
+    sf::Sound* _impactSound;
+    float _randPitch = 1;
 
     static constexpr float RADIUS = 10.0f;      
     static constexpr float VELOCITY = 350.0f;   // for reference.

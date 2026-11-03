@@ -8,6 +8,8 @@ GameManager::GameManager(sf::RenderWindow* window)
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _cam(nullptr), _parry(nullptr)
 {
+    _windowIcon.loadFromFile("textures/ball.png");
+
     _font.loadFromFile("font/montS.ttf");
 
     _bgTexture.loadFromFile("textures/bgfull.png");
@@ -31,6 +33,14 @@ GameManager::GameManager(sf::RenderWindow* window)
     _levelText.setPosition(window->getSize().x - 200, 25);
     _levelText.setCharacterSize(48);
     _levelText.setFillColor(sf::Color::Yellow);
+
+    window->setTitle("the dark souls of breakout games");
+    window->setIcon(_windowIcon.getSize().x, _windowIcon.getSize().y, _windowIcon.getPixelsPtr());
+
+    //audio
+    _bgMusic.openFromFile("sfx/bgmusic.mp3");
+    _bgMusic.setVolume(30);
+    _bgMusic.setLoop(true);
 }
 
 void GameManager::initialize()
@@ -46,6 +56,9 @@ void GameManager::initialize()
 
     // Create bricks
     _brickManager->createBricks(_brickRows[_currentLevel], _brickCols[_currentLevel], _brickWidth[_currentLevel], _brickHeight[_currentLevel], _brickSpacing[_currentLevel], _currentLevel);
+
+    //play bg music
+    _bgMusic.play();
 }
 
 void GameManager::update(float dt)
