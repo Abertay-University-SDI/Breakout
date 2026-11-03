@@ -14,6 +14,7 @@ public:
 	~UI();
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
+	void updatePowerupIcon(const std::pair<POWERUPS, float>);
 	void lifeLost(int lives);
 	void render();
 
@@ -26,7 +27,12 @@ private:
 
 	std::vector<sf::CircleShape> _lives;
 
+	sf::CircleShape _powerupIcon;
+
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
+
+	static constexpr float FLASHING_DURATION = 3.0f;
+	static constexpr int NUMBER_OF_FLASHES = 3;
 };
 

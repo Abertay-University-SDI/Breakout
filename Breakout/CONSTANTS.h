@@ -45,6 +45,9 @@ constexpr float PAUSE_TIME_BUFFER = 0.5f;
 constexpr float POWERUP_FREQUENCY = 7.5f;
 constexpr int INITIAL_LIVES = 3;
 
+// Math constants
+constexpr float PI = 3.14159265359f;
+
 // Colour Palette
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.

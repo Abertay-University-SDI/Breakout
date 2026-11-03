@@ -36,7 +36,8 @@ void GameManager::update(float dt)
     //_ui->updatePowerupText(_powerupInEffect);
     //_powerupInEffect.second -= dt;  // Why would this be done if paused?
 
-    _ui->updatePowerupText(_effectManager->getFirstActivePowerup()); // For now do this until I implement multiple effects displayed on the UI.
+    //_ui->updatePowerupText(_effectManager->getFirstActivePowerup()); // For now do this until I implement multiple effects displayed on the UI.
+    _ui->updatePowerupIcon(_effectManager->getFirstActivePowerup());
 
     if (_lives <= 0)
     {

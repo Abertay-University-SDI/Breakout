@@ -72,19 +72,19 @@ void PowerupManager::spawnPowerup()
     switch (rand() % 5)
     {
     case 0:
-        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {bigPaddle, 5.0f, paddleEffectsColour})); // Big Paddle
+        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {bigPaddle, 10.0f, paddleEffectsColour})); // Big Paddle
         break;
     case 1:
-        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {slowBall, 5.0f, ballEffectsColour}));  // Slow Ball
+        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {slowBall, 10.0f, ballEffectsColour}));  // Slow Ball
         break;
     case 2:
-        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {fastBall, 5.0f, ballEffectsColour}));  // Fast Ball
+        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {fastBall, 10.0f, ballEffectsColour}));  // Fast Ball
         break;
     case 3:
-        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {smallPaddle, 5.0f, paddleEffectsColour}));   // Small Paddle
+        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {smallPaddle, 10.0f, paddleEffectsColour}));   // Small Paddle
         break;
     case 4:
-        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {fireBall, 5.0f, ballEffectsColour}));  // Fire Ball
+        _powerups.push_back(new PowerupBase(_window, _paddle, _ball, spawnX, {fireBall, 10.0f, ballEffectsColour}));  // Fire Ball
         break;
     }
 
