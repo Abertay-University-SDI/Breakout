@@ -25,7 +25,7 @@ void GameManager::initialize()
     _powerupManager = new PowerupManager(_window, _paddle, _balls);
     _ui = new UI(_window, _lives, this);
     _soundManager = new SoundManager();
-
+	_soundManager->resetPitch();
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -186,7 +186,7 @@ void GameManager::update(float dt)
 	_paddle->setPosition(static_cast<float>(position.x) - _paddle->getBounds().width / 2.0f);
 
     _vfx->Update(dt);
-
+	_soundManager->update(dt);
     // update everything 
     _paddle->update(dt);
     for (Ball* _b : _balls)
@@ -215,6 +215,7 @@ void GameManager::update(float dt)
         {
             Ball* newBall = new Ball(_window, 400.0f, this);
             _balls.push_back(newBall);
+			_soundManager->resetPitch();
         }
     }
 

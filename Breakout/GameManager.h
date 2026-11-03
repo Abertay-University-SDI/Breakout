@@ -56,8 +56,8 @@ private:
     sf::View _camera;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
-    float _powerupFrequency = .5f;
-    int _powerupSpawnChance = 70;
+    float _powerupFrequency = 7.5f;
+    int _powerupSpawnChance = 100;
 
     int _selectedSetting = 0;
     float _settingsHold = 0.0f;
