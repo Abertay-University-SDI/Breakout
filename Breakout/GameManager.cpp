@@ -22,7 +22,7 @@ void GameManager::initialize()
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this, _camera); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _powerupManager = new PowerupManager(_window, _paddle, _ball, _camera);
     _ui = new UI(_window, _lives, this);
 
     // Create bricks
@@ -34,6 +34,11 @@ void GameManager::update(float dt)
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
+
+    //std::cout << _camera->getShakeVal();
+
+    _ui->updateShakeValText(std::to_string(_camera->getShakeVal()));
+
     
 
     if (_lives <= 0)

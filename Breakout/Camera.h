@@ -14,6 +14,9 @@ public:
     void render();
     void shake();
 
+    //temp
+    float getShakeVal();
+
     float _shakeVal;
     sf::Vector2f _offset;
     float _offsetRot;

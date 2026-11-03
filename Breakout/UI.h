@@ -19,6 +19,7 @@ public:
 	void lifeLost(int lives);
 	void render();
 	void lifeGain(int lives);
+	void updateShakeValText(std::string shakeVal);
 
 private:
 	GameManager* _gameManager;
@@ -28,6 +29,7 @@ private:
 	sf::Text _powerupText;
 	sf::Text _comboText;
 	sf::Text _newLifeText;
+	sf::Text _shakeValText;
 
 	std::vector<sf::CircleShape> _lives;
 

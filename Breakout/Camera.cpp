@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <iostream>
 
 Camera::Camera(sf::RenderWindow* window, GameManager* gameManager)
     : _window(window), _gameManager(gameManager)
@@ -26,7 +27,7 @@ void Camera::update(float dt)
     }
 
     //juice effects
-    _offset.x = ((rand() % 100) - 50) * _shakeVal; //random num between -10 and 10
+    _offset.x = ((rand() % 100) - 50) * _shakeVal; //random num between -50 and 50
     _offset.y = ((rand() % 100) - 50) * _shakeVal;
     _offsetRot = ((rand() % 1) - 0.5) * _shakeVal; //random num between -0.5 and 0.5
 
@@ -35,7 +36,8 @@ void Camera::update(float dt)
     _window->setView(_view);
 
     //time += sf::seconds(dt);
-    _shakeVal -= 0.1;
+    _shakeVal -= 0.07;
+    std::cout << _shakeVal << std::endl;
 }
 
 void Camera::render()
@@ -47,4 +49,10 @@ void Camera::shake()
 {
     _shakeVal += 1;
     //time = sf::seconds(0);
+}
+
+float Camera::getShakeVal()
+{
+    //std::cout << _shakeVal;
+    return _shakeVal;
 }

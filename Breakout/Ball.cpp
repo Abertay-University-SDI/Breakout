@@ -91,14 +91,14 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
-        onWallHit();
+        camShake();
         _comboNum++;
         _comboSize += 3;
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
-        onWallHit();
+        camShake();
         _comboNum++;
         _comboSize += 3;
     }
@@ -109,6 +109,7 @@ void Ball::update(float dt)
         _gameManager->gainLife();
         _comboNum = 0;
         _comboSize = 50;
+        camShake();
     }
     else
     {
@@ -139,7 +140,8 @@ void Ball::setFireBall(float duration)
     _timeWithPowerupEffect = 0.f;    
 }
 
-void Ball::onWallHit()
+
+void Ball::camShake()
 {
     _camera->shake();
 }

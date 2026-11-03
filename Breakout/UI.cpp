@@ -35,6 +35,11 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_newLifeText.setPosition(800, 700);
 	_newLifeText.setFillColor(sf::Color::Color(162, 210, 255));
 	_newLifeText.setFont(_font);
+
+	_shakeValText.setCharacterSize(50);
+	_shakeValText.setPosition(20, 700);
+	_shakeValText.setFillColor(sf::Color::Color(162, 210, 255));
+	_shakeValText.setFont(_font);
 }
 
 UI::~UI()
@@ -89,6 +94,11 @@ void UI::updateComboText(std::string combo, int size)
 	_comboText.setString(combo);
 }
 
+void UI::updateShakeValText(std::string shakeVal)
+{
+	_shakeValText.setString(shakeVal);
+}
+
 void UI::lifeLost(int lives)
 {
 	if (lives < 3)
@@ -105,6 +115,7 @@ void UI::render()
 {
 	_window->draw(_powerupText);
 	_window->draw(_comboText);
+	//_window->draw(_shakeValText);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);

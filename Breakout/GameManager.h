@@ -39,6 +39,8 @@ private:
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
 
+    float tempShake;
+
     sf::Font _font;
     sf::Text _masterText;
 
