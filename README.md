@@ -31,9 +31,12 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
-
 <Add information to this section about the time you've taken for this task along with a professional changelist.>
+
+26/10/2026 16:00-17:00 : Initial pull request. Read through the code and created a list of things that I want to do. Will probably have to look at some SFML documentation to implement some of this.
+27/10/2026 16:00-17:30 : Implemented basic Camera Manager that offsets the camera when the ball hits a wall.
+27/10/2026 20:00-22:00 : Making no headway. Tried implementing a better way of organizing the powerups but it didn't work so I scrapped it.
+27/10/2026 22:00-22:30 : Created a basic effects class to hopefully work on tomorrow to create a better way of managing active powerups.
 
 ---
 

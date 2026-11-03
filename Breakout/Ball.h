@@ -13,7 +13,11 @@ public:
     void update(float dt);
     void render();
     void setVelocity(float coeff, float duration);
+    void setVelocity(float coeff);
     void setFireBall(float duration);
+    void setFireBall(bool isFireBall);
+
+    void setColour(sf::Color givenColour);
 
 private:
     sf::CircleShape _sprite;

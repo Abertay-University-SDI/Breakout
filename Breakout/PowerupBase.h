@@ -6,16 +6,25 @@
 #include "Ball.h"
 #include <vector>
 
+struct PowerupData
+{
+    POWERUPS type;
+    float duration;
+    sf::Color colour;
+    //std::string icon;   // Later
+};
+
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX);
+    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX, PowerupData data);
     virtual ~PowerupBase();
 
     void update(float dt);
     void render();
 
-    virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
+    //virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect. NOTE: Gonna change this.
+    std::pair<POWERUPS, float> applyEffect();
     bool checkCollisionWithPaddle();
 
     void setAlive(bool alive);
@@ -33,6 +42,8 @@ protected: // Protected so derived classes can access these members
     Paddle* _paddle;
     Ball* _ball;
     sf::Vector2f _direction;
+
+    PowerupData _powerupData;
 
     // Render
     sf::CircleShape _sprite;

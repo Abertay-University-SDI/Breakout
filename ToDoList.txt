@@ -1,0 +1,12 @@
+# Breakout - To Do List
+- Camera shake (Camera Manager / possible Custom Renderer)
+- Ball Trail
+- Better UI
+	- Powerup symbols on powerup ball
+	- Powerup symbols instead of Powerup Text (top-right)
+	- Powerup symbols flashes when about to run out
+	- Maybe the name of the powerup flashes on screen when collected
+- New powerups
+	- Multiball: spawn multiple balls that fire out of the main ball in different directions (like a stealth bomber run)
+	- Homing Missile ball: auto aims to nearest brick.
+- Multiple powerups active at the same time

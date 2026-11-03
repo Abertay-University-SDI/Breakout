@@ -17,28 +17,28 @@ Ball::~Ball()
 void Ball::update(float dt)
 {
     // check for powerup, tick down or correct
-    if (_timeWithPowerupEffect > 0.f)
-    {
-        _timeWithPowerupEffect -= dt;
-    }
-    else
-    {
-        if (_velocity != VELOCITY)
-            _velocity = VELOCITY;   // reset speed.
-        else
-        {
-            setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
-        }        
-    }
+    //if (_timeWithPowerupEffect > 0.f)
+    //{
+    //    _timeWithPowerupEffect -= dt;
+    //}
+    //else
+    //{
+    //    if (_velocity != VELOCITY)
+    //        _velocity = VELOCITY;   // reset speed.
+    //    else
+    //    {
+    //        setFireBall(0);    // disable fireball
+    //        _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+    //    }        
+    //}
 
     // Fireball effect
-    if (_isFireBall)
-    {
-        // Flickering effect
-        int flicker = rand() % 50 + 205; // Random value between 205 and 255
-        _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
-    }
+    //if (_isFireBall)
+    //{
+    //    // Flickering effect
+    //    int flicker = rand() % 50 + 205; // Random value between 205 and 255
+    //    _sprite.setFillColor(sf::Color(flicker, flicker / 2, 0)); // Orange flickering color
+    //}
 
     // Update position with a subtle floating-point error
     _sprite.move(_direction * _velocity * dt);
@@ -51,12 +51,22 @@ void Ball::update(float dt)
     if ((position.x >= windowDimensions.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+
+        if (_gameManager->getCameraManager())
+        {
+            _gameManager->getCameraManager()->shake(0.1f, 10.0f);
+        }
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+
+        if (_gameManager->getCameraManager())
+        {
+            _gameManager->getCameraManager()->shake(0.1f, 10.0f);
+        }
     }
 
     // lose life bounce
@@ -103,6 +113,11 @@ void Ball::setVelocity(float coeff, float duration)
     _timeWithPowerupEffect = duration;
 }
 
+void Ball::setVelocity(float coeff)
+{
+    _velocity = coeff * VELOCITY;
+}
+
 void Ball::setFireBall(float duration)
 {
     if (duration) 
@@ -113,4 +128,14 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::setFireBall(bool isFireBall)
+{
+    _isFireBall = isFireBall;
+}
+
+void Ball::setColour(sf::Color givenColour)
+{
+    _sprite.setFillColor(givenColour);
 }

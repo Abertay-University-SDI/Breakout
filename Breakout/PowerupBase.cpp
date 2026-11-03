@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
+PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX, PowerupData data)
     : _time(0.0f) // Initialize the time variable
 {
     _window = window;
@@ -11,11 +11,14 @@ PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, f
     _isAlive = true;
     _ball = ball;
 
+    _powerupData = data;
+
     // Initial position and direction with some variability
     float initialX = spawnX;
     _sprite.setPosition(initialX, 5);
     _direction = { 0.0f, FLOAT_DOWN_SPEED };
 
+    _sprite.setFillColor(_powerupData.colour);
 }
 
 PowerupBase::~PowerupBase()
@@ -52,6 +55,11 @@ void PowerupBase::update(float dt)
 void PowerupBase::render()
 {
     _window->draw(_sprite);
+}
+
+std::pair<POWERUPS, float> PowerupBase::applyEffect()
+{
+    return std::pair<POWERUPS, float>(_powerupData.type, _powerupData.duration);
 }
 
 bool PowerupBase::checkCollisionWithPaddle()
