@@ -30,17 +30,32 @@ void PaddleBrain::handleControls(float dt)
 	if (thinking)
 		return;
 
-    std::string jsonData = std::format(R"(
-        {{
-			"model": "d1",
-            "state": {{ 
-						"info": "You are playing breakout",
-						"boardstate": {}
-					}},
-            "questions": {{
-              "q":  {{"type": "noul", "instructions": "should you go right?"}}
-            }}
-        }})", gameState.dump());
+	nlohmann::json jsonDataFull;
+	jsonDataFull["model"] = "d1";
+	jsonDataFull["state"] =
+	{
+		{ "info", "You are playing atari breakout" },
+		{ "boardstate", gameState }
+	};
+	jsonDataFull["questions"] =
+	{
+		{
+			"left",
+			{
+				{ "type", "noul"},
+				{ "instructions", "Save the ball! Should the paddle move in the negative direction to save the ball? Remember, you don't want the ball falling off screen." }
+			}
+		},
+		{
+			"right",
+			{
+				{ "type", "noul"},
+				{ "instructions", "Save the ball! Should the paddle move in the positive direction to save the ball? Remember, you don't want the ball falling off screen." }
+			}
+		}
+	};
+
+	std::string jsonData = jsonDataFull.dump();
 
 	thinking = true;
 	std::thread worker([this, jsonData]()
@@ -61,9 +76,9 @@ void PaddleBrain::handleControls(float dt)
 		if (res->status == 200)
 		{
 			std::cout << j << std::endl;
-			std::cout << j["answers"]["q"] << std::endl;
+			this->dir = j["answers"]["right"]["noul"].get<float>() - j["answers"]["left"]["noul"].get<float>();
 			std::cout << "Took " << ms.count() << " ms\n";
-			this->dir = j["answers"]["q"]["noul"].get<float>() - .5f;
+			this->dir = j["answers"]["right"]["noul"].get<float>() - j["answers"]["left"]["noul"].get<float>();
 		}
 		else
 		{
