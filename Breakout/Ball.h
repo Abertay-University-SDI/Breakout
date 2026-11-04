@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "CONSTANTS.h"
 
 
 class GameManager;  // forward declaration
@@ -12,8 +13,10 @@ public:
     ~Ball();
     void update(float dt);
     void render();
-    void setVelocity(float coeff, float duration);
-    void setFireBall(float duration);
+    void setVelocity(float coeff);
+	void setPower(float value);
+
+	int getBounces() const { return _bounces; }  // Getter for the number of bounces
 
 private:
     sf::CircleShape _sprite;
@@ -21,13 +24,10 @@ private:
     sf::RenderWindow* _window;
     float _velocity;
     bool _isAlive;
-    bool _isFireBall;
+    float _power = BALL_DEFAULT_DAMAGE;
     float _timeWithPowerupEffect;
+	int _bounces = 0;  // Number of bounces since the last power-up effect
 
     GameManager* _gameManager;  // Reference to the GameManager
-
-
-    static constexpr float RADIUS = 10.0f;      
-    static constexpr float VELOCITY = 350.0f;   // for reference.
 };
 
