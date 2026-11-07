@@ -26,6 +26,12 @@ private:
 
 	std::vector<sf::CircleShape> _lives;
 
+	//Powerup bar
+	sf::RectangleShape _powerupBar;
+	sf::RectangleShape _powerupBarBackground;
+	float _powerupBarMaxTime = 0.f;
+	POWERUPS _lastPowerup = none;
+
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;
 };
