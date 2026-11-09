@@ -11,8 +11,16 @@ namespace
 	const float powerupBarY = 50.0f;
 	const float powerupBarWidth = 185.0f;
 	const float powerupBarHeight = 20.0f;
-}
 
+	// Center Pause menu text and labels
+	void centerText(sf::Text& text, float x, float y) {
+
+		const sf::FloatRect bounds = text.getLocalBounds();
+		text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
+		text.setPosition(x, y);
+	}
+
+}
 UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager) 
 	: _window(window), _gameManager(gameManager)
 {
@@ -43,6 +51,54 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	//Powerup bar
 	_powerupBar.setSize({ 0.f, powerupBarHeight });
 	_powerupBar.setPosition(powerupBarX, powerupBarY);
+
+	///INITIALIZE PAUSE MENU
+	const sf::Vector2f win(_window->getSize());
+
+	// Pause menu background
+	_pauseScreen.setSize(win);
+	_pauseScreen.setFillColor(sf::Color(0, 0, 0, 150));
+
+	// Pause menu box
+	const sf::Vector2f menuSize(360.f, 330.f);
+	const float menuTop = (win.y - menuSize.y) / 2.f;
+
+	_pauseMenu.setSize(menuSize);
+	_pauseMenu.setOrigin(menuSize / 2.f);
+	_pauseMenu.setPosition(win / 2.f);
+	_pauseMenu.setFillColor(sf::Color(25, 25, 25, 200));
+	_pauseMenu.setOutlineColor(sf::Color::Cyan);
+	_pauseMenu.setOutlineThickness(4.f);
+
+	// Pause menu text
+	_pauseText.setFont(_font);
+	_pauseText.setString("Paused");
+	_pauseText.setCharacterSize(48);
+	_pauseText.setFillColor(sf::Color::Cyan);
+	centerText(_pauseText, win.x / 2.f, menuTop + 50.f);
+
+	// Pause menu options
+	const char* optionLabels[] = { "Resume", "Restart", "Exit" };
+	const sf::Vector2f optionSize(300.f, 50.f);
+
+	// Create pause menu button and label for each option
+	for (int i = 0; i < static_cast<int>(std::size(optionLabels)); ++i)
+	{
+		sf::RectangleShape button;
+		button.setSize(optionSize);
+		button.setOrigin(optionSize / 2.f);
+		button.setPosition(win.x / 2.f, menuTop + 120.f + i * 70.f);
+		button.setOutlineThickness(2.f);
+		_pauseOptions.push_back(button);
+
+		sf::Text label;
+		label.setFont(_font);
+		label.setString(optionLabels[i]);
+		label.setCharacterSize(24);
+		label.setFillColor(sf::Color::White);
+		centerText(label, button.getPosition().x, button.getPosition().y);
+		_pauseLabels.push_back(label);
+	}
 }
 
 UI::~UI()
@@ -132,4 +188,72 @@ void UI::render()
 	{
 		_window->draw(life);
 	}
+}
+
+// Get the index of the pause option at the given position
+int UI::getPauseAt(sf::Vector2f pos) const
+{
+	for (int i = 0; i < static_cast<int>(_pauseOptions.size()); ++i)
+	{
+		if (_pauseOptions[i].getGlobalBounds().contains(pos))
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+// Update the currently selected pause option based on user input
+void UI::updatePauseOption(int delta)
+{
+	const int count = static_cast<int>(_pauseOptions.size());
+	if (count == 0)
+		return;
+
+	_selectedOption = (_selectedOption + delta % count + count) % count;
+}
+
+// Reset the pause menu to its initial state
+void UI::resetPauseMenu()
+{
+	_selectedOption = 0;
+}
+
+// Render the pause menu
+void UI::renderPauseMenu()
+{
+	// Draw the pause screen and menu
+	_window->draw(_pauseScreen);
+	_window->draw(_pauseMenu);
+	_window->draw(_pauseText);
+
+	for (int i = 0; i < static_cast<int>(_pauseOptions.size()); ++i)
+	{
+		const bool isSelected = (i == _selectedOption);
+		
+		// Set the fill color based on whether the option is selected
+		_pauseOptions[i].setFillColor(isSelected ? sf::Color(100, 100, 100) : sf::Color(50, 50, 50));
+		_pauseOptions[i].setOutlineColor(isSelected ? sf::Color::Cyan : sf::Color::White);
+		_pauseLabels[i].setFillColor(isSelected ? sf::Color::Cyan : sf::Color::White);
+
+		_window->draw(_pauseOptions[i]);
+		_window->draw(_pauseLabels[i]);
+
+	}
+}
+
+// Set the currently selected pause option
+void UI::setPauseOption(int option)
+{
+	if (option >= 0 && option < static_cast<int>(_pauseOptions.size()))
+	{
+		_selectedOption = option;
+	}	
+}
+
+/// Get the currently selected pause option
+PauseOptions UI::getPauseOption() const
+{
+	return static_cast<PauseOptions>(_selectedOption);
 }
