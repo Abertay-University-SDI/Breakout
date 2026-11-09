@@ -52,53 +52,28 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupBar.setSize({ 0.f, powerupBarHeight });
 	_powerupBar.setPosition(powerupBarX, powerupBarY);
 
-	///INITIALIZE PAUSE MENU
+	///INITIALIZE MENU
 	const sf::Vector2f win(_window->getSize());
 
 	// Pause menu background
 	_pauseScreen.setSize(win);
 	_pauseScreen.setFillColor(sf::Color(0, 0, 0, 150));
 
-	// Pause menu box
-	const sf::Vector2f menuSize(360.f, 330.f);
-	const float menuTop = (win.y - menuSize.y) / 2.f;
-
-	_pauseMenu.setSize(menuSize);
-	_pauseMenu.setOrigin(menuSize / 2.f);
-	_pauseMenu.setPosition(win / 2.f);
+	// Pause menu options
 	_pauseMenu.setFillColor(sf::Color(25, 25, 25, 200));
 	_pauseMenu.setOutlineColor(sf::Color::Cyan);
 	_pauseMenu.setOutlineThickness(4.f);
 
-	// Pause menu text
 	_pauseText.setFont(_font);
-	_pauseText.setString("Paused");
 	_pauseText.setCharacterSize(48);
 	_pauseText.setFillColor(sf::Color::Cyan);
-	centerText(_pauseText, win.x / 2.f, menuTop + 50.f);
 
-	// Pause menu options
-	const char* optionLabels[] = { "Resume", "Restart", "Exit" };
-	const sf::Vector2f optionSize(300.f, 50.f);
-
-	// Create pause menu button and label for each option
-	for (int i = 0; i < static_cast<int>(std::size(optionLabels)); ++i)
-	{
-		sf::RectangleShape button;
-		button.setSize(optionSize);
-		button.setOrigin(optionSize / 2.f);
-		button.setPosition(win.x / 2.f, menuTop + 120.f + i * 70.f);
-		button.setOutlineThickness(2.f);
-		_pauseOptions.push_back(button);
-
-		sf::Text label;
-		label.setFont(_font);
-		label.setString(optionLabels[i]);
-		label.setCharacterSize(24);
-		label.setFillColor(sf::Color::White);
-		centerText(label, button.getPosition().x, button.getPosition().y);
-		_pauseLabels.push_back(label);
-	}
+	//Menu Options
+	showMenu("Paused", { 
+		{"Resume", PauseOptions::RESUME}, 
+		{"Restart", PauseOptions::RESTART}, 
+		{"Exit", PauseOptions::EXIT} 
+	});
 }
 
 UI::~UI()
@@ -184,7 +159,7 @@ void UI::render()
 	}
 
 	// Draw lives
-	for (sf::CircleShape life : _lives)
+	for (const sf::CircleShape life : _lives)
 	{
 		_window->draw(life);
 	}
@@ -239,7 +214,6 @@ void UI::renderPauseMenu()
 
 		_window->draw(_pauseOptions[i]);
 		_window->draw(_pauseLabels[i]);
-
 	}
 }
 
@@ -252,8 +226,53 @@ void UI::setPauseOption(int option)
 	}	
 }
 
-/// Get the currently selected pause option
+// Return the currently selected pause option
 PauseOptions UI::getPauseOption() const
 {
-	return static_cast<PauseOptions>(_selectedOption);
+	return _menuOptions.empty() ? PauseOptions::RESUME : _menuOptions[_selectedOption];
+}
+
+// Show menu based on the provided title and entries
+void UI::showMenu(const std::string& title, const std::vector<std::pair<std::string, PauseOptions>>& entries)
+{
+	// Initialize variables for the menu
+	const sf::Vector2f win(_window->getSize());
+	const int count = static_cast<int>(entries.size());
+	const sf::Vector2f menuSize(360.f, 100.f + 60.f * count);
+	const float menuTop = (win.y - menuSize.y) / 2.f;
+
+	// Set up the pause menu background
+	_pauseMenu.setSize(menuSize);
+	_pauseMenu.setOrigin(menuSize / 2.f);
+	_pauseMenu.setPosition(win / 2.f);
+
+	_pauseText.setString(title);
+	centerText(_pauseText, win.x / 2.f, menuTop + 50.f);
+
+	_pauseOptions.clear();
+	_pauseLabels.clear();
+	_menuOptions.clear();	
+
+	// Create new menu options and labels based on the provided entries
+	const sf::Vector2 optionSize(300.f, 50.f);
+	
+	for (int i = 0; i < count; ++i)
+	{
+		sf::RectangleShape button;
+		button.setSize(optionSize);
+		button.setOrigin(optionSize / 2.f);
+		button.setPosition(win.x / 2.f, menuTop + 110.f + i * 60.f);
+		button.setOutlineThickness(2.f);
+		_pauseOptions.push_back(button);
+
+		sf::Text label;
+		label.setFont(_font);
+		label.setString(entries[i].first);
+		label.setCharacterSize(30);
+		centerText(label, button.getPosition().x, button.getPosition().y);
+		_pauseLabels.push_back(label);
+		_menuOptions.push_back(entries[i].second);
+	}
+
+	_selectedOption = 0;
 }

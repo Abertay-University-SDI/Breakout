@@ -28,6 +28,9 @@ public:
 	void setPauseOption(int option);
 	PauseOptions getPauseOption() const;
 
+	//General menu
+	void showMenu(const std::string& title, const std::vector<std::pair<std::string, PauseOptions>>& entries);
+
 private:
 	GameManager* _gameManager;
 	
@@ -51,6 +54,8 @@ private:
 	std::vector<sf::Text> _pauseLabels;
 	int _selectedOption = 0;
 
+	//General menu variables
+	std::vector<PauseOptions> _menuOptions;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;

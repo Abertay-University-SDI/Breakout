@@ -27,7 +27,7 @@ public:
 
 	//Pause Menu functions
     void updatePauseMenu();
-    void setPauseOption();
+    void activatePauseOption();
     void restart();
 
 
@@ -51,7 +51,8 @@ private:
     MessagingSystem* _messagingSystem;
     UI* _ui;
 
-	//Pause menu variables
+	//Menu variables
+	bool _endMenuShown = false;
 	bool lastUp = false, lastDown = false, lastEnter = false, lastClick = false;
 	sf::Vector2i lastMousePos; //Specifically an integer vector for pixel-perfect mouse position
 

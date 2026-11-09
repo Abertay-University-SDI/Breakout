@@ -1,6 +1,6 @@
 #include "GameManager.h"
 #include "Ball.h"
-#include "PowerupManager.h"
+#include "PowerupManager.h" 
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
@@ -8,11 +8,6 @@ GameManager::GameManager(sf::RenderWindow* window)
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
-    _font.loadFromFile("font/montS.ttf");
-    _masterText.setFont(_font);
-    _masterText.setPosition(50, 400);
-    _masterText.setCharacterSize(48);
-    _masterText.setFillColor(sf::Color::Yellow);
 }
 
 void GameManager::initialize()
@@ -30,21 +25,22 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
-    _powerupInEffect = _powerupManager->getPowerupInEffect();
-    _ui->updatePowerupText(_powerupInEffect);
-    _powerupInEffect.second -= dt;
+	// Update the powerup text in the UI based on the current powerup in effect
+	_ui->updatePowerupText(_powerupManager->getPowerupInEffect());
     
-	// check for game over or level complete
-    if (_lives <= 0)
+	//Check for game over or level complete
+    if (_lives <= 0 || _levelComplete)
     {
-        _masterText.setString("Game over.");
+        if (!_endMenuShown)
+        {
+			_ui->showMenu(_lives <= 0 ? "Game Over" : "Level Complete", { 
+                {"Restart", PauseOptions::RESTART}, {"Exit", PauseOptions::EXIT} });
+			_endMenuShown = true;
+        }
+
+        updatePauseMenu();
         return;
-    }
-    if (_levelComplete)
-    {
-        _masterText.setString("Level completed.");
-        return;
-    }
+	}
 
     // Pause Menu
     if (_pauseHold > 0.f) 
@@ -103,7 +99,7 @@ void GameManager::render()
     _window->draw(_masterText);
     _ui->render();
 
-    if (_pause)
+    if (_pause || _endMenuShown)
 		_ui->renderPauseMenu();
 }
 
@@ -156,11 +152,11 @@ void GameManager::updatePauseMenu()
 	lastClick = click; lastMousePos = mousePos;
 
     if (activate)
-        setPauseOption();
+        activatePauseOption();
 }
 
 // Handle the selected pause option
-void GameManager::setPauseOption()
+void GameManager::activatePauseOption()
 {
     switch (_ui->getPauseOption())
     {
@@ -192,6 +188,7 @@ void GameManager::restart()
 
 	//Reset game state
     _pause = false;
+	_endMenuShown = false;
     _time = 0.f;
     _lives = 3;
     _pauseHold = 0.f;
