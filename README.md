@@ -48,7 +48,8 @@ This will include:
 * 2026 - William made it easier again
 
 * 07/11/2026 - Updated UI by including powerup duration bar
-* 09/11/2026 - Created Pause Menu with Resume, Restart, and Exit funcitonality
+* 09/11/2026 - Created Pause Menu with Resume, Restart, and Exit functionality
+* 09/11/2026 - Implemented complete Game Loop using Menu 
 
 ---
 
