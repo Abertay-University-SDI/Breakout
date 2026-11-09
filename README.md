@@ -2,10 +2,12 @@
 
 W Kavanagh & N Merchant. Summer 2024 (last maintained, Oct 26)
 
+Updated by Joel Hunte
+
 ## Controls
 
 A/D to move the paddle right and left.
-P to pause.
+Escape to open Pause Menu
 
 ## Powerups
 
@@ -31,15 +33,22 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
+I plan to give myself a maximum of 8 hours to complete a few QOL updates & additional features
 
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+This will include:
+* Better UI
+* Pause Menu
+* Game Loop
+* More Ball Types
 
 ---
 
 ### Change log
 * 2025 - Naman made it harder
 * 2026 - William made it easier again
+
+* 07/11/2026 - Updated UI by including powerup duration bar
+* 09/11/2026 - Created Pause Menu with Resume, Restart, and Exit funcitonality
 
 ---
 
