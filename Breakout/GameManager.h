@@ -18,13 +18,17 @@ public:
     void loseLife();
     void render();
     void levelComplete();
-    void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
+
+	//Pause Menu functions
+    void updatePauseMenu();
+    void activatePauseOption();
+    void restart();
 
 
 private:
@@ -46,6 +50,11 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+	//Menu variables
+	bool _endMenuShown = false;
+	bool lastUp = false, lastDown = false, lastEnter = false, lastClick = false;
+	sf::Vector2i lastMousePos; //Specifically an integer vector for pixel-perfect mouse position
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

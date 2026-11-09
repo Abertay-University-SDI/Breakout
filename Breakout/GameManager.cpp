@@ -1,6 +1,6 @@
 #include "GameManager.h"
 #include "Ball.h"
-#include "PowerupManager.h"
+#include "PowerupManager.h" 
 #include <iostream>
 
 GameManager::GameManager(sf::RenderWindow* window)
@@ -8,11 +8,6 @@ GameManager::GameManager(sf::RenderWindow* window)
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
-    _font.loadFromFile("font/montS.ttf");
-    _masterText.setFont(_font);
-    _masterText.setPosition(50, 400);
-    _masterText.setCharacterSize(48);
-    _masterText.setFillColor(sf::Color::Yellow);
 }
 
 void GameManager::initialize()
@@ -30,40 +25,40 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
-    _powerupInEffect = _powerupManager->getPowerupInEffect();
-    _ui->updatePowerupText(_powerupInEffect);
-    _powerupInEffect.second -= dt;
+	// Update the powerup text in the UI based on the current powerup in effect
+	_ui->updatePowerupText(_powerupManager->getPowerupInEffect());
     
+	//Check for game over or level complete
+    if (_lives <= 0 || _levelComplete)
+    {
+        if (!_endMenuShown)
+        {
+			_ui->showMenu(_lives <= 0 ? "Game Over" : "Level Complete", { 
+                {"Restart", PauseOptions::RESTART}, {"Exit", PauseOptions::EXIT} });
+			_endMenuShown = true;
+        }
 
-    if (_lives <= 0)
-    {
-        _masterText.setString("Game over.");
+        updatePauseMenu();
         return;
-    }
-    if (_levelComplete)
+	}
+
+    // Pause Menu
+    if (_pauseHold > 0.f) 
+        _pauseHold -= dt;
+
+	// toggle pause
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && _pauseHold <= 0.f)
     {
-        _masterText.setString("Level completed.");
-        return;
+        _pause = !_pause;
+        _pauseHold = PAUSE_TIME_BUFFER;
+
+        if (_pause)
+            _ui->resetPauseMenu();
     }
-    // pause and pause handling
-    if (_pauseHold > 0.f) _pauseHold -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-    {
-        if (!_pause && _pauseHold <= 0.f)
-        {
-            _pause = true;
-            _masterText.setString("paused.");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-        if (_pause && _pauseHold <= 0.f)
-        {
-            _pause = false;
-            _masterText.setString("");
-            _pauseHold = PAUSE_TIME_BUFFER;
-        }
-    }
+
     if (_pause)
     {
+		updatePauseMenu();
         return;
     }
 
@@ -103,6 +98,9 @@ void GameManager::render()
     _powerupManager->render();
     _window->draw(_masterText);
     _ui->render();
+
+    if (_pause || _endMenuShown)
+		_ui->renderPauseMenu();
 }
 
 void GameManager::levelComplete()
@@ -115,3 +113,88 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+
+// Pause Menu controls and logic
+void GameManager::updatePauseMenu()
+{
+	// Handle pause menu input and update selected option
+	const bool up = sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+	const bool down = sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+	const bool enter = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+	const bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+
+    bool activate = false;
+
+    //Keyboard controls
+    if (up && !lastUp)
+        _ui->updatePauseOption(-1);
+    if (down && !lastDown)
+		_ui->updatePauseOption(1);
+    if (enter && !lastEnter)
+		activate = true;
+
+	//Mouse controls
+	const sf::Vector2i mousePos = sf::Mouse::getPosition(*_window); 
+	const int mouseHover = _ui->getPauseAt(_window->mapPixelToCoords(mousePos));
+
+    if (mouseHover >= 0)
+    {
+        if (mousePos != lastMousePos)
+			_ui->setPauseOption(mouseHover);
+        if (click && !lastClick) {
+
+			_ui->setPauseOption(mouseHover);
+			activate = true;
+        }
+    }
+
+	lastUp = up; lastDown = down; lastEnter = enter;
+	lastClick = click; lastMousePos = mousePos;
+
+    if (activate)
+        activatePauseOption();
+}
+
+// Handle the selected pause option
+void GameManager::activatePauseOption()
+{
+    switch (_ui->getPauseOption())
+    {
+    case PauseOptions::RESUME:
+        _pause = false;
+		_pauseHold = PAUSE_TIME_BUFFER;
+        break;
+    case PauseOptions::RESTART:
+        restart();
+        break;
+    case PauseOptions::EXIT:
+        _window->close();
+        break;
+    default:
+        break;
+    }
+}
+
+// Restart the game 
+void GameManager::restart()
+{
+	//Delete existing objects
+    delete _paddle;
+    delete _ball;
+    delete _brickManager;
+    delete _powerupManager;
+    delete _messagingSystem;
+	delete _ui;
+
+	//Reset game state
+    _pause = false;
+	_endMenuShown = false;
+    _time = 0.f;
+    _lives = 3;
+    _pauseHold = 0.f;
+    _levelComplete = false;
+    _powerupInEffect = { none,0.f };
+	_timeLastPowerupSpawned = 0.f;
+
+	initialize();
+}
