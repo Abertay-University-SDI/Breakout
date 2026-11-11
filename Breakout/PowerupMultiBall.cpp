@@ -4,14 +4,15 @@ PowerupMultiBall::PowerupMultiBall(sf::RenderWindow* window, Paddle* paddle, std
     : PowerupBase(window, paddle, balls, x_pos)
 {
     _sprite.setFillColor(extraBallEffectsColour);
+    _colour = extraBallEffectsColour;
 }
 
 PowerupMultiBall::~PowerupMultiBall()
 {
 }
 
-std::pair<POWERUPS, float> PowerupMultiBall::applyEffect()
+std::tuple<POWERUPS, float, sf::Color> PowerupMultiBall::applyEffect()
 {
     
-    return { multiBall, 5.0f };
+    return { multiBall, 5.0f, _colour };
 }

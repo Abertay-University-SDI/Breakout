@@ -5,6 +5,7 @@ PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, std::
     : PowerupBase(window, paddle, balls, x_pos)
 {
     _sprite.setFillColor(ballEffectsColour);
+    _colour = ballEffectsColour;
 }
 
 PowerupFireBall::~PowerupFireBall()
@@ -21,11 +22,11 @@ PowerupFireBall::~PowerupFireBall()
     
 }
 
-std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
+std::tuple<POWERUPS, float, sf::Color> PowerupFireBall::applyEffect()
 {
     for (int i = 0; i < _balls.size(); i++)
     {
         _balls[i]->setFireBall(5.0f);
     }
-    return { fireBall, 5.0f };
+    return { fireBall, 5.0f, _colour };
 }

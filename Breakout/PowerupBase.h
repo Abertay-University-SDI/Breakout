@@ -15,8 +15,7 @@ public:
 
     void update(float dt);
     void render();
-
-    virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
+    virtual std::tuple<POWERUPS, float, sf::Color> applyEffect() = 0; // Pure virtual method for applying the power-up effect
     bool checkCollisionWithPaddle();
 
     void setAlive(bool alive);

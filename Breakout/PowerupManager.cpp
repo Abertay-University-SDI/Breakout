@@ -20,8 +20,9 @@ void PowerupManager::update(float dt)
     // tick down powerup effect time. Reset if elapsed.
     if (_powerupInEffect)
     {
-        _powerupInEffect->second -= dt;
-        if (_powerupInEffect->second <= 0)
+        
+        std::get<1>(*_powerupInEffect) -= dt;
+        if (std::get<1>(*_powerupInEffect) <= 0)
         {
             _powerupInEffect.reset();
         }
@@ -96,7 +97,7 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
-            if (_powerupInEffect->first == multiBall)
+            if (std::get<0>(*_powerupInEffect) == multiBall)
             {
                 _gameManager->activateMultiball();
             }
@@ -111,8 +112,8 @@ int PowerupManager::getPowerupsSpawned()
     return _powerups.size();
 }
 
-std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()
+std::tuple<POWERUPS, float, sf::Color> PowerupManager::getPowerupInEffect()
 {
-    if (!_powerupInEffect) return { none, 0.f };
+    if (!_powerupInEffect) return { none, 0.f, sf::Color::Black };
     return *_powerupInEffect;
 }

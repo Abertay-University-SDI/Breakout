@@ -6,7 +6,7 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f, sf::Color::Black }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -36,7 +36,8 @@ void GameManager::update(float dt)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
-    _powerupInEffect.second -= dt;
+    std::get<1>(_powerupInEffect) -= dt;
+    
     
 
     if (_lives <= 0)
@@ -116,8 +117,27 @@ void GameManager::activateMultiball()
     _ballsVector.push_back(new Ball(_window, 400.f, this));
 }
 
+void GameManager::setBackround()
+{
+    if (std::get<0>(_powerupInEffect) == none)
+    {
+        _window->clear(sf::Color::Black);
+        return;
+    }
+
+    sf::Color _backgroundColor = sf::Color(0, 0, 0, 255);
+    sf::Color _baseColor = std::get<2>(_powerupInEffect);
+
+    _backgroundColor.r = _baseColor.r + (255 - _baseColor.r) * 0.6;
+    _backgroundColor.g = _baseColor.g + (255 - _baseColor.g) * 0.6;
+    _backgroundColor.b = _baseColor.b + (255 - _baseColor.b) * 0.6;
+
+    _window->clear(_backgroundColor);
+}
+
 void GameManager::render()
 {
+    setBackround();
     _paddle->render();
     for (int i = 0; i < _ballsVector.size(); i++)
     {

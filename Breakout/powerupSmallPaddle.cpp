@@ -4,14 +4,16 @@ PowerupSmallPaddle::PowerupSmallPaddle(sf::RenderWindow* window, Paddle* paddle,
     : PowerupBase(window, paddle, balls, x_pos)
 {
     _sprite.setFillColor(paddleEffectsColour); // Same colour as SmallPaddle
+    _colour = paddleEffectsColour;
 }
 
 PowerupSmallPaddle::~PowerupSmallPaddle()
 {
 }
 
-std::pair<POWERUPS, float> PowerupSmallPaddle::applyEffect()
+std::tuple<POWERUPS, float, sf::Color> PowerupSmallPaddle::applyEffect()
 {
     _paddle->setWidth(0.67f, 5.0f);
-    return { smallPaddle, 5.0f };
+
+    return { smallPaddle, 5.0f, _colour };
 }

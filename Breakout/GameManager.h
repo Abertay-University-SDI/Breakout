@@ -18,7 +18,7 @@ public:
     void loseLife();
     void render();
     void levelComplete();
-    void powerupEffect(POWERUPS pu, float t);
+    void powerupEffect(POWERUPS pu, float t, sf::Color c);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -29,6 +29,7 @@ public:
     const std::vector<Ball*>& getBallsVector() const;
     void destroyBall(Ball*);
     void activateMultiball();
+    void setBackround();
 
 private:
     bool _pause;
@@ -38,7 +39,7 @@ private:
     int _lives;
     bool _levelComplete;
     bool _usedMulti;
-    std::pair<POWERUPS, float> _powerupInEffect;
+    std::tuple<POWERUPS, float, sf::Color> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;

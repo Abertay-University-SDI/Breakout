@@ -28,14 +28,14 @@ public:
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle
     int getPowerupsSpawned();
-    std::pair<POWERUPS, float> getPowerupInEffect();
+    std::tuple<POWERUPS, float, sf::Color> getPowerupInEffect();
 
 private:
     sf::RenderWindow* _window;
     Paddle* _paddle;
     std::vector<Ball*>& _balls;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
-    std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    std::optional<std::tuple<POWERUPS, float, sf::Color >> _powerupInEffect;    // used for gameManager to get reference.
     std::mt19937 _rng; // mersenne twister
 
     GameManager* _gameManager;
