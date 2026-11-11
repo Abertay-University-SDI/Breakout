@@ -29,40 +29,43 @@ UI::~UI()
 }
 
 
-void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
+void UI::updatePowerupText(std::tuple<POWERUPS, float, sf::Color> powerup)
 {
 	std::ostringstream oss;
 
-	switch (powerup.first)
+	switch (std::get<0>(powerup))
 	{
 	case bigPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
+		oss << std::fixed << std::setprecision(2) << std::get<1>(powerup);
 		_powerupText.setString("big " + oss.str());
 		_powerupText.setFillColor(paddleEffectsColour);
 		break;
 	case smallPaddle:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
+		oss << std::fixed << std::setprecision(2) << std::get<1>(powerup);;
 		_powerupText.setString("small " + oss.str());
 		_powerupText.setFillColor(paddleEffectsColour);
 		break;
 	case slowBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
+		oss << std::fixed << std::setprecision(2) << std::get<1>(powerup);;
 		_powerupText.setString("slow " + oss.str());
 		_powerupText.setFillColor(ballEffectsColour);
 		break;
 	case fastBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
+		oss << std::fixed << std::setprecision(2) << std::get<1>(powerup);;
 		_powerupText.setString("fast " + oss.str());
 		_powerupText.setFillColor(ballEffectsColour);
 		break;
 	case fireBall:
-		oss << std::fixed << std::setprecision(2) << powerup.second;
+		oss << std::fixed << std::setprecision(2) << std::get<1>(powerup);;
 		_powerupText.setString("fire " + oss.str());
+		_powerupText.setFillColor(extraBallEffectsColour);
+		break;
+	case multiBall:
+		_powerupText.setString("multiball");
 		_powerupText.setFillColor(extraBallEffectsColour);
 		break;
 	case none:
 		_powerupText.setString("");
-		
 		break;
 	}
 }

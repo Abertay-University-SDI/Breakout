@@ -13,7 +13,7 @@ public:
 	UI(sf::RenderWindow* window, int lives, GameManager* gameManager);
 	~UI();
 
-	void updatePowerupText(std::pair<POWERUPS, float>);
+	void updatePowerupText(std::tuple<POWERUPS, float, sf::Color>);
 	void lifeLost(int lives);
 	void render();
 

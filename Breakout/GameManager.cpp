@@ -6,7 +6,7 @@
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f, sf::Color::Black }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -21,8 +21,12 @@ void GameManager::initialize()
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
     _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
+    _powerupManager = new PowerupManager(_window, _paddle, _ballsVector, this);
     _ui = new UI(_window, _lives, this);
+    
+    // Add original ball to vector
+    _ballsVector.push_back(_ball);
+
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -32,7 +36,8 @@ void GameManager::update(float dt)
 {
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
-    _powerupInEffect.second -= dt;
+    std::get<1>(_powerupInEffect) -= dt;
+    
     
 
     if (_lives <= 0)
@@ -83,8 +88,11 @@ void GameManager::update(float dt)
 
     // update everything 
     _paddle->update(dt);
-    _ball->update(dt);
     _powerupManager->update(dt);
+    for (int i = 0; i < _ballsVector.size(); i++)
+    {
+        _ballsVector[i]->update(dt);
+    }
 }
 
 void GameManager::loseLife()
@@ -95,10 +103,46 @@ void GameManager::loseLife()
     // TODO screen shake.
 }
 
+void GameManager::destroyBall(Ball* ball)
+{
+    auto it = std::find(_ballsVector.begin(), _ballsVector.end(), ball);
+    if (it != _ballsVector.end()) {  // Makes sure it only checks size of vector and stops from deleting random objects
+        _ballsVector.erase(it); // Erases from vector
+        delete ball; // Destroys object
+    }
+}
+
+void GameManager::activateMultiball()
+{
+    _ballsVector.push_back(new Ball(_window, 400.f, this));
+}
+
+void GameManager::setBackround()
+{
+    if (std::get<0>(_powerupInEffect) == none)
+    {
+        _window->clear(sf::Color::Black);
+        return;
+    }
+
+    sf::Color _backgroundColor = sf::Color(0, 0, 0, 255);
+    sf::Color _baseColor = std::get<2>(_powerupInEffect);
+
+    _backgroundColor.r = _baseColor.r + (255 - _baseColor.r) * 0.6;
+    _backgroundColor.g = _baseColor.g + (255 - _baseColor.g) * 0.6;
+    _backgroundColor.b = _baseColor.b + (255 - _baseColor.b) * 0.6;
+
+    _window->clear(_backgroundColor);
+}
+
 void GameManager::render()
 {
+    setBackround();
     _paddle->render();
-    _ball->render();
+    for (int i = 0; i < _ballsVector.size(); i++)
+    {
+        _ballsVector[i]->render();
+    }
     _brickManager->render();
     _powerupManager->render();
     _window->draw(_masterText);
@@ -115,3 +159,4 @@ UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }
 PowerupManager* GameManager::getPowerupManager() const { return _powerupManager; }
+const std::vector<Ball*>& GameManager::getBallsVector() const { return _ballsVector; }

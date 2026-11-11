@@ -1,15 +1,14 @@
 #include "PowerupBase.h"
 #include <cmath>
-#include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
+PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, std::vector<Ball*>& balls, float spawnX)
     : _time(0.0f) // Initialize the time variable
 {
     _window = window;
     _paddle = paddle;
     _sprite.setRadius(RADIUS);
     _isAlive = true;
-    _ball = ball;
+    _balls = balls;
 
     // Initial position and direction with some variability
     float initialX = spawnX;

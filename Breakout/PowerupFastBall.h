@@ -3,10 +3,10 @@
 class PowerupFastBall : public PowerupBase
 {
 public:
-    PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos);
+    PowerupFastBall(sf::RenderWindow* window, Paddle* paddle, std::vector<Ball*>& balls, float x_pos);
     ~PowerupFastBall();
 
-    std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect
+    std::tuple<POWERUPS, float, sf::Color> applyEffect() override; // Method to apply the power-up effect
 
 
 };

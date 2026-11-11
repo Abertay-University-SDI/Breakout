@@ -8,6 +8,7 @@ enum POWERUPS
     fastBall,
     slowBall,
     fireBall,
+    multiBall,
     none
 };
 
@@ -47,7 +48,6 @@ constexpr int INITIAL_LIVES = 3;
 
 // Colour Palette
 const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
-const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
-const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
-
+const sf::Color paddleEffectsColour = sf::Color(22, 219, 22, 255); // forest green
+const sf::Color extraBallEffectsColour = sf::Color(254, 1, 154, 255); // hot pink
 

@@ -5,17 +5,17 @@
 #include "Paddle.h"
 #include "Ball.h"
 #include <vector>
+#include <iostream>
 
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX);
+    PowerupBase(sf::RenderWindow* window, Paddle* paddle, std::vector<Ball*>& balls, float spawnX);
     virtual ~PowerupBase();
 
     void update(float dt);
     void render();
-
-    virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
+    virtual std::tuple<POWERUPS, float, sf::Color> applyEffect() = 0; // Pure virtual method for applying the power-up effect
     bool checkCollisionWithPaddle();
 
     void setAlive(bool alive);
@@ -31,7 +31,7 @@ protected: // Protected so derived classes can access these members
     float _time;
     bool _isAlive;
     Paddle* _paddle;
-    Ball* _ball;
+    std::vector<Ball*> _balls;
     sf::Vector2f _direction;
 
     // Render

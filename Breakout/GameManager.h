@@ -18,7 +18,7 @@ public:
     void loseLife();
     void render();
     void levelComplete();
-    void powerupEffect(POWERUPS pu, float t);
+    void powerupEffect(POWERUPS pu, float t, sf::Color c);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
@@ -26,6 +26,10 @@ public:
     sf::RenderWindow* getWindow() const;
     UI* getUI() const;
 
+    const std::vector<Ball*>& getBallsVector() const;
+    void destroyBall(Ball*);
+    void activateMultiball();
+    void setBackround();
 
 private:
     bool _pause;
@@ -34,7 +38,8 @@ private:
     float _timeLastPowerupSpawned;
     int _lives;
     bool _levelComplete;
-    std::pair<POWERUPS, float> _powerupInEffect;
+    bool _usedMulti;
+    std::tuple<POWERUPS, float, sf::Color> _powerupInEffect;
 
     sf::Font _font;
     sf::Text _masterText;
@@ -46,6 +51,8 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    std::vector<Ball*> _ballsVector;
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

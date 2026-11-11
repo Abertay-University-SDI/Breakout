@@ -59,12 +59,20 @@ void Ball::update(float dt)
         _direction.y *= -1;
     }
 
-    // lose life bounce
+    // lose life bounce if last ball
     if (position.y > windowDimensions.y)
     {
-        _sprite.setPosition(0, 300);
-        _direction = { 1, 1 };
-        _gameManager->loseLife();
+        if (_gameManager->getBallsVector().size() == 1)
+        {
+            _sprite.setPosition(0, 300);
+            _direction = { 1, 1 };
+            _gameManager->loseLife();
+        }
+        else
+        {
+            _gameManager->destroyBall(this);
+            return;
+        }
     }
 
     // collision with paddle
